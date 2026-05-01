@@ -9,21 +9,21 @@
   <script src="./chart.umd.min.js"></script>
   <style>
     :root {
-      --bg-deep: #040200;
-      --bg-page: #080400;
-      --bg-card: #110700;
-      --bg-card2: #1a0d00;
-      --gold: #c8962a;
-      --gold-light: #e8b84b;
-      --gold-bright: #ffd700;
-      --saffron: #e05c00;
-      --saffron-light: #ff7a1a;
-      --cream: #fdf3e7;
-      --cream-dim: #c9b38a;
-      --cream-muted: #7a6548;
-      --border: rgba(200,150,42,0.3);
-      --border-bright: rgba(200,150,42,0.6);
-      --card-shadow: 0 4px 32px rgba(0,0,0,0.85), inset 0 1px 0 rgba(200,150,42,0.08);
+      --bg-deep:      #e8dcc8;
+      --bg-page:      #fef8ed;
+      --bg-card:      #ffffff;
+      --bg-card2:     #fffbf4;
+      --gold:         #7a4a00;
+      --gold-light:   #9a6200;
+      --gold-bright:  #b87800;
+      --saffron:      #cc3300;
+      --saffron-light:#e04800;
+      --cream:        #0d0600;
+      --cream-dim:    #1e0e00;
+      --cream-muted:  #5a3510;
+      --border:       rgba(120,80,10,0.2);
+      --border-bright:rgba(120,80,10,0.48);
+      --card-shadow:  0 2px 16px rgba(80,45,5,0.1), 0 1px 3px rgba(80,45,5,0.07), inset 0 1px 0 rgba(255,255,255,0.9);
     }
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
     html { scroll-behavior:smooth; }
@@ -33,32 +33,34 @@
       font-family: 'Noto Serif', Georgia, serif;
       min-height: 100vh;
       background-image:
-        radial-gradient(ellipse 60% 40% at 10% 0%, rgba(200,150,42,0.07) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 50% at 90% 100%, rgba(224,92,0,0.05) 0%, transparent 70%),
-        repeating-linear-gradient(60deg, transparent, transparent 120px, rgba(200,150,42,0.012) 120px, rgba(200,150,42,0.012) 121px),
-        repeating-linear-gradient(-60deg, transparent, transparent 120px, rgba(200,150,42,0.012) 120px, rgba(200,150,42,0.012) 121px);
+        radial-gradient(ellipse 70% 50% at 10% 0%, rgba(200,150,42,0.09) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 60% at 90% 100%, rgba(220,100,10,0.06) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 30% at 50% 50%, rgba(255,240,200,0.5) 0%, transparent 80%),
+        repeating-linear-gradient(60deg, transparent, transparent 140px, rgba(180,130,30,0.025) 140px, rgba(180,130,30,0.025) 141px),
+        repeating-linear-gradient(-60deg, transparent, transparent 140px, rgba(180,130,30,0.025) 140px, rgba(180,130,30,0.025) 141px);
     }
 
     /* ──────────────── HEADER ──────────────── */
     .header {
       position: relative;
-      background: linear-gradient(180deg, #1d0a00 0%, #0f0500 70%, transparent 100%);
-      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, #faecc0 0%, #fdf0cc 45%, #fef5dc 75%, #fef8ed 100%);
+      border-bottom: 2px solid rgba(184,120,0,0.35);
       overflow: hidden;
+      box-shadow: 0 2px 12px rgba(120,70,0,0.1);
     }
     .header::before {
       content: '';
       position: absolute; top:0; left:0; right:0; height:3px;
-      background: linear-gradient(90deg, transparent 0%, var(--saffron) 20%, var(--gold-bright) 50%, var(--saffron) 80%, transparent 100%);
+      background: linear-gradient(90deg, transparent 0%, #cc3300 15%, #b87800 35%, #e04800 50%, #b87800 65%, #cc3300 85%, transparent 100%);
     }
     .header::after {
       content: '';
       position: absolute; top:3px; left:0; right:0; height:1px;
-      background: linear-gradient(90deg, transparent, rgba(255,215,0,0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(184,120,0,0.5), transparent);
     }
     .header-lotus-l, .header-lotus-r {
       position: absolute; top: 50%; transform: translateY(-50%);
-      font-size: 80px; opacity:0.04; pointer-events:none;
+      font-size: 80px; opacity:0.1; pointer-events:none;
       color: var(--gold-bright);
     }
     .header-lotus-l { left: 20px; }
@@ -69,53 +71,54 @@
     }
     .header-om {
       font-size: 80px; line-height:1; flex-shrink:0;
-      color: var(--gold-bright);
-      text-shadow: 0 0 25px rgba(255,215,0,0.5), 0 0 60px rgba(255,140,0,0.3);
+      color: #7a3800;
+      text-shadow: 0 2px 8px rgba(120,60,0,0.25), 0 0 30px rgba(200,100,0,0.15);
       animation: omPulse 5s ease-in-out infinite;
     }
     @keyframes omPulse {
-      0%,100%{ text-shadow: 0 0 25px rgba(255,215,0,0.5), 0 0 50px rgba(255,140,0,0.25); }
-      50%{ text-shadow: 0 0 40px rgba(255,215,0,0.85), 0 0 80px rgba(255,140,0,0.5), 0 0 120px rgba(255,215,0,0.2); }
+      0%,100%{ text-shadow: 0 2px 8px rgba(120,60,0,0.2), 0 0 25px rgba(200,100,0,0.12); }
+      50%   { text-shadow: 0 2px 12px rgba(120,60,0,0.35), 0 0 40px rgba(200,100,0,0.25); }
     }
     .header-text { flex:1; min-width:240px; }
     .header-ttd {
-      font-family:'Cinzel Decorative', serif; font-weight:700;
+      font-family:'Cinzel Decorative', serif; font-weight:900;
       font-size: clamp(16px, 2.8vw, 30px);
-      color: var(--gold-bright);
-      text-shadow: 0 2px 20px rgba(255,215,0,0.35);
+      color: #3d0e00;
+      text-shadow: 0 1px 3px rgba(100,40,0,0.2);
       letter-spacing: 0.06em; line-height:1.3;
     }
     .header-sub {
       font-family:'Cinzel', serif; font-size: clamp(11px,1.6vw,17px);
-      color: var(--cream-dim); margin-top:5px; letter-spacing:0.12em;
+      color: #5c1800; margin-top:5px; letter-spacing:0.12em; font-weight:600;
     }
     .header-divider {
       display:flex; align-items:center; gap:10px; margin:10px 0 8px;
     }
-    .header-divider span { flex:1; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+    .header-divider span { flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(140,70,0,0.5),transparent); }
     .header-divider em {
       font-style:normal; font-family:'Cinzel',serif; font-size:10px;
-      color: var(--saffron-light); letter-spacing:0.18em; white-space:nowrap;
+      color: #b83000; letter-spacing:0.18em; white-space:nowrap; font-weight:700;
     }
     .header-range {
-      font-size:12px; color: var(--cream-muted); letter-spacing:0.04em; font-style:italic;
+      font-size:12px; color: #6b3a10; letter-spacing:0.04em; font-style:italic; font-weight:600;
     }
     .header-badges {
       display:flex; gap:12px; flex-shrink:0; flex-wrap:wrap;
     }
     .header-badge {
       text-align:center; padding:12px 18px;
-      background: rgba(200,150,42,0.07);
-      border:1px solid var(--border); border-radius:10px;
+      background: rgba(184,120,0,0.1);
+      border:1px solid rgba(184,120,0,0.35); border-radius:10px;
       min-width:90px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
     }
     .header-badge .v {
-      font-family:'Cinzel',serif; font-size:22px; font-weight:700;
-      color: var(--gold-bright); display:block; line-height:1;
+      font-family:'Cinzel',serif; font-size:22px; font-weight:800;
+      color: #5c2800; display:block; line-height:1;
     }
     .header-badge .l {
-      font-size:9px; color:var(--cream-muted);
-      letter-spacing:0.12em; text-transform:uppercase; margin-top:4px;
+      font-size:9px; color:#7a4010;
+      letter-spacing:0.12em; text-transform:uppercase; margin-top:4px; font-weight:700;
     }
 
     /* ──────────────── KPI CARDS ──────────────── */
@@ -127,15 +130,15 @@
     @media(max-width:700px){ .kpi-row{ grid-template-columns:repeat(2,1fr); } }
     .kpi {
       background:var(--bg-card); border:1px solid var(--border);
-      border-radius:12px; padding:18px 20px; position:relative; overflow:hidden;
-      box-shadow: var(--card-shadow);
+      border-radius:14px; padding:18px 20px; position:relative; overflow:hidden;
+      box-shadow: 0 4px 20px rgba(100,65,10,0.1), 0 1px 3px rgba(100,65,10,0.07), inset 0 1px 0 rgba(255,255,255,0.9);
       transition: transform .2s, border-color .2s, box-shadow .2s;
       cursor: default;
     }
     .kpi:hover {
       transform:translateY(-3px);
       border-color: var(--border-bright);
-      box-shadow:0 10px 40px rgba(0,0,0,0.9), 0 0 25px rgba(200,150,42,0.12);
+      box-shadow: 0 8px 30px rgba(100,65,10,0.18), 0 0 20px rgba(200,150,42,0.15), inset 0 1px 0 rgba(255,255,255,0.95);
     }
     .kpi::before {
       content:''; position:absolute; top:0; left:0; right:0; height:2px;
@@ -143,18 +146,17 @@
     }
     .kpi-icon {
       position:absolute; right:14px; top:50%; transform:translateY(-50%);
-      font-size:44px; opacity:0.08; pointer-events:none;
+      font-size:44px; opacity:0.14; pointer-events:none;
     }
     .kpi-label {
       font-size:9px; text-transform:uppercase; letter-spacing:0.18em;
-      color:var(--cream-muted); margin-bottom:8px;
+      color:#6b3a10; margin-bottom:8px; font-weight:700;
     }
     .kpi-val {
-      font-family:'Cinzel',serif; font-size:clamp(20px,2vw,28px); font-weight:700;
+      font-family:'Cinzel',serif; font-size:clamp(20px,2vw,28px); font-weight:800;
       color:var(--kc, var(--gold-bright)); line-height:1;
-      text-shadow: 0 0 20px rgba(255,215,0,0.2);
     }
-    .kpi-sub { font-size:10px; color:var(--cream-muted); margin-top:6px; line-height:1.4; }
+    .kpi-sub { font-size:10px; color:#5a3510; margin-top:6px; line-height:1.4; font-weight:600; }
     .kpi-track {
       height:3px; background:rgba(200,150,42,0.1); border-radius:2px; margin-top:10px; overflow:hidden;
     }
@@ -168,7 +170,7 @@
     .page-body { max-width:1440px; margin:0 auto; padding:0 28px 60px; }
     .section-hdr {
       font-family:'Cinzel',serif; font-size:11px; letter-spacing:0.22em;
-      text-transform:uppercase; color:var(--gold);
+      text-transform:uppercase; color:#5c2800; font-weight:800;
       display:flex; align-items:center; gap:12px;
       margin:32px 0 16px;
     }
@@ -189,20 +191,21 @@
     /* ──────────────── CHART CARD ──────────────── */
     .card {
       background:var(--bg-card); border:1px solid var(--border);
-      border-radius:12px; padding:22px 24px; position:relative; overflow:hidden;
-      box-shadow:var(--card-shadow);
+      border-radius:14px; padding:22px 24px; position:relative; overflow:hidden;
+      box-shadow: 0 4px 24px rgba(100,65,10,0.1), 0 1px 4px rgba(100,65,10,0.07), inset 0 1px 0 rgba(255,255,255,0.9);
+      transition: box-shadow .25s, transform .2s;
     }
     .card::before {
       content:''; position:absolute; top:0; left:25%; right:25%; height:1px;
       background:linear-gradient(90deg,transparent,rgba(200,150,42,0.4),transparent);
     }
     .card-hdr { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; gap:10px; }
-    .card-title { font-family:'Cinzel',serif; font-size:13px; font-weight:600; color:var(--gold-light); letter-spacing:0.06em; }
-    .card-desc { font-size:10px; color:var(--cream-muted); margin-top:3px; font-style:italic; }
+    .card-title { font-family:'Cinzel',serif; font-size:13px; font-weight:800; color:#5c2e00; letter-spacing:0.06em; }
+    .card-desc { font-size:10px; color:#6b3a10; margin-top:3px; font-style:italic; font-weight:600; }
     .card-badge {
       font-size:9px; padding:3px 10px; border-radius:20px;
-      background:rgba(200,150,42,0.1); border:1px solid var(--border);
-      color:var(--cream-muted); letter-spacing:0.06em; white-space:nowrap; flex-shrink:0;
+      background:rgba(120,70,0,0.1); border:1px solid rgba(120,70,0,0.3);
+      color:#5a2e00; letter-spacing:0.06em; white-space:nowrap; flex-shrink:0; font-weight:700;
     }
     .chart-wrap { position:relative; }
     /* card flex layout keeps chart canvas consistent within cards */
@@ -215,71 +218,72 @@
     /* ──────────────── INSIGHT ──────────────── */
     .insight {
       margin-top:12px; padding:9px 14px;
-      background:rgba(200,150,42,0.05);
-      border-left:2px solid var(--gold);
+      background:rgba(200,150,42,0.08);
+      border-left:3px solid var(--gold);
       border-radius:0 6px 6px 0;
       font-size:11px; color:var(--cream-dim); line-height:1.55;
     }
-    .insight strong { color:var(--gold-light); }
+    .insight strong { color:#5c2800; font-weight:700; }
 
     /* ──────────────── CONTROLS ──────────────── */
     .ctrl-btn {
       padding:4px 11px; border:1px solid var(--border); border-radius:5px;
-      background:transparent; color:var(--cream-muted); font-size:10px;
+      background:rgba(200,150,42,0.07); color:#5a3510; font-size:10px; font-weight:700;
       cursor:pointer; letter-spacing:0.05em; transition:all .2s;
       font-family:'Noto Serif',serif;
     }
-    .ctrl-btn:hover, .ctrl-btn.on { background:rgba(200,150,42,0.12); border-color:var(--gold); color:var(--gold-bright); }
+    .ctrl-btn:hover, .ctrl-btn.on { background:rgba(120,70,0,0.15); border-color:#7a3800; color:#3d1200; font-weight:800; box-shadow:0 0 0 2px rgba(120,70,0,0.15); }
     .ctrl-grp { display:flex; gap:6px; }
     select.ctrl-sel {
-      background:var(--bg-card2); border:1px solid var(--border);
+      background:var(--bg-card); border:1px solid var(--border);
       color:var(--cream); padding:6px 12px; border-radius:7px;
       font-family:'Noto Serif',serif; font-size:11px; cursor:pointer;
-      transition:border-color .2s;
+      transition:border-color .2s; box-shadow:inset 0 1px 3px rgba(0,0,0,0.04);
     }
     select.ctrl-sel:hover { border-color:var(--gold); }
-    select.ctrl-sel option { background:#1a0d00; }
+    select.ctrl-sel option { background:#fffbf4; color:#1a0c00; }
 
     /* ──────────────── TABLE ──────────────── */
     .tbl-wrap { overflow-x:auto; }
     table { width:100%; border-collapse:collapse; font-size:11px; }
     th {
       font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.14em;
-      text-transform:uppercase; color:var(--gold); padding:11px 14px;
-      border-bottom:1px solid var(--border); text-align:left; white-space:nowrap;
-      background:rgba(200,150,42,0.04);
+      text-transform:uppercase; color:#5c2800; font-weight:800; padding:11px 14px;
+      border-bottom:1px solid rgba(120,80,10,0.2); text-align:left; white-space:nowrap;
+      background:rgba(200,150,42,0.09);
     }
     th.r{ text-align:right; }
-    td { padding:9px 14px; border-bottom:1px solid rgba(200,150,42,0.07); color:var(--cream-dim); vertical-align:middle; }
-    td.r{ text-align:right; color:var(--cream); font-family:'Cinzel',serif; font-size:12px; }
-    tr:hover td{ background:rgba(200,150,42,0.04); }
+    td { padding:9px 14px; border-bottom:1px solid rgba(120,80,10,0.12); color:#1e0e00; vertical-align:middle; font-weight:500; }
+    td.r{ text-align:right; color:#0d0600; font-family:'Cinzel',serif; font-size:12px; font-weight:700; }
+    tr:hover td{ background:rgba(200,150,42,0.07); }
     .dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:8px; vertical-align:middle; }
     .pbar { width:70px; height:4px; background:rgba(200,150,42,0.1); border-radius:2px; overflow:hidden; display:inline-block; vertical-align:middle; margin-right:6px; }
     .pbar-f { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--gold),var(--gold-bright)); }
     .vrate { font-size:10px; padding:2px 7px; border-radius:10px; font-family:'Cinzel',serif; }
-    .vrate.hi { background:rgba(74,222,128,0.12); color:#4ade80; border:1px solid rgba(74,222,128,0.3); }
-    .vrate.mid { background:rgba(251,191,36,0.12); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
-    .vrate.lo { background:rgba(248,113,113,0.12); color:#f87171; border:1px solid rgba(248,113,113,0.3); }
+    .vrate.hi { background:rgba(0,140,60,0.12); color:#006428; border:1px solid rgba(0,140,60,0.35); font-weight:700; }
+    .vrate.mid { background:rgba(180,100,0,0.12); color:#8c5000; border:1px solid rgba(180,100,0,0.35); font-weight:700; }
+    .vrate.lo { background:rgba(200,0,0,0.1); color:#a00000; border:1px solid rgba(200,0,0,0.3); font-weight:700; }
 
     /* ──────────────── FOOTER ──────────────── */
     .footer {
       margin-top:48px; padding:28px 28px 20px;
       border-top:1px solid var(--border); text-align:center; position:relative;
+      background: linear-gradient(0deg, rgba(200,150,42,0.04) 0%, transparent 100%);
     }
     .footer::before {
       content:'ॐ'; position:absolute; top:-18px; left:50%; transform:translateX(-50%);
       font-size:28px; background:var(--bg-page); padding:2px 14px;
       color:var(--gold-bright); text-shadow:0 0 20px rgba(255,215,0,0.5);
     }
-    .footer-verse { font-style:italic; color:var(--cream-muted); font-size:13px; line-height:1.9; max-width:620px; margin:0 auto 10px; }
-    .footer-telugu { font-size:15px; color:var(--cream-dim); letter-spacing:0.05em; }
+    .footer-verse { font-style:italic; color:#5a3510; font-size:13px; line-height:1.9; max-width:620px; margin:0 auto 10px; font-weight:600; }
+    .footer-telugu { font-size:15px; color:#2d1400; letter-spacing:0.05em; font-weight:700; }
     .footer-trans { font-size:11px; opacity:0.5; }
-    .footer-copy { font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.18em; color:var(--cream-muted); opacity:0.4; text-transform:uppercase; }
+    .footer-copy { font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.18em; color:#5c3010; opacity:0.8; text-transform:uppercase; font-weight:700; }
 
     /* scrollbar */
     ::-webkit-scrollbar{ width:5px; height:5px; }
-    ::-webkit-scrollbar-track{ background:var(--bg-deep); }
-    ::-webkit-scrollbar-thumb{ background:var(--gold); border-radius:3px; }
+    ::-webkit-scrollbar-track{ background:rgba(200,150,42,0.08); border-radius:3px; }
+    ::-webkit-scrollbar-thumb{ background:var(--gold-bright); border-radius:3px; box-shadow: inset 0 1px 2px rgba(255,255,255,0.4); }
   
     /* ──── CHART FILTERS BAR ──── */
     .chart-filters {
@@ -306,22 +310,255 @@
     /* ──── CHART INSIGHTS LIST ──── */
     .chart-insights {
       margin-top:14px; padding:14px 20px;
-      background:rgba(200,150,42,0.04); border:1px solid rgba(200,150,42,0.1);
+      background:rgba(200,150,42,0.06); border:1px solid rgba(200,150,42,0.15);
       border-radius:8px;
     }
     .chart-insights ul { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px; }
     .chart-insights li {
-      font-size:11.5px; color:var(--cream-dim); line-height:1.6;
+      font-size:11.5px; color:#1e0e00; line-height:1.6; font-weight:500;
       padding-left:20px; position:relative;
     }
     .chart-insights li::before {
       content:'◆'; position:absolute; left:0; top:4px;
       color:var(--gold); font-size:7px;
     }
-    .chart-insights li strong { color:var(--cream); }
-    .chart-insights .anom { color:#f87171; font-weight:600; }
-    .chart-insights .ok   { color:#4ade80; font-weight:600; }
-    .chart-insights .warn { color:#fbbf24; font-weight:600; }
+    .chart-insights li strong { color:#0d0600; font-weight:700; }
+    .chart-insights .anom { color:#c00000; font-weight:700; }
+    .chart-insights .ok   { color:#007a30; font-weight:700; }
+    .chart-insights .warn { color:#b86200; font-weight:700; }
+
+    /* ──────────────── SEVA DATA CARDS ──────────────── */
+    .seva-cards-grid {
+      display:grid; grid-template-columns:repeat(2,1fr); gap:20px; margin-bottom:32px;
+    }
+    @media(max-width:950px){ .seva-cards-grid{ grid-template-columns:1fr; } }
+    .seva-stat-card {
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:14px; overflow:hidden;
+      box-shadow: 0 3px 20px rgba(100,65,10,0.1), 0 1px 4px rgba(100,65,10,0.07), inset 0 1px 0 rgba(255,255,255,0.9);
+      display:flex; flex-direction:column;
+    }
+    .seva-stat-card::before {
+      content:''; display:block; height:3px; flex-shrink:0;
+      background:linear-gradient(90deg,transparent 0%,var(--sc,var(--gold)) 30%,var(--sc,var(--gold)) 70%,transparent 100%);
+    }
+    .seva-card-hdr {
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;
+      padding:14px 18px 12px; border-bottom:1px solid rgba(200,150,42,0.1); flex-shrink:0;
+    }
+    .seva-card-title {
+      font-family:'Cinzel',serif; font-size:14px; font-weight:700;
+      color:var(--sc,var(--gold-bright)); letter-spacing:0.05em;
+    }
+    .seva-card-badge {
+      font-family:'Cinzel',serif; font-size:10px; color:#5c2800; font-weight:700;
+      background:rgba(120,70,0,0.09); border:1px solid rgba(120,70,0,0.28);
+      border-radius:6px; padding:3px 10px; white-space:nowrap;
+    }
+    .seva-stats-row {
+      display:grid; grid-template-columns:repeat(6,1fr);
+      gap:1px; background:rgba(200,150,42,0.1);
+      border-bottom:1px solid rgba(200,150,42,0.1); flex-shrink:0;
+    }
+    .seva-stat-box {
+      background:var(--bg-card); padding:12px 8px 10px; text-align:center;
+      transition: background .2s;
+    }
+    .seva-stat-box:hover { background: rgba(200,150,42,0.06); }
+    .seva-stat-box .sv {
+      font-family:'Cinzel',serif; font-size:17px; font-weight:700;
+      color:var(--sc,var(--gold-bright)); line-height:1;
+    }
+    .seva-stat-box .sl {
+      font-size:8.5px; text-transform:uppercase; letter-spacing:0.13em;
+      color:#6b3a10; margin-top:5px; font-weight:700;
+    }
+    .seva-tabs {
+      display:flex; padding:0 14px; border-bottom:1px solid rgba(200,150,42,0.1); flex-shrink:0;
+    }
+    .seva-tab-btn {
+      padding:9px 12px; font-size:9px; text-transform:uppercase; letter-spacing:0.13em;
+      color:#6b3a10; cursor:pointer; background:none; font-weight:700;
+      border:none; border-bottom:2px solid transparent; margin-bottom:-1px;
+      font-family:'Cinzel',serif; transition:color .15s,border-color .15s;
+    }
+    .seva-tab-btn:hover{ color:#3d1200; }
+    .seva-tab-btn.on{ color:#3d1200; border-bottom-color:var(--sc,var(--gold)); font-weight:900; }
+    .seva-tab-panel{ display:none; padding:14px 16px 16px; overflow-x:auto; }
+    .seva-tab-panel.on{ display:block; }
+    .stbl {
+      width:100%; border-collapse:collapse; font-size:11px; min-width:340px;
+    }
+    .stbl th {
+      font-family:'Cinzel',serif; font-size:8px; letter-spacing:0.13em;
+      text-transform:uppercase; color:#5c2800; font-weight:800; padding:7px 8px;
+      border-bottom:1px solid rgba(120,80,10,0.2); text-align:left;
+      background:rgba(200,150,42,0.1); white-space:nowrap;
+    }
+    .stbl th.r{ text-align:right; }
+    .stbl td {
+      padding:5px 8px; border-bottom:1px solid rgba(120,80,10,0.12);
+      color:#1e0e00; white-space:nowrap; font-weight:500;
+    }
+    .stbl td.r{ text-align:right; font-family:'Cinzel',serif; font-size:11px; color:#0d0600; font-weight:700; }
+    .stbl tr:hover td{ background:rgba(200,150,42,0.04); }
+    .type-blk{ margin-bottom:18px; }
+    .type-blk:last-child{ margin-bottom:0; }
+    .type-blk-hdr{
+      display:flex; align-items:center; gap:8px; margin-bottom:8px;
+    }
+    .type-dot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .type-lbl{
+      font-family:'Cinzel',serif; font-size:10px; color:#1e0e00;
+      letter-spacing:0.07em; flex:1; font-weight:700;
+    }
+    .type-toggle{
+      font-size:9px; color:var(--cream-muted); cursor:pointer;
+      letter-spacing:0.06em; border:none; background:none;
+      font-family:'Noto Serif',serif; text-decoration:underline;
+    }
+    .type-toggle:hover{ color:var(--gold-light); }
+    .type-overall{
+      display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-bottom:8px;
+    }
+    .type-kpi{
+      text-align:center; background:rgba(200,150,42,0.06);
+      border:1px solid rgba(200,150,42,0.15); border-radius:6px; padding:8px 5px;
+    }
+    .type-kpi .tv{
+      font-family:'Cinzel',serif; font-size:13px; font-weight:800;
+      color:var(--tsc,#8c5000); line-height:1;
+    }
+    .type-kpi .tl{
+      font-size:8px; color:#6b3a10; text-transform:uppercase;
+      letter-spacing:0.11em; margin-top:4px; font-weight:700;
+    }
+    .type-monthly-wrap{ display:none; }
+    .type-monthly-wrap.open{ display:block; }
+    .ap-badge {
+      font-family:'Cinzel',serif; font-size:9px; font-weight:600;
+      padding:2px 7px; border-radius:10px; letter-spacing:0.04em; white-space:nowrap;
+    }
+    .ap-badge.ap-lo  { background:rgba(0,130,55,0.1);  color:#005a22; border:1px solid rgba(0,130,55,0.3); font-weight:700; }
+    .ap-badge.ap-mid { background:rgba(180,100,0,0.1);  color:#8c4e00; border:1px solid rgba(180,100,0,0.3); font-weight:700; }
+    .ap-badge.ap-hi  { background:rgba(200,0,0,0.09); color:#a00000; border:1px solid rgba(200,0,0,0.28); font-weight:700; }
+
+
+    /* ──────────────── SUMMARY TABLE ──────────────── */
+    .summary-wrap { margin-bottom: 52px; }
+    .summary-controls {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 18px;
+      padding: 16px 20px 20px;
+      background: #fff; border: 1px solid rgba(120,80,10,0.18);
+      border-radius: 12px 12px 0 0; border-bottom: none;
+      box-shadow: 0 2px 12px rgba(100,65,10,0.08);
+    }
+    .sc-label {
+      font-family: 'Cinzel', serif; font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.16em; color: #5c2800;
+      white-space: nowrap;
+    }
+    .sc-range-badge {
+      font-family: 'Cinzel', serif; font-size: 13px; font-weight: 800;
+      color: #3d1200; background: rgba(184,120,0,0.1);
+      border: 1px solid rgba(120,70,0,0.3); border-radius: 8px;
+      padding: 4px 14px; white-space: nowrap;
+    }
+    .dual-slider-wrap {
+      flex: 1; min-width: 260px; position: relative;
+      height: 44px; display: flex; align-items: center;
+    }
+    .ds-track {
+      position: absolute; left: 0; right: 0; height: 6px;
+      background: rgba(120,80,10,0.14); border-radius: 3px;
+    }
+    .ds-fill {
+      position: absolute; height: 6px; border-radius: 3px;
+      background: linear-gradient(90deg, #b87800, #cc3300);
+      pointer-events: none; transition: left .05s, width .05s;
+    }
+    .dual-slider-wrap input[type=range] {
+      position: absolute; width: 100%;
+      -webkit-appearance: none; appearance: none;
+      height: 6px; background: transparent;
+      pointer-events: none; outline: none;
+      margin: 0; padding: 0;
+    }
+    .dual-slider-wrap input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: linear-gradient(145deg, #faecc0, #c8962a);
+      border: 3px solid #fff;
+      box-shadow: 0 2px 8px rgba(100,60,0,0.35);
+      cursor: pointer; pointer-events: all;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .dual-slider-wrap input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.18);
+      box-shadow: 0 3px 12px rgba(100,60,0,0.5);
+    }
+    .dual-slider-wrap input[type=range]::-moz-range-thumb {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: linear-gradient(145deg, #faecc0, #c8962a);
+      border: 3px solid #fff;
+      box-shadow: 0 2px 8px rgba(100,60,0,0.35);
+      cursor: pointer; pointer-events: all;
+    }
+    .ds-month-labels {
+      position: absolute; bottom: -18px; left: 0; right: 0;
+      display: flex; justify-content: space-between;
+    }
+    .ds-month-labels span {
+      font-size: 8px; color: #7a4010; font-family: 'Cinzel', serif;
+      font-weight: 600; letter-spacing: 0.04em;
+    }
+    .summary-tbl-wrap {
+      overflow-x: auto;
+      border: 1px solid rgba(120,80,10,0.18);
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 4px 20px rgba(100,65,10,0.1), 0 1px 4px rgba(100,65,10,0.06);
+    }
+    .summary-tbl {
+      width: 100%; border-collapse: collapse; font-size: 11px;
+      min-width: 900px; background: #fff;
+    }
+    .summary-tbl th {
+      padding: 8px 10px; font-family: 'Cinzel', serif; font-size: 8.5px;
+      letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
+      text-align: center; white-space: nowrap; border: 1px solid rgba(120,80,10,0.13);
+    }
+    .summary-tbl th.seva-hdr {
+      background: rgba(200,150,42,0.12); color: #3d1200;
+      vertical-align: bottom; min-width: 160px; text-align: left;
+      padding-left: 14px; font-size: 9px;
+    }
+    .summary-tbl th.grp-all    { background: rgba(90,60,10,0.09);  color: #3d1200; }
+    .summary-tbl th.grp-online { background: rgba(67,56,202,0.1);  color: #1e1680; }
+    .summary-tbl th.grp-disc   { background: rgba(180,83,9,0.1);   color: #7c2d00; }
+    .summary-tbl th.grp-curr   { background: rgba(4,120,87,0.1);   color: #064e3b; }
+    .summary-tbl th.grp-adv    { background: rgba(190,24,93,0.1);  color: #9d1f5e; }
+    .summary-tbl th.sub-all    { background: rgba(90,60,10,0.05);  color: #5c2800; font-size:8px; }
+    .summary-tbl th.sub-online { background: rgba(67,56,202,0.05); color: #1e1680; font-size:8px; }
+    .summary-tbl th.sub-disc   { background: rgba(180,83,9,0.05);  color: #7c2d00; font-size:8px; }
+    .summary-tbl th.sub-curr   { background: rgba(4,120,87,0.05);  color: #064e3b; font-size:8px; }
+    .summary-tbl th.sub-adv    { background: rgba(190,24,93,0.05); color: #9d1f5e; font-size:8px; }
+    .summary-tbl td {
+      padding: 7px 10px; border: 1px solid rgba(120,80,10,0.1);
+      color: #1e0e00; text-align: right; font-family: 'Cinzel', serif;
+      font-size: 11px; font-weight: 700; white-space: nowrap;
+    }
+    .summary-tbl td.seva-cell {
+      text-align: left; font-size: 11px; font-weight: 800;
+      font-family: 'Cinzel', serif; padding-left: 14px;
+      background: rgba(200,150,42,0.04); letter-spacing: 0.03em;
+    }
+    .summary-tbl td.nil { color: #ccc; text-align: center; font-weight: 400; font-family: serif; }
+    .summary-tbl tr:hover td { background: rgba(200,150,42,0.06); }
+    .summary-tbl tr:hover td.seva-cell { background: rgba(200,150,42,0.1); }
+    .abs-lo  { color: #005a22 !important; }
+    .abs-mid { color: #8c4e00 !important; }
+    .abs-hi  { color: #a00000 !important; }
+    .summary-tbl .grp-div { border-left: 2px solid rgba(120,80,10,0.25) !important; }
 
   </style>
 </head>
@@ -905,6 +1142,37 @@
     </div>
   </div>
 
+
+  <!-- ════════════════ SEVA DATA CARDS ════════════════ -->
+  <div class="section-hdr">Per-Seva Daily Statistics — Bookings per Operating Day</div>
+  <div class="seva-cards-grid" id="sevaCardsGrid"></div>
+
+  <!-- ════════════════ SEVA SUMMARY TABLE ════════════════ -->
+  <div class="section-hdr">Seva Performance Summary — By Booking Type</div>
+  <div class="summary-wrap">
+
+    <!-- Dual-handle date range slider -->
+    <div class="summary-controls">
+      <span class="sc-label">Date Range</span>
+      <span class="sc-range-badge" id="scBadge">Jul 25 &rarr; Apr 26</span>
+      <div class="dual-slider-wrap" id="dualSlider">
+        <div class="ds-track"></div>
+        <div class="ds-fill" id="dsFill"></div>
+        <input type="range" id="dsFrom" min="0" max="9" value="0" step="1"
+               oninput="onDsInput()" style="z-index:5">
+        <input type="range" id="dsTo"   min="0" max="9" value="9" step="1"
+               oninput="onDsInput()" style="z-index:4">
+        <div class="ds-month-labels" id="dsMonthLabels"></div>
+      </div>
+    </div>
+
+    <!-- Summary table (dynamically built) -->
+    <div class="summary-tbl-wrap">
+      <table class="summary-tbl" id="summaryTbl"></table>
+    </div>
+
+  </div>
+
 </div><!-- /page-body -->
 
 <!-- ════════════════ FOOTER ════════════════ -->
@@ -924,28 +1192,28 @@ const D = {"sevas":["Abhishekam","Archana","Arjitha Brahmotsavam","Astadala Pada
 
 /* ═══════════════════════ CONSTANTS ═══════════════════════ */
 const SEVA_COLORS = {
-  'Abhishekam':                    '#FF6B6B',
-  'Archana':                       '#FFD700',
-  'Arjitha Brahmotsavam':          '#FF8C00',
-  'Astadala Pada Padmaradhana':    '#A78BFA',
-  'Civet Vessel':                  '#60A5FA',
-  'Kalyanotsavam':                 '#FF3D5A',
-  'Kasturi Vessel':                '#00E5CC',
-  'Melchat Vastram':               '#FB923C',
-  'Sahasra Deepalankara':          '#F7D94C',
-  'Suprabatham':                   '#4ADE80',
-  'Thiruppavada':                  '#22D3EE',
-  'Thomala':                       '#F97316',
-  'USSE':                          '#C084FC',
-  'Unjal Seva':                    '#86EFAC'
+  'Abhishekam':                    '#E60000',
+  'Archana':                       '#C47A00',
+  'Arjitha Brahmotsavam':          '#E06000',
+  'Astadala Pada Padmaradhana':    '#6D28D9',
+  'Civet Vessel':                  '#1D4ED8',
+  'Kalyanotsavam':                 '#CC0022',
+  'Kasturi Vessel':                '#007A6A',
+  'Melchat Vastram':               '#C25400',
+  'Sahasra Deepalankara':          '#A07000',
+  'Suprabatham':                   '#047857',
+  'Thiruppavada':                  '#0369A1',
+  'Thomala':                       '#C2410C',
+  'USSE':                          '#7C3AED',
+  'Unjal Seva':                    '#15803D'
 };
 
 const TYPE_COLORS = {
-  'Advance Booking': '#60A5FA',
-  'Current Booking': '#34D399',
-  'Descritionary':   '#FBBF24',
-  'Donor':           '#F472B6',
-  'Online':          '#818CF8'
+  'Advance Booking': '#1D4ED8',
+  'Current Booking': '#047857',
+  'Descritionary':   '#B45309',
+  'Donor':           '#BE185D',
+  'Online':          '#4338CA'
 };
 
 const MO = D.monthOrder;
@@ -955,30 +1223,32 @@ const fmtFull = n => n.toLocaleString('en-IN');
 /* ═══════════════════════ CHART DEFAULTS ═══════════════════════ */
 if (typeof Chart === 'undefined') {
   document.querySelectorAll('.chart-wrap').forEach(el => {
-    el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#7a6548;font-size:12px;font-style:italic;">Chart library not available. Please serve this file via a local web server.</div>';
+    el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#7a5020;font-size:12px;font-style:italic;">Chart library not available. Please serve this file via a local web server.</div>';
   });
 } else {
-  Chart.defaults.color = '#c9b38a';
-  Chart.defaults.borderColor = 'rgba(200,150,42,0.15)';
+  Chart.defaults.color = '#2d1400';
+  Chart.defaults.borderColor = 'rgba(120,80,10,0.15)';
   Chart.defaults.font.family = "'Noto Serif', Georgia, serif";
 }
 
 const TOOLTIP = {
-  backgroundColor: 'rgba(10,5,0,0.95)',
-  borderColor: 'rgba(200,150,42,0.6)',
+  backgroundColor: 'rgba(40,18,0,0.97)',
+  borderColor: 'rgba(200,150,42,0.7)',
   borderWidth: 1,
   titleColor: '#ffd700',
-  bodyColor: '#c9b38a',
-  padding: 10,
-  titleFont: { family:"'Cinzel',serif", size:11 },
+  bodyColor: '#f0c878',
+  padding: 12,
+  cornerRadius: 8,
+  boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+  titleFont: { family:"'Cinzel',serif", size:11, weight:'700' },
   bodyFont: { family:"'Noto Serif',serif", size:11 },
   callbacks: {
     label: ctx => ' ' + ctx.dataset.label + ': ' + fmtFull(ctx.parsed.y ?? ctx.parsed.r ?? ctx.raw)
   }
 };
 
-const GRID = { color:'rgba(200,150,42,0.1)', drawTicks:false };
-const TICK = { color:'#7a6548', padding:8, font:{size:10} };
+const GRID = { color:'rgba(120,80,10,0.14)', drawTicks:false };
+const TICK = { color:'#5a3010', padding:8, font:{size:10}, weight:'600' };
 
 /* ════════════════════ 1. TREND LINE ════════════════════ */
 let trendScale = 'logarithmic';
@@ -991,10 +1261,13 @@ function buildTrend(scale) {
     label: s,
     data: MO.map(m => toVal(D.monthlyPerSeva[s][m], isLog)),
     borderColor: SEVA_COLORS[s],
-    backgroundColor: SEVA_COLORS[s] + '18',
-    borderWidth: s === 'Kalyanotsavam' ? 2.5 : 1.5,
-    pointRadius: s === 'Kalyanotsavam' ? 5 : 3,
-    pointHoverRadius: 7,
+    backgroundColor: SEVA_COLORS[s] + '22',
+    borderWidth: s === 'Kalyanotsavam' ? 3 : 2,
+    pointRadius: s === 'Kalyanotsavam' ? 5 : 3.5,
+    pointHoverRadius: 8,
+    pointBackgroundColor: SEVA_COLORS[s],
+    pointBorderColor: '#fff',
+    pointBorderWidth: s === 'Kalyanotsavam' ? 2 : 1.5,
     tension: 0.45,
     fill: false
   }));
@@ -1003,10 +1276,10 @@ function buildTrend(scale) {
   datasets.unshift({
     label: '— Grand Total',
     data: MO.map(m => D.monthlyGrandTotal[m]),
-    borderColor: '#ffffff',
+    borderColor: '#5c2800',
     backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderDash: [5,4],
+    borderWidth: 2,
+    borderDash: [6,4],
     pointRadius: 4,
     pointHoverRadius: 7,
     tension: 0.4,
@@ -1023,7 +1296,7 @@ function buildTrend(scale) {
       plugins: {
         legend: {
           position:'bottom',
-          labels: { boxWidth:12, padding:14, color:'#c9b38a', font:{size:10} }
+          labels: { boxWidth:12, padding:14, color:'#1e0e00', font:{size:10} }
         },
         tooltip: { ...TOOLTIP,
           callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + fmtFull(ctx.parsed.y) }
@@ -1054,6 +1327,21 @@ function setTrendScale(s) {
   buildTrend(s);
 }
 
+/* ══════ GRADIENT HELPER ══════ */
+function makeBarGrad(canvas, color, vertical) {
+  try {
+    var ctx2 = canvas.getContext('2d');
+    var w = canvas.offsetWidth || 600, h = canvas.offsetHeight || 400;
+    var g = vertical
+      ? ctx2.createLinearGradient(0, 0, 0, h)
+      : ctx2.createLinearGradient(0, 0, w, 0);
+    g.addColorStop(0,    color + 'ff');
+    g.addColorStop(0.55, color + 'ee');
+    g.addColorStop(1,    color + 'bb');
+    return g;
+  } catch(e){ return color + 'cc'; }
+}
+
 /* ════════════════════ 2. SEVA POPULARITY BAR ════════════════════ */
 function buildBar() {
   const sorted = [...D.sevas].sort((a,b) => D.sevaTotal[b] - D.sevaTotal[a]);
@@ -1064,10 +1352,10 @@ function buildBar() {
       datasets: [{
         label: 'Total Bookings',
         data: sorted.map(s => D.sevaTotal[s]),
-        backgroundColor: sorted.map(s => SEVA_COLORS[s] + 'cc'),
-        borderColor:      sorted.map(s => SEVA_COLORS[s]),
-        borderWidth: 1,
-        borderRadius: 6,
+        backgroundColor: sorted.map(s => makeBarGrad(document.getElementById('cBar'), SEVA_COLORS[s], false)),
+        borderColor:      sorted.map(s => SEVA_COLORS[s] + 'ff'),
+        borderWidth: 2,
+        borderRadius: 8,
         borderSkipped: false
       }]
     },
@@ -1084,7 +1372,7 @@ function buildBar() {
           type:'logarithmic', grid:GRID,
           ticks: { ...TICK, callback: v => fmt(v) }
         },
-        y: { grid:{display:false}, ticks:{ ...TICK, color:'#c9b38a', font:{size:11} } }
+        y: { grid:{display:false}, ticks:{ ...TICK, color:'#1e0e00', font:{size:11} } }
       }
     }
   });
@@ -1095,7 +1383,7 @@ function buildDonut() {
   const labels = ['Online','Discretionary','Current Booking','Advance Booking','Donor'];
   const keyMap = { 'Online':'Online','Discretionary':'Descritionary','Current Booking':'Current Booking','Advance Booking':'Advance Booking','Donor':'Donor' };
   const vals = labels.map(l => D.typeTotal[keyMap[l]]);
-  const colors = ['#818CF8','#FBBF24','#34D399','#60A5FA','#F472B6'];
+  const colors = ['#4338CA','#D97706','#059669','#2563EB','#DB2777'];
 
   chartDonut = window._chartDonut = new Chart(document.getElementById('cDonut'), {
     type:'doughnut',
@@ -1103,17 +1391,18 @@ function buildDonut() {
       labels,
       datasets:[{
         data: vals,
-        backgroundColor: colors.map(c=>c+'cc'),
-        borderColor: colors,
-        borderWidth:2,
-        hoverOffset:12
+        backgroundColor: colors.map(c=>c+'f0'),
+        borderColor: '#fff',
+        borderWidth: 3,
+        hoverOffset: 18,
+        hoverBorderColor: colors
       }]
     },
     options:{
       responsive:true, maintainAspectRatio:false,
       cutout:'68%',
       plugins:{
-        legend:{ position:'right', labels:{ boxWidth:12, padding:10, color:'#c9b38a', font:{size:10} } },
+        legend:{ position:'right', labels:{ boxWidth:14, padding:12, color:'#1e0e00', font:{size:11} } },
         tooltip:{ ...TOOLTIP,
           callbacks:{ label: ctx => ' ' + ctx.label + ': ' + fmtFull(ctx.raw) + ' (' + ((ctx.raw/D.stats.grandTotal)*100).toFixed(1) + '%)' }
         }
@@ -1130,13 +1419,13 @@ function buildBV() {
     data:{
       labels: sorted,
       datasets:[
-        { label:'Booked',   data: sorted.map(s=>D.sevaTotal[s]),    backgroundColor:'rgba(251,191,36,0.6)',  borderColor:'#FBBF24', borderWidth:1, borderRadius:4, borderSkipped:false },
-        { label:'Verified', data: sorted.map(s=>D.sevaVerified[s]), backgroundColor:'rgba(74,222,128,0.55)', borderColor:'#4ADE80', borderWidth:1, borderRadius:4, borderSkipped:false }
+        { label:'Booked',   data: sorted.map(s=>D.sevaTotal[s]),    backgroundColor:'rgba(200,140,0,0.88)',  borderColor:'#a07000', borderWidth:2, borderRadius:6, borderSkipped:false },
+        { label:'Verified', data: sorted.map(s=>D.sevaVerified[s]), backgroundColor:'rgba(0,170,80,0.82)',   borderColor:'#006b30', borderWidth:2, borderRadius:6, borderSkipped:false }
       ]
     },
     options:{
       responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{ labels:{ boxWidth:12, color:'#c9b38a', font:{size:10} } },
+      plugins:{ legend:{ labels:{ boxWidth:12, color:'#1e0e00', font:{size:10} } },
         tooltip:{ ...TOOLTIP }
       },
       scales:{
@@ -1159,10 +1448,21 @@ function buildMonthlyBar() {
       datasets:[{
         label:'Total Bookings',
         data: vals,
-        backgroundColor: vals.map(v => `rgba(200,150,42,${0.4 + 0.5*(v/max)})`),
-        borderColor: vals.map(v => `rgba(255,215,0,${0.5 + 0.4*(v/max)})`),
-        borderWidth:1,
-        borderRadius:6,
+        backgroundColor: (function(){
+          var cv = document.getElementById('cMonthlyBar');
+          var ctx2 = cv.getContext('2d');
+          return vals.map(function(v){
+            var intensity = 0.55 + 0.4*(v/max);
+            var g = ctx2.createLinearGradient(0,0,0,cv.offsetHeight||300);
+            g.addColorStop(0,   'rgba(200,120,0,'+(intensity+0.15)+')');
+            g.addColorStop(0.5, 'rgba(180,100,0,'+intensity+')');
+            g.addColorStop(1,   'rgba(140,70,0,'+(intensity-0.05)+')');
+            return g;
+          });
+        })(),
+        borderColor: vals.map(v => 'rgba(160,90,0,'+(0.75+0.2*(v/max))+')'),  
+        borderWidth:2,
+        borderRadius:8,
         borderSkipped:false
       }]
     },
@@ -1183,18 +1483,18 @@ function buildMonthlyBar() {
 /* ════════════════════ 6. STACKED (drill-down) ════════════════════ */
 let chartStacked;
 const typeLabels = { 'Advance Booking':'Advance', 'Current Booking':'Current', 'Descritionary':'Discretionary', 'Donor':'Donor', 'Online':'Online' };
-const typeColorList = ['#60A5FA','#34D399','#FBBF24','#F472B6','#818CF8'];
+const typeColorList = ['#1D4ED8','#047857','#B45309','#BE185D','#4338CA'];
 
 function buildStacked(seva, filtMO) {
   filtMO = filtMO || MO;
   const datasets = D.types.map((t,i) => ({
     label: typeLabels[t],
     data: filtMO.map(m => D.monthlyByType[seva][t][m] || 0),
-    backgroundColor: typeColorList[i] + 'bb',
+    backgroundColor: typeColorList[i] + 'ee',
     borderColor: typeColorList[i],
-    borderWidth:1,
-    borderRadius:4,
-    borderSkipped:false
+    borderWidth: 2,
+    borderRadius: 6,
+    borderSkipped: false
   }));
 
   const cfg = {
@@ -1202,7 +1502,7 @@ function buildStacked(seva, filtMO) {
     data:{ labels:filtMO, datasets },
     options:{
       responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{ labels:{ boxWidth:12, color:'#c9b38a', font:{size:10} } },
+      plugins:{ legend:{ labels:{ boxWidth:12, color:'#1e0e00', font:{size:10} } },
         tooltip:{ ...TOOLTIP }
       },
       scales:{
@@ -1255,7 +1555,7 @@ function buildRadar(moIdx) {
     data:{ labels:MO, datasets },
     options:{
       responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, color:'#c9b38a', font:{size:9}, padding:8 } },
+      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, color:'#1e0e00', font:{size:9}, padding:8 } },
         tooltip:{ ...TOOLTIP, callbacks:{ label: ctx => ' '+ctx.dataset.label+': '+ctx.raw+'% of peak' } }
       },
       scales:{
@@ -1263,7 +1563,7 @@ function buildRadar(moIdx) {
           backgroundColor:'rgba(200,150,42,0.04)',
           grid:{ color:'rgba(200,150,42,0.15)' },
           angleLines:{ color:'rgba(200,150,42,0.2)' },
-          pointLabels:{ color:'#c9b38a', font:{size:9} },
+          pointLabels:{ color:'#4a2e00', font:{size:9} },
           ticks:{ display:false, stepSize:25 },
           min:0, max:100
         }
@@ -1298,7 +1598,7 @@ function buildArea(filtMO) {
     options:{
       responsive:true, maintainAspectRatio:false,
       interaction:{ mode:'index', intersect:false },
-      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:12, color:'#c9b38a', font:{size:10} } },
+      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:12, color:'#1e0e00', font:{size:10} } },
         tooltip:{ ...TOOLTIP,
           callbacks:{ label: ctx => ' ' + ctx.dataset.label + ': ' + fmtFull(ctx.parsed.y) }
         }
@@ -1605,7 +1905,7 @@ function buildDowChart(seva) {
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { boxWidth:12, color:'#c9b38a', font:{size:10} } },
+        legend: { labels: { boxWidth:12, color:'#1e0e00', font:{size:10} } },
         tooltip: { ...TOOLTIP,
           callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + (ctx.parsed.y||0).toLocaleString('en-IN') }
         }
@@ -1704,7 +2004,7 @@ function buildAnoSuprabatham() {
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { boxWidth:12, color:'#c9b38a', font:{size:10} } },
+        legend: { labels: { boxWidth:12, color:'#1e0e00', font:{size:10} } },
         tooltip: { ...TOOLTIP,
           callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + (ctx.parsed.y||0).toLocaleString('en-IN') }
         }
@@ -1749,7 +2049,7 @@ function buildAnoUSSE() {
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { boxWidth:12, color:'#c9b38a', font:{size:10} } },
+        legend: { labels: { boxWidth:12, color:'#1e0e00', font:{size:10} } },
         tooltip: { ...TOOLTIP,
           callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + (ctx.parsed.y||0).toLocaleString('en-IN') }
         }
@@ -1904,7 +2204,7 @@ function buildEOTimeline() {
       responsive:true, maintainAspectRatio:false,
       interaction:{ mode:'index', intersect:false },
       plugins: {
-        legend:{ position:'bottom', labels:{ boxWidth:12, color:'#c9b38a', font:{size:10} } },
+        legend:{ position:'bottom', labels:{ boxWidth:12, color:'#1e0e00', font:{size:10} } },
         tooltip:{ ...TOOLTIP, callbacks:{ label: ctx => ' '+ctx.dataset.label+': '+(ctx.parsed.y!=null?fmtFull(ctx.parsed.y):'—') } }
       },
       scales: {
@@ -1937,7 +2237,7 @@ function buildEOCompare(scale) {
     options: {
       responsive:true, maintainAspectRatio:false,
       plugins: {
-        legend:{ position:'bottom', labels:{ boxWidth:12, color:'#c9b38a', font:{size:10} } },
+        legend:{ position:'bottom', labels:{ boxWidth:12, color:'#1e0e00', font:{size:10} } },
         tooltip:{ ...TOOLTIP, callbacks:{ label: ctx=>' '+ctx.dataset.label+': '+fmtFull(ctx.parsed.y) } }
       },
       scales: {
@@ -1972,7 +2272,7 @@ function buildEOChange() {
         data: pcts,
         backgroundColor: pcts.map(p => p>=0 ? 'rgba(74,222,128,0.75)' : 'rgba(248,113,113,0.75)'),
         borderColor:      pcts.map(p => p>=0 ? '#4ade80' : '#f87171'),
-        borderWidth:1.5, borderRadius:4, borderSkipped:false
+        borderWidth:1.5, borderRadius:7, borderSkipped:false
       }]
     },
     options: {
@@ -2027,7 +2327,7 @@ function updateTrend() {
       responsive:true, maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
       plugins:{
-        legend:{position:'bottom',labels:{boxWidth:12,padding:14,color:'#c9b38a',font:{size:10}}},
+        legend:{position:'bottom',labels:{boxWidth:12,padding:14,color:'#1e0e00',font:{size:10}}},
         tooltip:{...TOOLTIP, callbacks:{label:ctx=>' '+ctx.dataset.label+': '+fmtFull(ctx.parsed.y)}}
       },
       scales:{
@@ -2091,7 +2391,7 @@ function updateDonut() {
     options:{
       responsive:true, maintainAspectRatio:false, cutout:'62%',
       plugins:{
-        legend:{position:'right',labels:{boxWidth:12,color:'#c9b38a',font:{size:11},padding:14}},
+        legend:{position:'right',labels:{boxWidth:12,color:'#1e0e00',font:{size:11},padding:14}},
         tooltip:{...TOOLTIP,callbacks:{label:ctx=>' '+ctx.label+': '+fmtFull(ctx.parsed)}}
       }
     }
@@ -2115,7 +2415,7 @@ function updateBV() {
     options:{
       responsive:true, maintainAspectRatio:false,
       plugins:{
-        legend:{position:'bottom',labels:{boxWidth:12,color:'#c9b38a',font:{size:10}}},
+        legend:{position:'bottom',labels:{boxWidth:12,color:'#1e0e00',font:{size:10}}},
         tooltip:{...TOOLTIP,callbacks:{label:ctx=>' '+ctx.dataset.label+': '+fmtFull(ctx.parsed.y)}}
       },
       scales:{
@@ -2234,7 +2534,7 @@ function updateAbsentTrend() {
       responsive:true, maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
       plugins:{
-        legend:{position:'bottom',labels:{boxWidth:12,color:'#c9b38a',font:{size:10}}},
+        legend:{position:'bottom',labels:{boxWidth:12,color:'#1e0e00',font:{size:10}}},
         tooltip:{...TOOLTIP,callbacks:{label:ctx=>' '+ctx.dataset.label+': '+ctx.parsed.y+'%'}}
       },
       scales:{x:{grid:GRID,ticks:TICK},y:{grid:GRID,ticks:{...TICK,callback:v=>v+'%'},beginAtZero:true}}
@@ -2269,7 +2569,7 @@ function updateEOChange() {
       data:pairs.map(x=>x.pct),
       backgroundColor:pairs.map(x=>x.pct>=0?'rgba(74,222,128,0.75)':'rgba(248,113,113,0.75)'),
       borderColor:pairs.map(x=>x.pct>=0?'#4ade80':'#f87171'),
-      borderWidth:1.5, borderRadius:4, borderSkipped:false
+      borderWidth:1.5, borderRadius:7, borderSkipped:false
     }]},
     options:{
       indexAxis:'y', responsive:true, maintainAspectRatio:false,
@@ -2319,6 +2619,283 @@ if (document.readyState === 'loading') {
 } else {
   runAll();
 }
+
+
+/* DS DATA */
+const DS={"Abhishekam":{"overall":{"total":4254,"avg":99,"max":130,"min":20,"days":43,"absent":54,"absentPct":1.3},"monthly":{"Jul 25":{"total":418,"avg":105,"max":121,"min":94,"days":4,"absent":3,"absentPct":0.7},"Aug 25":{"total":496,"avg":99,"max":113,"min":73,"days":5,"absent":5,"absentPct":1},"Sep 25":{"total":431,"avg":108,"max":130,"min":74,"days":4,"absent":4,"absentPct":0.9},"Oct 25":{"total":494,"avg":99,"max":109,"min":89,"days":5,"absent":3,"absentPct":0.6},"Nov 25":{"total":379,"avg":95,"max":103,"min":88,"days":4,"absent":8,"absentPct":2.1},"Dec 25":{"total":405,"avg":101,"max":104,"min":98,"days":4,"absent":2,"absentPct":0.5},"Jan 26":{"total":405,"avg":81,"max":101,"min":20,"days":5,"absent":1,"absentPct":0.2},"Feb 26":{"total":409,"avg":102,"max":121,"min":86,"days":4,"absent":8,"absentPct":2},"Mar 26":{"total":419,"avg":105,"max":106,"min":104,"days":4,"absent":8,"absentPct":1.9},"Apr 26":{"total":398,"avg":100,"max":105,"min":94,"days":4,"absent":12,"absentPct":3}},"byType":{"Advance Booking":{"overall":{"total":1642,"avg":38,"max":50,"min":17,"days":43,"absent":33,"absentPct":2},"monthly":{"Jul 25":{"total":161,"avg":40,"max":47,"min":36,"days":4,"absent":1,"absentPct":0.6},"Aug 25":{"total":176,"avg":35,"max":47,"min":26,"days":5,"absent":3,"absentPct":1.7},"Sep 25":{"total":165,"avg":41,"max":46,"min":36,"days":4,"absent":4,"absentPct":2.4},"Oct 25":{"total":204,"avg":41,"max":50,"min":36,"days":5,"absent":2,"absentPct":1},"Nov 25":{"total":155,"avg":39,"max":44,"min":29,"days":4,"absent":7,"absentPct":4.5},"Dec 25":{"total":182,"avg":46,"max":49,"min":40,"days":4,"absent":2,"absentPct":1.1},"Jan 26":{"total":142,"avg":28,"max":42,"min":17,"days":5,"absent":1,"absentPct":0.7},"Feb 26":{"total":148,"avg":37,"max":40,"min":34,"days":4,"absent":2,"absentPct":1.4},"Mar 26":{"total":166,"avg":42,"max":49,"min":34,"days":4,"absent":2,"absentPct":1.2},"Apr 26":{"total":143,"avg":36,"max":44,"min":27,"days":4,"absent":9,"absentPct":6.3}}},"Current Booking":{"overall":{"total":143,"avg":3,"max":5,"min":1,"days":41,"absent":0,"absentPct":0},"monthly":{"Jul 25":{"total":14,"avg":4,"max":5,"min":3,"days":4,"absent":0,"absentPct":0},"Aug 25":{"total":14,"avg":4,"max":5,"min":1,"days":4,"absent":0,"absentPct":0},"Sep 25":{"total":15,"avg":4,"max":5,"min":3,"days":4,"absent":0,"absentPct":0},"Oct 25":{"total":20,"avg":4,"max":5,"min":3,"days":5,"absent":0,"absentPct":0},"Nov 25":{"total":13,"avg":3,"max":4,"min":3,"days":4,"absent":0,"absentPct":0},"Dec 25":{"total":12,"avg":3,"max":3,"min":3,"days":4,"absent":0,"absentPct":0},"Jan 26":{"total":15,"avg":4,"max":5,"min":3,"days":4,"absent":0,"absentPct":0},"Feb 26":{"total":14,"avg":4,"max":5,"min":1,"days":4,"absent":0,"absentPct":0},"Mar 26":{"total":15,"avg":4,"max":5,"min":3,"days":4,"absent":0,"absentPct":0},"Apr 26":{"total":11,"avg":3,"max":5,"min":1,"days":4,"absent":0,"absentPct":0}}},"Descritionary":{"overall":{"total":2469,"avg":57,"max":82,"min":3,"days":43,"absent":21,"absentPct":0.9},"monthly":{"Jul 25":{"total":243,"avg":61,"max":77,"min":51,"days":4,"absent":2,"absentPct":0.8},"Aug 25":{"total":306,"avg":61,"max":72,"min":46,"days":5,"absent":2,"absentPct":0.7},"Sep 25":{"total":251,"avg":63,"max":82,"min":25,"days":4,"absent":0,"absentPct":0},"Oct 25":{"total":270,"avg":54,"max":61,"min":34,"days":5,"absent":1,"absentPct":0.4},"Nov 25":{"total":211,"avg":53,"max":58,"min":41,"days":4,"absent":1,"absentPct":0.5},"Dec 25":{"total":211,"avg":53,"max":61,"min":50,"days":4,"absent":0,"absentPct":0},"Jan 26":{"total":248,"avg":50,"max":72,"min":3,"days":5,"absent":0,"absentPct":0},"Feb 26":{"total":247,"avg":62,"max":78,"min":46,"days":4,"absent":6,"absentPct":2.4},"Mar 26":{"total":238,"avg":60,"max":66,"min":54,"days":4,"absent":6,"absentPct":2.5},"Apr 26":{"total":244,"avg":61,"max":73,"min":49,"days":4,"absent":3,"absentPct":1.2}}}}},"Archana":{"overall":{"total":6414,"avg":62,"max":92,"min":22,"days":104,"absent":172,"absentPct":2.7},"monthly":{"Jul 25":{"total":831,"avg":59,"max":79,"min":28,"days":14,"absent":29,"absentPct":3.5},"Aug 25":{"total":553,"avg":61,"max":87,"min":46,"days":9,"absent":28,"absentPct":5.1},"Sep 25":{"total":550,"avg":55,"max":79,"min":28,"days":10,"absent":19,"absentPct":3.5},"Oct 25":{"total":663,"avg":60,"max":92,"min":43,"days":11,"absent":12,"absentPct":1.8},"Nov 25":{"total":724,"avg":66,"max":79,"min":54,"days":11,"absent":13,"absentPct":1.8},"Dec 25":{"total":465,"avg":66,"max":89,"min":59,"days":7,"absent":11,"absentPct":2.4},"Jan 26":{"total":418,"avg":60,"max":77,"min":43,"days":7,"absent":21,"absentPct":5},"Feb 26":{"total":733,"avg":61,"max":87,"min":42,"days":12,"absent":18,"absentPct":2.5},"Mar 26":{"total":746,"avg":62,"max":85,"min":22,"days":12,"absent":17,"absentPct":2.3},"Apr 26":{"total":731,"avg":66,"max":81,"min":50,"days":11,"absent":4,"absentPct":0.5}},"byType":{"Advance Booking":{"overall":{"total":324,"avg":7,"max":17,"min":2,"days":47,"absent":61,"absentPct":18.8},"monthly":{"Jul 25":{"total":44,"avg":9,"max":15,"min":5,"days":5,"absent":16,"absentPct":36.4},"Aug 25":{"total":54,"avg":11,"max":17,"min":4,"days":5,"absent":12,"absentPct":22.2},"Sep 25":{"total":36,"avg":7,"max":12,"min":2,"days":5,"absent":6,"absentPct":16.7},"Oct 25":{"total":46,"avg":9,"max":17,"min":3,"days":5,"absent":5,"absentPct":10.9},"Nov 25":{"total":47,"avg":7,"max":9,"min":4,"days":7,"absent":8,"absentPct":17},"Dec 25":{"total":18,"avg":6,"max":7,"min":5,"days":3,"absent":0,"absentPct":0},"Jan 26":{"total":25,"avg":4,"max":7,"min":2,"days":6,"absent":12,"absentPct":48},"Feb 26":{"total":10,"avg":5,"max":8,"min":2,"days":2,"absent":0,"absentPct":0},"Mar 26":{"total":15,"avg":4,"max":6,"min":2,"days":4,"absent":2,"absentPct":13.3},"Apr 26":{"total":29,"avg":6,"max":10,"min":4,"days":5,"absent":0,"absentPct":0}}},"Current Booking":{"overall":{"total":994,"avg":10,"max":10,"min":6,"days":104,"absent":9,"absentPct":0.9},"monthly":{"Jul 25":{"total":126,"avg":9,"max":10,"min":6,"days":14,"absent":0,"absentPct":0},"Aug 25":{"total":85,"avg":9,"max":10,"min":8,"days":9,"absent":0,"absentPct":0},"Sep 25":{"total":99,"avg":10,"max":10,"min":9,"days":10,"absent":0,"absentPct":0},"Oct 25":{"total":105,"avg":10,"max":10,"min":8,"days":11,"absent":2,"absentPct":1.9},"Nov 25":{"total":105,"avg":10,"max":10,"min":7,"days":11,"absent":3,"absentPct":2.9},"Dec 25":{"total":69,"avg":10,"max":10,"min":9,"days":7,"absent":2,"absentPct":2.9},"Jan 26":{"total":68,"avg":10,"max":10,"min":9,"days":7,"absent":0,"absentPct":0},"Feb 26":{"total":116,"avg":10,"max":10,"min":8,"days":12,"absent":2,"absentPct":1.7},"Mar 26":{"total":120,"avg":10,"max":10,"min":10,"days":12,"absent":0,"absentPct":0},"Apr 26":{"total":101,"avg":9,"max":10,"min":7,"days":11,"absent":0,"absentPct":0}}},"Descritionary":{"overall":{"total":4050,"avg":39,"max":70,"min":7,"days":103,"absent":28,"absentPct":0.7},"monthly":{"Jul 25":{"total":522,"avg":37,"max":62,"min":9,"days":14,"absent":0,"absentPct":0},"Aug 25":{"total":322,"avg":36,"max":54,"min":9,"days":9,"absent":6,"absentPct":1.9},"Sep 25":{"total":314,"avg":31,"max":55,"min":7,"days":10,"absent":2,"absentPct":0.6},"Oct 25":{"total":402,"avg":37,"max":54,"min":24,"days":11,"absent":1,"absentPct":0.2},"Nov 25":{"total":460,"avg":42,"max":50,"min":33,"days":11,"absent":1,"absentPct":0.2},"Dec 25":{"total":306,"avg":44,"max":70,"min":32,"days":7,"absent":3,"absentPct":1},"Jan 26":{"total":257,"avg":37,"max":53,"min":21,"days":7,"absent":3,"absentPct":1.2},"Feb 26":{"total":480,"avg":40,"max":67,"min":21,"days":12,"absent":5,"absentPct":1},"Mar 26":{"total":489,"avg":44,"max":60,"min":23,"days":11,"absent":7,"absentPct":1.4},"Apr 26":{"total":498,"avg":45,"max":59,"min":33,"days":11,"absent":0,"absentPct":0}}},"Online":{"overall":{"total":1046,"avg":10,"max":11,"min":6,"days":104,"absent":74,"absentPct":7.1},"monthly":{"Jul 25":{"total":139,"avg":10,"max":11,"min":8,"days":14,"absent":13,"absentPct":9.4},"Aug 25":{"total":92,"avg":10,"max":11,"min":9,"days":9,"absent":10,"absentPct":10.9},"Sep 25":{"total":101,"avg":10,"max":11,"min":9,"days":10,"absent":11,"absentPct":10.9},"Oct 25":{"total":110,"avg":10,"max":11,"min":9,"days":11,"absent":4,"absentPct":3.6},"Nov 25":{"total":112,"avg":10,"max":11,"min":9,"days":11,"absent":1,"absentPct":0.9},"Dec 25":{"total":72,"avg":10,"max":11,"min":10,"days":7,"absent":6,"absentPct":8.3},"Jan 26":{"total":68,"avg":10,"max":11,"min":8,"days":7,"absent":6,"absentPct":8.8},"Feb 26":{"total":127,"avg":11,"max":11,"min":10,"days":12,"absent":11,"absentPct":8.7},"Mar 26":{"total":122,"avg":10,"max":11,"min":8,"days":12,"absent":8,"absentPct":6.6},"Apr 26":{"total":103,"avg":9,"max":11,"min":6,"days":11,"absent":4,"absentPct":3.9}}}}},"Arjitha Brahmotsavam":{"overall":{"total":70960,"avg":274,"max":275,"min":10,"days":259,"absent":14603,"absentPct":20.6},"monthly":{"Jul 25":{"total":8250,"avg":275,"max":275,"min":275,"days":30,"absent":1656,"absentPct":20.1},"Aug 25":{"total":7425,"avg":275,"max":275,"min":275,"days":27,"absent":1637,"absentPct":22},"Sep 25":{"total":6060,"avg":263,"max":275,"min":10,"days":23,"absent":1311,"absentPct":21.6},"Oct 25":{"total":7425,"avg":275,"max":275,"min":275,"days":27,"absent":1561,"absentPct":21},"Nov 25":{"total":7975,"avg":275,"max":275,"min":275,"days":29,"absent":1592,"absentPct":20},"Dec 25":{"total":7425,"avg":275,"max":275,"min":275,"days":27,"absent":1490,"absentPct":20.1},"Jan 26":{"total":5775,"avg":275,"max":275,"min":275,"days":21,"absent":1054,"absentPct":18.3},"Feb 26":{"total":7425,"avg":275,"max":275,"min":275,"days":27,"absent":1505,"absentPct":20.3},"Mar 26":{"total":6875,"avg":275,"max":275,"min":275,"days":25,"absent":1490,"absentPct":21.7},"Apr 26":{"total":6325,"avg":275,"max":275,"min":275,"days":23,"absent":1307,"absentPct":20.7}},"byType":{"Advance Booking":{"overall":{"total":10,"avg":10,"max":10,"min":10,"days":1,"absent":5,"absentPct":50},"monthly":{"Sep 25":{"total":10,"avg":10,"max":10,"min":10,"days":1,"absent":5,"absentPct":50}}},"Online":{"overall":{"total":70950,"avg":275,"max":275,"min":275,"days":258,"absent":14598,"absentPct":20.6},"monthly":{"Jul 25":{"total":8250,"avg":275,"max":275,"min":275,"days":30,"absent":1656,"absentPct":20.1},"Aug 25":{"total":7425,"avg":275,"max":275,"min":275,"days":27,"absent":1637,"absentPct":22},"Sep 25":{"total":6050,"avg":275,"max":275,"min":275,"days":22,"absent":1306,"absentPct":21.6},"Oct 25":{"total":7425,"avg":275,"max":275,"min":275,"days":27,"absent":1561,"absentPct":21},"Nov 25":{"total":7975,"avg":275,"max":275,"min":275,"days":29,"absent":1592,"absentPct":20},"Dec 25":{"total":7425,"avg":275,"max":275,"min":275,"days":27,"absent":1490,"absentPct":20.1},"Jan 26":{"total":5775,"avg":275,"max":275,"min":275,"days":21,"absent":1054,"absentPct":18.3},"Feb 26":{"total":7425,"avg":275,"max":275,"min":275,"days":27,"absent":1505,"absentPct":20.3},"Mar 26":{"total":6875,"avg":275,"max":275,"min":275,"days":25,"absent":1490,"absentPct":21.7},"Apr 26":{"total":6325,"avg":275,"max":275,"min":275,"days":23,"absent":1307,"absentPct":20.7}}}}},"Astadala Pada Padmaradhana":{"overall":{"total":3020,"avg":92,"max":128,"min":62,"days":33,"absent":118,"absentPct":3.9},"monthly":{"Jul 25":{"total":402,"avg":101,"max":109,"min":95,"days":4,"absent":21,"absentPct":5.2},"Aug 25":{"total":282,"avg":94,"max":106,"min":88,"days":3,"absent":11,"absentPct":3.9},"Sep 25":{"total":302,"avg":101,"max":128,"min":81,"days":3,"absent":6,"absentPct":2},"Oct 25":{"total":343,"avg":86,"max":98,"min":75,"days":4,"absent":15,"absentPct":4.4},"Nov 25":{"total":378,"avg":95,"max":106,"min":82,"days":4,"absent":16,"absentPct":4.2},"Dec 25":{"total":248,"avg":83,"max":97,"min":62,"days":3,"absent":8,"absentPct":3.2},"Jan 26":{"total":245,"avg":82,"max":99,"min":64,"days":3,"absent":10,"absentPct":4.1},"Feb 26":{"total":368,"avg":92,"max":107,"min":79,"days":4,"absent":16,"absentPct":4.3},"Mar 26":{"total":186,"avg":93,"max":101,"min":85,"days":2,"absent":5,"absentPct":2.7},"Apr 26":{"total":266,"avg":89,"max":93,"min":83,"days":3,"absent":10,"absentPct":3.8}},"byType":{"Advance Booking":{"overall":{"total":94,"avg":6,"max":14,"min":2,"days":15,"absent":18,"absentPct":19.1},"monthly":{"Jul 25":{"total":32,"avg":11,"max":14,"min":8,"days":3,"absent":6,"absentPct":18.8},"Aug 25":{"total":20,"avg":10,"max":10,"min":10,"days":2,"absent":0,"absentPct":0},"Oct 25":{"total":12,"avg":4,"max":6,"min":2,"days":3,"absent":6,"absentPct":50},"Nov 25":{"total":12,"avg":4,"max":6,"min":2,"days":3,"absent":4,"absentPct":33.3},"Dec 25":{"total":6,"avg":3,"max":4,"min":2,"days":2,"absent":2,"absentPct":33.3},"Feb 26":{"total":12,"avg":6,"max":8,"min":4,"days":2,"absent":0,"absentPct":0}}},"Descritionary":{"overall":{"total":1058,"avg":32,"max":69,"min":7,"days":33,"absent":9,"absentPct":0.9},"monthly":{"Jul 25":{"total":142,"avg":36,"max":43,"min":31,"days":4,"absent":1,"absentPct":0.7},"Aug 25":{"total":91,"avg":30,"max":40,"min":20,"days":3,"absent":0,"absentPct":0},"Sep 25":{"total":123,"avg":41,"max":69,"min":21,"days":3,"absent":0,"absentPct":0},"Oct 25":{"total":101,"avg":25,"max":35,"min":19,"days":4,"absent":0,"absentPct":0},"Nov 25":{"total":140,"avg":35,"max":50,"min":25,"days":4,"absent":2,"absentPct":1.4},"Dec 25":{"total":72,"avg":24,"max":33,"min":7,"days":3,"absent":0,"absentPct":0},"Jan 26":{"total":82,"avg":27,"max":41,"min":14,"days":3,"absent":3,"absentPct":3.7},"Feb 26":{"total":125,"avg":31,"max":50,"min":20,"days":4,"absent":2,"absentPct":1.6},"Mar 26":{"total":85,"avg":43,"max":50,"min":35,"days":2,"absent":1,"absentPct":1.2},"Apr 26":{"total":97,"avg":32,"max":36,"min":28,"days":3,"absent":0,"absentPct":0}}},"Online":{"overall":{"total":1868,"avg":57,"max":61,"min":50,"days":33,"absent":91,"absentPct":4.9},"monthly":{"Jul 25":{"total":228,"avg":57,"max":61,"min":52,"days":4,"absent":14,"absentPct":6.1},"Aug 25":{"total":171,"avg":57,"max":58,"min":56,"days":3,"absent":11,"absentPct":6.4},"Sep 25":{"total":179,"avg":60,"max":60,"min":59,"days":3,"absent":6,"absentPct":3.4},"Oct 25":{"total":230,"avg":58,"max":61,"min":52,"days":4,"absent":9,"absentPct":3.9},"Nov 25":{"total":226,"avg":57,"max":58,"min":55,"days":4,"absent":10,"absentPct":4.4},"Dec 25":{"total":170,"avg":57,"max":60,"min":55,"days":3,"absent":6,"absentPct":3.5},"Jan 26":{"total":163,"avg":54,"max":58,"min":50,"days":3,"absent":7,"absentPct":4.3},"Feb 26":{"total":231,"avg":58,"max":61,"min":55,"days":4,"absent":14,"absentPct":6.1},"Mar 26":{"total":101,"avg":51,"max":51,"min":50,"days":2,"absent":4,"absentPct":4},"Apr 26":{"total":169,"avg":56,"max":60,"min":54,"days":3,"absent":10,"absentPct":5.9}}}}},"Civet Vessel":{"overall":{"total":131,"avg":6,"max":14,"min":2,"days":22,"absent":3,"absentPct":2.3},"monthly":{"Jul 25":{"total":4,"avg":2,"max":2,"min":2,"days":2,"absent":0,"absentPct":0},"Aug 25":{"total":27,"avg":9,"max":11,"min":8,"days":3,"absent":1,"absentPct":3.7},"Sep 25":{"total":24,"avg":8,"max":14,"min":4,"days":3,"absent":0,"absentPct":0},"Oct 25":{"total":4,"avg":4,"max":4,"min":4,"days":1,"absent":0,"absentPct":0},"Nov 25":{"total":14,"avg":7,"max":8,"min":6,"days":2,"absent":0,"absentPct":0},"Jan 26":{"total":14,"avg":5,"max":10,"min":2,"days":3,"absent":0,"absentPct":0},"Feb 26":{"total":12,"avg":4,"max":4,"min":4,"days":3,"absent":0,"absentPct":0},"Mar 26":{"total":6,"avg":6,"max":6,"min":6,"days":1,"absent":0,"absentPct":0},"Apr 26":{"total":26,"avg":7,"max":10,"min":2,"days":4,"absent":2,"absentPct":7.7}},"byType":{"Advance Booking":{"overall":{"total":131,"avg":6,"max":14,"min":2,"days":22,"absent":3,"absentPct":2.3},"monthly":{"Jul 25":{"total":4,"avg":2,"max":2,"min":2,"days":2,"absent":0,"absentPct":0},"Aug 25":{"total":27,"avg":9,"max":11,"min":8,"days":3,"absent":1,"absentPct":3.7},"Sep 25":{"total":24,"avg":8,"max":14,"min":4,"days":3,"absent":0,"absentPct":0},"Oct 25":{"total":4,"avg":4,"max":4,"min":4,"days":1,"absent":0,"absentPct":0},"Nov 25":{"total":14,"avg":7,"max":8,"min":6,"days":2,"absent":0,"absentPct":0},"Jan 26":{"total":14,"avg":5,"max":10,"min":2,"days":3,"absent":0,"absentPct":0},"Feb 26":{"total":12,"avg":4,"max":4,"min":4,"days":3,"absent":0,"absentPct":0},"Mar 26":{"total":6,"avg":6,"max":6,"min":6,"days":1,"absent":0,"absentPct":0},"Apr 26":{"total":26,"avg":7,"max":10,"min":2,"days":4,"absent":2,"absentPct":7.7}}}}},"Kalyanotsavam":{"overall":{"total":340446,"avg":1280,"max":1506,"min":2,"days":266,"absent":35658,"absentPct":10.5},"monthly":{"Jul 25":{"total":37973,"avg":1266,"max":1403,"min":1195,"days":30,"absent":3872,"absentPct":10.2},"Aug 25":{"total":34985,"avg":1296,"max":1444,"min":1200,"days":27,"absent":3868,"absentPct":11.1},"Sep 25":{"total":27311,"avg":1187,"max":1344,"min":2,"days":23,"absent":3074,"absentPct":11.3},"Oct 25":{"total":34360,"avg":1273,"max":1416,"min":1162,"days":27,"absent":3583,"absentPct":10.4},"Nov 25":{"total":37984,"avg":1310,"max":1411,"min":1206,"days":29,"absent":3826,"absentPct":10.1},"Dec 25":{"total":35085,"avg":1253,"max":1506,"min":10,"days":28,"absent":3644,"absentPct":10.4},"Jan 26":{"total":26270,"avg":1251,"max":1321,"min":1181,"days":21,"absent":2916,"absentPct":11.1},"Feb 26":{"total":36249,"avg":1295,"max":1406,"min":1204,"days":28,"absent":3761,"absentPct":10.4},"Mar 26":{"total":35818,"avg":1327,"max":1463,"min":1215,"days":27,"absent":3471,"absentPct":9.7},"Apr 26":{"total":34411,"avg":1324,"max":1463,"min":1203,"days":26,"absent":3643,"absentPct":10.6}},"byType":{"Advance Booking":{"overall":{"total":4,"avg":4,"max":4,"min":4,"days":1,"absent":4,"absentPct":100},"monthly":{"Feb 26":{"total":4,"avg":4,"max":4,"min":4,"days":1,"absent":4,"absentPct":100}}},"Current Booking":{"overall":{"total":48872,"avg":185,"max":198,"min":114,"days":264,"absent":732,"absentPct":1.5},"monthly":{"Jul 25":{"total":5372,"avg":179,"max":194,"min":114,"days":30,"absent":73,"absentPct":1.4},"Aug 25":{"total":5014,"avg":186,"max":198,"min":150,"days":27,"absent":100,"absentPct":2},"Sep 25":{"total":4098,"avg":186,"max":194,"min":164,"days":22,"absent":44,"absentPct":1.1},"Oct 25":{"total":5054,"avg":187,"max":196,"min":172,"days":27,"absent":69,"absentPct":1.4},"Nov 25":{"total":5442,"avg":188,"max":198,"min":168,"days":29,"absent":97,"absentPct":1.8},"Dec 25":{"total":4900,"avg":181,"max":192,"min":144,"days":27,"absent":52,"absentPct":1.1},"Jan 26":{"total":3770,"avg":180,"max":198,"min":150,"days":21,"absent":59,"absentPct":1.6},"Feb 26":{"total":5204,"avg":186,"max":194,"min":168,"days":28,"absent":97,"absentPct":1.9},"Mar 26":{"total":5140,"avg":190,"max":198,"min":164,"days":27,"absent":63,"absentPct":1.2},"Apr 26":{"total":4878,"avg":188,"max":198,"min":176,"days":26,"absent":78,"absentPct":1.6}}},"Descritionary":{"overall":{"total":40770,"avg":153,"max":376,"min":2,"days":266,"absent":1127,"absentPct":2.8},"monthly":{"Jul 25":{"total":4101,"avg":137,"max":269,"min":66,"days":30,"absent":87,"absentPct":2.1},"Aug 25":{"total":4321,"avg":160,"max":306,"min":79,"days":27,"absent":147,"absentPct":3.4},"Sep 25":{"total":2313,"avg":101,"max":200,"min":2,"days":23,"absent":54,"absentPct":2.3},"Oct 25":{"total":3656,"avg":135,"max":272,"min":32,"days":27,"absent":94,"absentPct":2.6},"Nov 25":{"total":4992,"avg":172,"max":267,"min":70,"days":29,"absent":154,"absentPct":3.1},"Dec 25":{"total":4535,"avg":162,"max":376,"min":10,"days":28,"absent":96,"absentPct":2.1},"Jan 26":{"total":2550,"avg":121,"max":195,"min":63,"days":21,"absent":71,"absentPct":2.8},"Feb 26":{"total":4441,"avg":159,"max":262,"min":74,"days":28,"absent":163,"absentPct":3.7},"Mar 26":{"total":5028,"avg":186,"max":319,"min":69,"days":27,"absent":142,"absentPct":2.8},"Apr 26":{"total":4833,"avg":186,"max":323,"min":76,"days":26,"absent":119,"absentPct":2.5}}},"Online":{"overall":{"total":250800,"avg":950,"max":950,"min":950,"days":264,"absent":33795,"absentPct":13.5},"monthly":{"Jul 25":{"total":28500,"avg":950,"max":950,"min":950,"days":30,"absent":3712,"absentPct":13},"Aug 25":{"total":25650,"avg":950,"max":950,"min":950,"days":27,"absent":3621,"absentPct":14.1},"Sep 25":{"total":20900,"avg":950,"max":950,"min":950,"days":22,"absent":2976,"absentPct":14.2},"Oct 25":{"total":25650,"avg":950,"max":950,"min":950,"days":27,"absent":3420,"absentPct":13.3},"Nov 25":{"total":27550,"avg":950,"max":950,"min":950,"days":29,"absent":3575,"absentPct":13},"Dec 25":{"total":25650,"avg":950,"max":950,"min":950,"days":27,"absent":3496,"absentPct":13.6},"Jan 26":{"total":19950,"avg":950,"max":950,"min":950,"days":21,"absent":2786,"absentPct":14},"Feb 26":{"total":26600,"avg":950,"max":950,"min":950,"days":28,"absent":3497,"absentPct":13.1},"Mar 26":{"total":25650,"avg":950,"max":950,"min":950,"days":27,"absent":3266,"absentPct":12.7},"Apr 26":{"total":24700,"avg":950,"max":950,"min":950,"days":26,"absent":3446,"absentPct":14}}}}},"Kasturi Vessel":{"overall":{"total":242,"avg":6,"max":10,"min":2,"days":38,"absent":10,"absentPct":4.1},"monthly":{"Jul 25":{"total":34,"avg":9,"max":10,"min":4,"days":4,"absent":1,"absentPct":2.9},"Aug 25":{"total":22,"avg":6,"max":9,"min":3,"days":4,"absent":1,"absentPct":4.5},"Sep 25":{"total":15,"avg":4,"max":8,"min":2,"days":4,"absent":0,"absentPct":0},"Oct 25":{"total":17,"avg":4,"max":7,"min":2,"days":4,"absent":0,"absentPct":0},"Nov 25":{"total":23,"avg":8,"max":9,"min":7,"days":3,"absent":1,"absentPct":4.3},"Dec 25":{"total":25,"avg":6,"max":10,"min":2,"days":4,"absent":4,"absentPct":16},"Jan 26":{"total":36,"avg":9,"max":10,"min":7,"days":4,"absent":1,"absentPct":2.8},"Feb 26":{"total":29,"avg":10,"max":10,"min":9,"days":3,"absent":0,"absentPct":0},"Mar 26":{"total":19,"avg":5,"max":8,"min":2,"days":4,"absent":1,"absentPct":5.3},"Apr 26":{"total":22,"avg":6,"max":8,"min":3,"days":4,"absent":1,"absentPct":4.5}},"byType":{"Advance Booking":{"overall":{"total":242,"avg":6,"max":10,"min":2,"days":38,"absent":10,"absentPct":4.1},"monthly":{"Jul 25":{"total":34,"avg":9,"max":10,"min":4,"days":4,"absent":1,"absentPct":2.9},"Aug 25":{"total":22,"avg":6,"max":9,"min":3,"days":4,"absent":1,"absentPct":4.5},"Sep 25":{"total":15,"avg":4,"max":8,"min":2,"days":4,"absent":0,"absentPct":0},"Oct 25":{"total":17,"avg":4,"max":7,"min":2,"days":4,"absent":0,"absentPct":0},"Nov 25":{"total":23,"avg":8,"max":9,"min":7,"days":3,"absent":1,"absentPct":4.3},"Dec 25":{"total":25,"avg":6,"max":10,"min":2,"days":4,"absent":4,"absentPct":16},"Jan 26":{"total":36,"avg":9,"max":10,"min":7,"days":4,"absent":1,"absentPct":2.8},"Feb 26":{"total":29,"avg":10,"max":10,"min":9,"days":3,"absent":0,"absentPct":0},"Mar 26":{"total":19,"avg":5,"max":8,"min":2,"days":4,"absent":1,"absentPct":5.3},"Apr 26":{"total":22,"avg":6,"max":8,"min":3,"days":4,"absent":1,"absentPct":4.5}}}}},"Melchat Vastram":{"overall":{"total":1505,"avg":35,"max":48,"min":10,"days":43,"absent":17,"absentPct":1.1},"monthly":{"Jul 25":{"total":148,"avg":37,"max":40,"min":36,"days":4,"absent":2,"absentPct":1.4},"Aug 25":{"total":188,"avg":38,"max":46,"min":30,"days":5,"absent":1,"absentPct":0.5},"Sep 25":{"total":122,"avg":31,"max":40,"min":20,"days":4,"absent":0,"absentPct":0},"Oct 25":{"total":169,"avg":34,"max":38,"min":24,"days":5,"absent":2,"absentPct":1.2},"Nov 25":{"total":152,"avg":38,"max":46,"min":30,"days":4,"absent":2,"absentPct":1.3},"Dec 25":{"total":158,"avg":40,"max":48,"min":32,"days":4,"absent":3,"absentPct":1.9},"Jan 26":{"total":126,"avg":25,"max":36,"min":10,"days":5,"absent":1,"absentPct":0.8},"Feb 26":{"total":131,"avg":33,"max":37,"min":24,"days":4,"absent":4,"absentPct":3.1},"Mar 26":{"total":149,"avg":37,"max":43,"min":32,"days":4,"absent":0,"absentPct":0},"Apr 26":{"total":162,"avg":41,"max":46,"min":34,"days":4,"absent":2,"absentPct":1.2}},"byType":{"Advance Booking":{"overall":{"total":546,"avg":13,"max":20,"min":6,"days":43,"absent":14,"absentPct":2.6},"monthly":{"Jul 25":{"total":48,"avg":12,"max":14,"min":8,"days":4,"absent":2,"absentPct":4.2},"Aug 25":{"total":68,"avg":14,"max":20,"min":6,"days":5,"absent":1,"absentPct":1.5},"Sep 25":{"total":46,"avg":12,"max":14,"min":10,"days":4,"absent":0,"absentPct":0},"Oct 25":{"total":60,"avg":12,"max":14,"min":10,"days":5,"absent":2,"absentPct":3.3},"Nov 25":{"total":50,"avg":13,"max":16,"min":8,"days":4,"absent":2,"absentPct":4},"Dec 25":{"total":60,"avg":15,"max":16,"min":12,"days":4,"absent":0,"absentPct":0},"Jan 26":{"total":56,"avg":11,"max":14,"min":8,"days":5,"absent":1,"absentPct":1.8},"Feb 26":{"total":58,"avg":15,"max":16,"min":10,"days":4,"absent":4,"absentPct":6.9},"Mar 26":{"total":50,"avg":13,"max":14,"min":10,"days":4,"absent":0,"absentPct":0},"Apr 26":{"total":50,"avg":13,"max":14,"min":10,"days":4,"absent":2,"absentPct":4}}},"Current Booking":{"overall":{"total":12,"avg":2,"max":4,"min":2,"days":5,"absent":0,"absentPct":0},"monthly":{"Sep 25":{"total":2,"avg":2,"max":2,"min":2,"days":1,"absent":0,"absentPct":0},"Oct 25":{"total":2,"avg":2,"max":2,"min":2,"days":1,"absent":0,"absentPct":0},"Mar 26":{"total":2,"avg":2,"max":2,"min":2,"days":1,"absent":0,"absentPct":0},"Apr 26":{"total":6,"avg":3,"max":4,"min":2,"days":2,"absent":0,"absentPct":0}}},"Descritionary":{"overall":{"total":947,"avg":22,"max":32,"min":2,"days":43,"absent":3,"absentPct":0.3},"monthly":{"Jul 25":{"total":100,"avg":25,"max":28,"min":22,"days":4,"absent":0,"absentPct":0},"Aug 25":{"total":120,"avg":24,"max":28,"min":20,"days":5,"absent":0,"absentPct":0},"Sep 25":{"total":74,"avg":19,"max":30,"min":6,"days":4,"absent":0,"absentPct":0},"Oct 25":{"total":107,"avg":21,"max":26,"min":12,"days":5,"absent":0,"absentPct":0},"Nov 25":{"total":102,"avg":26,"max":30,"min":22,"days":4,"absent":0,"absentPct":0},"Dec 25":{"total":98,"avg":25,"max":32,"min":16,"days":4,"absent":3,"absentPct":3.1},"Jan 26":{"total":70,"avg":14,"max":26,"min":2,"days":5,"absent":0,"absentPct":0},"Feb 26":{"total":73,"avg":18,"max":21,"min":14,"days":4,"absent":0,"absentPct":0},"Mar 26":{"total":97,"avg":24,"max":29,"min":20,"days":4,"absent":0,"absentPct":0},"Apr 26":{"total":106,"avg":27,"max":32,"min":20,"days":4,"absent":0,"absentPct":0}}}}},"Sahasra Deepalankara":{"overall":{"total":152425,"avg":600,"max":610,"min":600,"days":254,"absent":29027,"absentPct":19},"monthly":{"Jul 25":{"total":18000,"avg":600,"max":600,"min":600,"days":30,"absent":3310,"absentPct":18.4},"Aug 25":{"total":15600,"avg":600,"max":600,"min":600,"days":26,"absent":3410,"absentPct":21.9},"Sep 25":{"total":12600,"avg":600,"max":600,"min":600,"days":21,"absent":2453,"absentPct":19.5},"Oct 25":{"total":16200,"avg":600,"max":600,"min":600,"days":27,"absent":3015,"absentPct":18.6},"Nov 25":{"total":17415,"avg":601,"max":610,"min":600,"days":29,"absent":3269,"absentPct":18.8},"Dec 25":{"total":16205,"avg":600,"max":605,"min":600,"days":27,"absent":2845,"absentPct":17.6},"Jan 26":{"total":12600,"avg":600,"max":600,"min":600,"days":21,"absent":2425,"absentPct":19.2},"Feb 26":{"total":15000,"avg":600,"max":600,"min":600,"days":25,"absent":2894,"absentPct":19.3},"Mar 26":{"total":15000,"avg":600,"max":600,"min":600,"days":25,"absent":2772,"absentPct":18.5},"Apr 26":{"total":13805,"avg":600,"max":605,"min":600,"days":23,"absent":2634,"absentPct":19.1}},"byType":{"Advance Booking":{"overall":{"total":25,"avg":6,"max":10,"min":5,"days":4,"absent":20,"absentPct":80},"monthly":{"Nov 25":{"total":15,"avg":8,"max":10,"min":5,"days":2,"absent":15,"absentPct":100},"Dec 25":{"total":5,"avg":5,"max":5,"min":5,"days":1,"absent":0,"absentPct":0},"Apr 26":{"total":5,"avg":5,"max":5,"min":5,"days":1,"absent":5,"absentPct":100}}},"Online":{"overall":{"total":152400,"avg":600,"max":600,"min":600,"days":254,"absent":29007,"absentPct":19},"monthly":{"Jul 25":{"total":18000,"avg":600,"max":600,"min":600,"days":30,"absent":3310,"absentPct":18.4},"Aug 25":{"total":15600,"avg":600,"max":600,"min":600,"days":26,"absent":3410,"absentPct":21.9},"Sep 25":{"total":12600,"avg":600,"max":600,"min":600,"days":21,"absent":2453,"absentPct":19.5},"Oct 25":{"total":16200,"avg":600,"max":600,"min":600,"days":27,"absent":3015,"absentPct":18.6},"Nov 25":{"total":17400,"avg":600,"max":600,"min":600,"days":29,"absent":3254,"absentPct":18.7},"Dec 25":{"total":16200,"avg":600,"max":600,"min":600,"days":27,"absent":2845,"absentPct":17.6},"Jan 26":{"total":12600,"avg":600,"max":600,"min":600,"days":21,"absent":2425,"absentPct":19.2},"Feb 26":{"total":15000,"avg":600,"max":600,"min":600,"days":25,"absent":2894,"absentPct":19.3},"Mar 26":{"total":15000,"avg":600,"max":600,"min":600,"days":25,"absent":2772,"absentPct":18.5},"Apr 26":{"total":13800,"avg":600,"max":600,"min":600,"days":23,"absent":2629,"absentPct":19.1}}}}},"Suprabatham":{"overall":{"total":107042,"avg":401,"max":624,"min":37,"days":267,"absent":6018,"absentPct":5.6},"monthly":{"Jul 25":{"total":12574,"avg":406,"max":485,"min":273,"days":31,"absent":653,"absentPct":5.2},"Aug 25":{"total":12396,"avg":400,"max":502,"min":271,"days":31,"absent":688,"absentPct":5.6},"Sep 25":{"total":11012,"avg":380,"max":484,"min":267,"days":29,"absent":755,"absentPct":6.9},"Oct 25":{"total":11395,"avg":393,"max":481,"min":266,"days":29,"absent":679,"absentPct":6},"Nov 25":{"total":11539,"avg":412,"max":552,"min":268,"days":28,"absent":577,"absentPct":5},"Dec 25":{"total":7173,"avg":448,"max":624,"min":295,"days":16,"absent":472,"absentPct":6.6},"Jan 26":{"total":6370,"avg":375,"max":479,"min":37,"days":17,"absent":404,"absentPct":6.3},"Feb 26":{"total":11338,"avg":405,"max":503,"min":283,"days":28,"absent":566,"absentPct":5},"Mar 26":{"total":12384,"avg":399,"max":497,"min":259,"days":31,"absent":629,"absentPct":5.1},"Apr 26":{"total":10861,"avg":402,"max":480,"min":266,"days":27,"absent":595,"absentPct":5.5}},"byType":{"Advance Booking":{"overall":{"total":1112,"avg":12,"max":103,"min":1,"days":94,"absent":258,"absentPct":23.2},"monthly":{"Jul 25":{"total":99,"avg":8,"max":28,"min":1,"days":12,"absent":33,"absentPct":33.3},"Aug 25":{"total":61,"avg":12,"max":41,"min":2,"days":5,"absent":6,"absentPct":9.8},"Sep 25":{"total":464,"avg":36,"max":103,"min":2,"days":13,"absent":122,"absentPct":26.3},"Oct 25":{"total":134,"avg":9,"max":40,"min":2,"days":15,"absent":24,"absentPct":17.9},"Nov 25":{"total":100,"avg":7,"max":14,"min":4,"days":14,"absent":27,"absentPct":27},"Dec 25":{"total":85,"avg":12,"max":36,"min":4,"days":7,"absent":12,"absentPct":14.1},"Jan 26":{"total":43,"avg":7,"max":12,"min":2,"days":6,"absent":12,"absentPct":27.9},"Feb 26":{"total":30,"avg":3,"max":5,"min":2,"days":9,"absent":9,"absentPct":30},"Mar 26":{"total":36,"avg":7,"max":10,"min":2,"days":5,"absent":5,"absentPct":13.9},"Apr 26":{"total":60,"avg":8,"max":12,"min":4,"days":8,"absent":8,"absentPct":13.3}}},"Current Booking":{"overall":{"total":10512,"avg":46,"max":50,"min":22,"days":227,"absent":137,"absentPct":1.3},"monthly":{"Jul 25":{"total":1187,"avg":44,"max":48,"min":22,"days":27,"absent":9,"absentPct":0.8},"Aug 25":{"total":1191,"avg":46,"max":50,"min":42,"days":26,"absent":24,"absentPct":2},"Sep 25":{"total":1152,"avg":46,"max":49,"min":39,"days":25,"absent":21,"absentPct":1.8},"Oct 25":{"total":1104,"avg":46,"max":50,"min":39,"days":24,"absent":13,"absentPct":1.2},"Nov 25":{"total":1123,"avg":47,"max":50,"min":40,"days":24,"absent":10,"absentPct":0.9},"Dec 25":{"total":644,"avg":46,"max":49,"min":43,"days":14,"absent":9,"absentPct":1.4},"Jan 26":{"total":609,"avg":47,"max":50,"min":42,"days":13,"absent":9,"absentPct":1.5},"Feb 26":{"total":1117,"avg":47,"max":50,"min":41,"days":24,"absent":16,"absentPct":1.4},"Mar 26":{"total":1282,"avg":47,"max":50,"min":41,"days":27,"absent":17,"absentPct":1.3},"Apr 26":{"total":1103,"avg":48,"max":50,"min":43,"days":23,"absent":9,"absentPct":0.8}}},"Descritionary":{"overall":{"total":21766,"avg":92,"max":182,"min":2,"days":237,"absent":221,"absentPct":1},"monthly":{"Jul 25":{"total":2662,"avg":95,"max":154,"min":3,"days":28,"absent":22,"absentPct":0.8},"Aug 25":{"total":2605,"avg":100,"max":158,"min":60,"days":26,"absent":21,"absentPct":0.8},"Sep 25":{"total":1964,"avg":79,"max":165,"min":6,"days":25,"absent":29,"absentPct":1.5},"Oct 25":{"total":2221,"avg":82,"max":151,"min":2,"days":27,"absent":24,"absentPct":1.1},"Nov 25":{"total":2551,"avg":94,"max":181,"min":2,"days":27,"absent":25,"absentPct":1},"Dec 25":{"total":1479,"avg":99,"max":174,"min":2,"days":15,"absent":29,"absentPct":2},"Jan 26":{"total":1176,"avg":90,"max":133,"min":48,"days":13,"absent":10,"absentPct":0.9},"Feb 26":{"total":2323,"avg":93,"max":169,"min":3,"days":25,"absent":12,"absentPct":0.5},"Mar 26":{"total":2523,"avg":90,"max":182,"min":3,"days":28,"absent":24,"absentPct":1},"Apr 26":{"total":2262,"avg":98,"max":147,"min":60,"days":23,"absent":25,"absentPct":1.1}}},"Online":{"overall":{"total":68627,"avg":258,"max":271,"min":184,"days":266,"absent":5009,"absentPct":7.3},"monthly":{"Jul 25":{"total":8118,"avg":262,"max":269,"min":248,"days":31,"absent":575,"absentPct":7.1},"Aug 25":{"total":8053,"avg":260,"max":267,"min":218,"days":31,"absent":610,"absentPct":7.6},"Sep 25":{"total":7168,"avg":247,"max":268,"min":184,"days":29,"absent":563,"absentPct":7.9},"Oct 25":{"total":7530,"avg":260,"max":268,"min":226,"days":29,"absent":580,"absentPct":7.7},"Nov 25":{"total":7171,"avg":256,"max":266,"min":247,"days":28,"absent":483,"absentPct":6.7},"Dec 25":{"total":4068,"avg":254,"max":265,"min":226,"days":16,"absent":335,"absentPct":8.2},"Jan 26":{"total":4141,"avg":259,"max":266,"min":249,"days":16,"absent":321,"absentPct":7.8},"Feb 26":{"total":7328,"avg":262,"max":271,"min":253,"days":28,"absent":485,"absentPct":6.6},"Mar 26":{"total":8006,"avg":258,"max":269,"min":248,"days":31,"absent":534,"absentPct":6.7},"Apr 26":{"total":7044,"avg":261,"max":268,"min":243,"days":27,"absent":523,"absentPct":7.4}}},"Donor":{"overall":{"total":5025,"avg":21,"max":169,"min":1,"days":245,"absent":393,"absentPct":7.8},"monthly":{"Jul 25":{"total":508,"avg":17,"max":44,"min":4,"days":30,"absent":14,"absentPct":2.8},"Aug 25":{"total":486,"avg":17,"max":40,"min":1,"days":28,"absent":27,"absentPct":5.6},"Sep 25":{"total":264,"avg":10,"max":23,"min":2,"days":26,"absent":20,"absentPct":7.6},"Oct 25":{"total":406,"avg":17,"max":39,"min":2,"days":24,"absent":38,"absentPct":9.4},"Nov 25":{"total":594,"avg":21,"max":49,"min":5,"days":28,"absent":32,"absentPct":5.4},"Dec 25":{"total":897,"avg":60,"max":169,"min":10,"days":15,"absent":87,"absentPct":9.7},"Jan 26":{"total":401,"avg":25,"max":51,"min":5,"days":16,"absent":52,"absentPct":13},"Feb 26":{"total":540,"avg":20,"max":52,"min":5,"days":27,"absent":44,"absentPct":8.1},"Mar 26":{"total":537,"avg":19,"max":56,"min":4,"days":28,"absent":49,"absentPct":9.1},"Apr 26":{"total":392,"avg":17,"max":57,"min":4,"days":23,"absent":30,"absentPct":7.7}}}}},"Thiruppavada":{"overall":{"total":2448,"avg":68,"max":96,"min":32,"days":36,"absent":6,"absentPct":0.2},"monthly":{"Jul 25":{"total":315,"avg":63,"max":78,"min":32,"days":5,"absent":2,"absentPct":0.6},"Aug 25":{"total":218,"avg":73,"max":84,"min":61,"days":3,"absent":0,"absentPct":0},"Sep 25":{"total":194,"avg":65,"max":77,"min":55,"days":3,"absent":1,"absentPct":0.5},"Oct 25":{"total":176,"avg":59,"max":69,"min":44,"days":3,"absent":0,"absentPct":0},"Nov 25":{"total":262,"avg":66,"max":70,"min":58,"days":4,"absent":0,"absentPct":0},"Dec 25":{"total":360,"avg":90,"max":96,"min":81,"days":4,"absent":1,"absentPct":0.3},"Jan 26":{"total":178,"avg":59,"max":61,"min":57,"days":3,"absent":0,"absentPct":0},"Feb 26":{"total":241,"avg":60,"max":64,"min":52,"days":4,"absent":0,"absentPct":0},"Mar 26":{"total":231,"avg":77,"max":87,"min":65,"days":3,"absent":0,"absentPct":0},"Apr 26":{"total":273,"avg":68,"max":86,"min":53,"days":4,"absent":2,"absentPct":0.7}},"byType":{"Advance Booking":{"overall":{"total":48,"avg":7,"max":12,"min":6,"days":7,"absent":0,"absentPct":0},"monthly":{"Aug 25":{"total":6,"avg":6,"max":6,"min":6,"days":1,"absent":0,"absentPct":0},"Dec 25":{"total":24,"avg":8,"max":12,"min":6,"days":3,"absent":0,"absentPct":0},"Jan 26":{"total":6,"avg":6,"max":6,"min":6,"days":1,"absent":0,"absentPct":0},"Mar 26":{"total":6,"avg":6,"max":6,"min":6,"days":1,"absent":0,"absentPct":0},"Apr 26":{"total":6,"avg":6,"max":6,"min":6,"days":1,"absent":0,"absentPct":0}}},"Current Booking":{"overall":{"total":830,"avg":23,"max":25,"min":13,"days":36,"absent":2,"absentPct":0.2},"monthly":{"Jul 25":{"total":103,"avg":21,"max":25,"min":13,"days":5,"absent":0,"absentPct":0},"Aug 25":{"total":69,"avg":23,"max":24,"min":22,"days":3,"absent":0,"absentPct":0},"Sep 25":{"total":68,"avg":23,"max":24,"min":22,"days":3,"absent":1,"absentPct":1.5},"Oct 25":{"total":73,"avg":24,"max":25,"min":23,"days":3,"absent":0,"absentPct":0},"Nov 25":{"total":93,"avg":23,"max":25,"min":22,"days":4,"absent":0,"absentPct":0},"Dec 25":{"total":88,"avg":22,"max":24,"min":20,"days":4,"absent":1,"absentPct":1.1},"Jan 26":{"total":73,"avg":24,"max":25,"min":24,"days":3,"absent":0,"absentPct":0},"Feb 26":{"total":95,"avg":24,"max":25,"min":22,"days":4,"absent":0,"absentPct":0},"Mar 26":{"total":74,"avg":25,"max":25,"min":24,"days":3,"absent":0,"absentPct":0},"Apr 26":{"total":94,"avg":24,"max":25,"min":21,"days":4,"absent":0,"absentPct":0}}},"Descritionary":{"overall":{"total":1570,"avg":44,"max":73,"min":19,"days":36,"absent":4,"absentPct":0.3},"monthly":{"Jul 25":{"total":212,"avg":42,"max":58,"min":19,"days":5,"absent":2,"absentPct":0.9},"Aug 25":{"total":143,"avg":48,"max":54,"min":38,"days":3,"absent":0,"absentPct":0},"Sep 25":{"total":126,"avg":42,"max":55,"min":31,"days":3,"absent":0,"absentPct":0},"Oct 25":{"total":103,"avg":34,"max":44,"min":19,"days":3,"absent":0,"absentPct":0},"Nov 25":{"total":169,"avg":42,"max":48,"min":35,"days":4,"absent":0,"absentPct":0},"Dec 25":{"total":248,"avg":62,"max":73,"min":54,"days":4,"absent":0,"absentPct":0},"Jan 26":{"total":99,"avg":33,"max":36,"min":30,"days":3,"absent":0,"absentPct":0},"Feb 26":{"total":146,"avg":37,"max":41,"min":27,"days":4,"absent":0,"absentPct":0},"Mar 26":{"total":151,"avg":50,"max":62,"min":35,"days":3,"absent":0,"absentPct":0},"Apr 26":{"total":173,"avg":43,"max":62,"min":32,"days":4,"absent":2,"absentPct":1.2}}}}},"Thomala":{"overall":{"total":7157,"avg":69,"max":100,"min":26,"days":104,"absent":178,"absentPct":2.5},"monthly":{"Jul 25":{"total":936,"avg":67,"max":91,"min":32,"days":14,"absent":44,"absentPct":4.7},"Aug 25":{"total":661,"avg":73,"max":99,"min":51,"days":9,"absent":4,"absentPct":0.6},"Sep 25":{"total":611,"avg":61,"max":81,"min":42,"days":10,"absent":8,"absentPct":1.3},"Oct 25":{"total":738,"avg":67,"max":84,"min":48,"days":11,"absent":19,"absentPct":2.6},"Nov 25":{"total":766,"avg":70,"max":86,"min":59,"days":11,"absent":11,"absentPct":1.4},"Dec 25":{"total":478,"avg":68,"max":94,"min":52,"days":7,"absent":14,"absentPct":2.9},"Jan 26":{"total":473,"avg":68,"max":81,"min":55,"days":7,"absent":18,"absentPct":3.8},"Feb 26":{"total":843,"avg":70,"max":91,"min":49,"days":12,"absent":15,"absentPct":1.8},"Mar 26":{"total":793,"avg":66,"max":88,"min":26,"days":12,"absent":19,"absentPct":2.4},"Apr 26":{"total":858,"avg":78,"max":100,"min":54,"days":11,"absent":26,"absentPct":3}},"byType":{"Advance Booking":{"overall":{"total":252,"avg":5,"max":15,"min":2,"days":46,"absent":92,"absentPct":36.5},"monthly":{"Jul 25":{"total":52,"avg":7,"max":15,"min":2,"days":7,"absent":26,"absentPct":50},"Aug 25":{"total":39,"avg":8,"max":14,"min":4,"days":5,"absent":2,"absentPct":5.1},"Sep 25":{"total":5,"avg":3,"max":3,"min":2,"days":2,"absent":0,"absentPct":0},"Oct 25":{"total":29,"avg":7,"max":10,"min":4,"days":4,"absent":9,"absentPct":31},"Nov 25":{"total":26,"avg":4,"max":5,"min":2,"days":7,"absent":4,"absentPct":15.4},"Dec 25":{"total":7,"avg":4,"max":5,"min":2,"days":2,"absent":5,"absentPct":71.4},"Jan 26":{"total":21,"avg":5,"max":11,"min":2,"days":4,"absent":14,"absentPct":66.7},"Feb 26":{"total":20,"avg":3,"max":5,"min":2,"days":6,"absent":8,"absentPct":40},"Mar 26":{"total":16,"avg":5,"max":7,"min":4,"days":3,"absent":11,"absentPct":68.8},"Apr 26":{"total":37,"avg":6,"max":12,"min":3,"days":6,"absent":13,"absentPct":35.1}}},"Current Booking":{"overall":{"total":996,"avg":10,"max":10,"min":5,"days":104,"absent":10,"absentPct":1},"monthly":{"Jul 25":{"total":133,"avg":10,"max":10,"min":5,"days":14,"absent":5,"absentPct":3.8},"Aug 25":{"total":87,"avg":10,"max":10,"min":8,"days":9,"absent":0,"absentPct":0},"Sep 25":{"total":97,"avg":10,"max":10,"min":8,"days":10,"absent":0,"absentPct":0},"Oct 25":{"total":104,"avg":9,"max":10,"min":8,"days":11,"absent":3,"absentPct":2.9},"Nov 25":{"total":103,"avg":9,"max":10,"min":6,"days":11,"absent":0,"absentPct":0},"Dec 25":{"total":66,"avg":9,"max":10,"min":8,"days":7,"absent":1,"absentPct":1.5},"Jan 26":{"total":66,"avg":9,"max":10,"min":8,"days":7,"absent":0,"absentPct":0},"Feb 26":{"total":118,"avg":10,"max":10,"min":9,"days":12,"absent":0,"absentPct":0},"Mar 26":{"total":116,"avg":10,"max":10,"min":8,"days":12,"absent":0,"absentPct":0},"Apr 26":{"total":106,"avg":10,"max":10,"min":8,"days":11,"absent":1,"absentPct":0.9}}},"Descritionary":{"overall":{"total":4876,"avg":47,"max":75,"min":11,"days":103,"absent":15,"absentPct":0.3},"monthly":{"Jul 25":{"total":609,"avg":44,"max":71,"min":11,"days":14,"absent":3,"absentPct":0.5},"Aug 25":{"total":443,"avg":49,"max":73,"min":31,"days":9,"absent":0,"absentPct":0},"Sep 25":{"total":412,"avg":41,"max":60,"min":23,"days":10,"absent":2,"absentPct":0.5},"Oct 25":{"total":495,"avg":45,"max":63,"min":28,"days":11,"absent":0,"absentPct":0},"Nov 25":{"total":528,"avg":48,"max":66,"min":37,"days":11,"absent":0,"absentPct":0},"Dec 25":{"total":336,"avg":48,"max":74,"min":33,"days":7,"absent":2,"absentPct":0.6},"Jan 26":{"total":319,"avg":46,"max":60,"min":35,"days":7,"absent":0,"absentPct":0},"Feb 26":{"total":586,"avg":49,"max":70,"min":29,"days":12,"absent":0,"absentPct":0},"Mar 26":{"total":543,"avg":49,"max":64,"min":19,"days":11,"absent":1,"absentPct":0.2},"Apr 26":{"total":605,"avg":55,"max":75,"min":34,"days":11,"absent":7,"absentPct":1.2}}},"Online":{"overall":{"total":1033,"avg":10,"max":11,"min":8,"days":104,"absent":61,"absentPct":5.9},"monthly":{"Jul 25":{"total":142,"avg":10,"max":11,"min":8,"days":14,"absent":10,"absentPct":7},"Aug 25":{"total":92,"avg":10,"max":11,"min":8,"days":9,"absent":2,"absentPct":2.2},"Sep 25":{"total":97,"avg":10,"max":11,"min":8,"days":10,"absent":6,"absentPct":6.2},"Oct 25":{"total":110,"avg":10,"max":11,"min":8,"days":11,"absent":7,"absentPct":6.4},"Nov 25":{"total":109,"avg":10,"max":11,"min":8,"days":11,"absent":7,"absentPct":6.4},"Dec 25":{"total":69,"avg":10,"max":11,"min":9,"days":7,"absent":6,"absentPct":8.7},"Jan 26":{"total":67,"avg":10,"max":11,"min":8,"days":7,"absent":4,"absentPct":6},"Feb 26":{"total":119,"avg":10,"max":11,"min":8,"days":12,"absent":7,"absentPct":5.9},"Mar 26":{"total":118,"avg":10,"max":11,"min":8,"days":12,"absent":7,"absentPct":5.9},"Apr 26":{"total":110,"avg":10,"max":11,"min":8,"days":11,"absent":5,"absentPct":4.5}}}}},"USSE":{"overall":{"total":12377,"avg":45,"max":158,"min":4,"days":277,"absent":4849,"absentPct":39.2},"monthly":{"Jul 25":{"total":1339,"avg":45,"max":82,"min":24,"days":30,"absent":528,"absentPct":39.4},"Aug 25":{"total":938,"avg":34,"max":64,"min":13,"days":28,"absent":260,"absentPct":27.7},"Sep 25":{"total":897,"avg":35,"max":89,"min":4,"days":26,"absent":354,"absentPct":39.5},"Oct 25":{"total":1294,"avg":46,"max":99,"min":22,"days":28,"absent":586,"absentPct":45.3},"Nov 25":{"total":1449,"avg":52,"max":92,"min":19,"days":28,"absent":562,"absentPct":38.8},"Dec 25":{"total":1726,"avg":62,"max":158,"min":27,"days":28,"absent":593,"absentPct":34.4},"Jan 26":{"total":986,"avg":43,"max":96,"min":25,"days":23,"absent":413,"absentPct":41.9},"Feb 26":{"total":1328,"avg":47,"max":90,"min":18,"days":28,"absent":591,"absentPct":44.5},"Mar 26":{"total":1287,"avg":42,"max":94,"min":23,"days":31,"absent":549,"absentPct":42.7},"Apr 26":{"total":1133,"avg":42,"max":96,"min":24,"days":27,"absent":413,"absentPct":36.5}},"byType":{"Advance Booking":{"overall":{"total":12377,"avg":45,"max":158,"min":4,"days":277,"absent":4849,"absentPct":39.2},"monthly":{"Jul 25":{"total":1339,"avg":45,"max":82,"min":24,"days":30,"absent":528,"absentPct":39.4},"Aug 25":{"total":938,"avg":34,"max":64,"min":13,"days":28,"absent":260,"absentPct":27.7},"Sep 25":{"total":897,"avg":35,"max":89,"min":4,"days":26,"absent":354,"absentPct":39.5},"Oct 25":{"total":1294,"avg":46,"max":99,"min":22,"days":28,"absent":586,"absentPct":45.3},"Nov 25":{"total":1449,"avg":52,"max":92,"min":19,"days":28,"absent":562,"absentPct":38.8},"Dec 25":{"total":1726,"avg":62,"max":158,"min":27,"days":28,"absent":593,"absentPct":34.4},"Jan 26":{"total":986,"avg":43,"max":96,"min":25,"days":23,"absent":413,"absentPct":41.9},"Feb 26":{"total":1328,"avg":47,"max":90,"min":18,"days":28,"absent":591,"absentPct":44.5},"Mar 26":{"total":1287,"avg":42,"max":94,"min":23,"days":31,"absent":549,"absentPct":42.7},"Apr 26":{"total":1133,"avg":42,"max":96,"min":24,"days":27,"absent":413,"absentPct":36.5}}}}},"Unjal Seva":{"overall":{"total":39760,"avg":150,"max":160,"min":150,"days":265,"absent":6579,"absentPct":16.5},"monthly":{"Jul 25":{"total":4500,"avg":150,"max":150,"min":150,"days":30,"absent":702,"absentPct":15.6},"Aug 25":{"total":4200,"avg":150,"max":150,"min":150,"days":28,"absent":721,"absentPct":17.2},"Sep 25":{"total":3300,"avg":150,"max":150,"min":150,"days":22,"absent":575,"absentPct":17.4},"Oct 25":{"total":4050,"avg":150,"max":150,"min":150,"days":27,"absent":664,"absentPct":16.4},"Nov 25":{"total":4350,"avg":150,"max":150,"min":150,"days":29,"absent":697,"absentPct":16},"Dec 25":{"total":4050,"avg":150,"max":150,"min":150,"days":27,"absent":678,"absentPct":16.7},"Jan 26":{"total":3150,"avg":150,"max":150,"min":150,"days":21,"absent":513,"absentPct":16.3},"Feb 26":{"total":4200,"avg":150,"max":150,"min":150,"days":28,"absent":718,"absentPct":17.1},"Mar 26":{"total":4050,"avg":150,"max":150,"min":150,"days":27,"absent":639,"absentPct":15.8},"Apr 26":{"total":3910,"avg":150,"max":160,"min":150,"days":26,"absent":672,"absentPct":17.2}},"byType":{"Advance Booking":{"overall":{"total":10,"avg":10,"max":10,"min":10,"days":1,"absent":0,"absentPct":0},"monthly":{"Apr 26":{"total":10,"avg":10,"max":10,"min":10,"days":1,"absent":0,"absentPct":0}}},"Online":{"overall":{"total":39750,"avg":150,"max":150,"min":150,"days":265,"absent":6579,"absentPct":16.6},"monthly":{"Jul 25":{"total":4500,"avg":150,"max":150,"min":150,"days":30,"absent":702,"absentPct":15.6},"Aug 25":{"total":4200,"avg":150,"max":150,"min":150,"days":28,"absent":721,"absentPct":17.2},"Sep 25":{"total":3300,"avg":150,"max":150,"min":150,"days":22,"absent":575,"absentPct":17.4},"Oct 25":{"total":4050,"avg":150,"max":150,"min":150,"days":27,"absent":664,"absentPct":16.4},"Nov 25":{"total":4350,"avg":150,"max":150,"min":150,"days":29,"absent":697,"absentPct":16},"Dec 25":{"total":4050,"avg":150,"max":150,"min":150,"days":27,"absent":678,"absentPct":16.7},"Jan 26":{"total":3150,"avg":150,"max":150,"min":150,"days":21,"absent":513,"absentPct":16.3},"Feb 26":{"total":4200,"avg":150,"max":150,"min":150,"days":28,"absent":718,"absentPct":17.1},"Mar 26":{"total":4050,"avg":150,"max":150,"min":150,"days":27,"absent":639,"absentPct":15.8},"Apr 26":{"total":3900,"avg":150,"max":150,"min":150,"days":26,"absent":672,"absentPct":17.2}}}}}};
+
+/* ═══════════════════ SEVA DATA CARDS ═══════════════════ */
+
+const DS_MO = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26'];
+
+function switchSevaTab(btn, panelId) {
+  var card = btn.closest('.seva-stat-card');
+  card.querySelectorAll('.seva-tab-btn').forEach(function(b){ b.classList.remove('on'); });
+  card.querySelectorAll('.seva-tab-panel').forEach(function(p){ p.classList.remove('on'); });
+  btn.classList.add('on');
+  var panel = document.getElementById(panelId);
+  if (panel) panel.classList.add('on');
+}
+
+function toggleTypeMonthly(btn) {
+  var wrap = btn.closest('.type-blk').querySelector('.type-monthly-wrap');
+  var isOpen = wrap.classList.toggle('open');
+  btn.textContent = isOpen ? '\u25b2 hide' : '\u25bc monthly';
+}
+
+function buildSevaCards() {
+  var grid = document.getElementById('sevaCardsGrid');
+  if (!grid) return;
+
+  var F  = function(n){ return n>=1e6?(n/1e6).toFixed(2)+'M':n>=1000?(n/1000).toFixed(1)+'K':String(n); };
+  var FF = function(n){ return n.toLocaleString('en-IN'); };
+  var AP = function(p){ return p.toFixed(1)+'%'; };
+  var absPctClass = function(p){ return p<5?'ap-lo':p<12?'ap-mid':'ap-hi'; };
+
+  var sevas = Object.keys(DS).sort(function(a,b){ return (D.sevaTotal[b]||0)-(D.sevaTotal[a]||0); });
+
+  sevas.forEach(function(seva) {
+    var data = DS[seva];
+    var color = SEVA_COLORS[seva]||'#ffd700';
+    var sid = seva.replace(/[^a-zA-Z0-9]/g,'_');
+    var ov = data.overall;
+    var activeTypes = Object.keys(data.byType).filter(function(t){ return data.byType[t].overall.total>0; });
+    var hasTypes = activeTypes.length>0;
+
+    var monthRows = DS_MO.map(function(m) {
+      var ms = data.monthly[m]; if (!ms) return '';
+      return '<tr>'
+        +'<td>'+m+'</td>'
+        +'<td class="r">'+ms.days+'</td>'
+        +'<td class="r">'+FF(ms.total)+'</td>'
+        +'<td class="r">'+ms.avg+'</td>'
+        +'<td class="r">'+ms.max+'</td>'
+        +'<td class="r">'+ms.min+'</td>'
+        +'<td class="r"><span class="ap-badge '+absPctClass(ms.absentPct)+'">'+AP(ms.absentPct)+'</span></td>'
+        +'<td class="r">'+FF(ms.absent)+'</td>'
+        +'</tr>';
+    }).join('');
+
+    var typeBlocks = activeTypes.map(function(type) {
+      var tdata = data.byType[type]; var tv = tdata.overall; var tc = TYPE_COLORS[type]||'#999';
+      var tmRows = DS_MO.map(function(m){
+        var ms = tdata.monthly[m]; if (!ms) return '';
+        return '<tr><td>'+m+'</td><td class="r">'+FF(ms.total)+'</td><td class="r">'+ms.avg+'</td><td class="r">'+ms.max+'</td><td class="r">'+ms.min+'</td>'
+          +'<td class="r"><span class="ap-badge '+absPctClass(ms.absentPct)+'">'+AP(ms.absentPct)+'</span></td>'
+          +'<td class="r">'+FF(ms.absent)+'</td></tr>';
+      }).join('');
+      return '<div class="type-blk">'
+        +'<div class="type-blk-hdr">'
+          +'<div class="type-dot" style="background:'+tc+'"></div>'
+          +'<div class="type-lbl">'+type+'</div>'
+          +'<span class="ap-badge '+absPctClass(tv.absentPct)+'" style="margin-right:6px">'+AP(tv.absentPct)+' absent</span>'
+          +'<button class="type-toggle" onclick="toggleTypeMonthly(this)">\u25bc monthly</button>'
+        +'</div>'
+        +'<div class="type-overall">'
+          +'<div class="type-kpi" style="--tsc:'+tc+'"><div class="tv">'+F(tv.total)+'</div><div class="tl">Total</div></div>'
+          +'<div class="type-kpi" style="--tsc:'+tc+'"><div class="tv">'+tv.avg+'</div><div class="tl">Avg/Day</div></div>'
+          +'<div class="type-kpi" style="--tsc:'+tc+'"><div class="tv">'+tv.max+'</div><div class="tl">Peak</div></div>'
+          +'<div class="type-kpi" style="--tsc:'+tc+'"><div class="tv">'+tv.min+'</div><div class="tl">Min</div></div>'
+          +'<div class="type-kpi" style="--tsc:#f87171"><div class="tv">'+AP(tv.absentPct)+'</div><div class="tl">Absent %</div></div>'
+          +'<div class="type-kpi" style="--tsc:#f87171"><div class="tv">'+F(tv.absent)+'</div><div class="tl">No-Shows</div></div>'
+        +'</div>'
+        +'<div class="type-monthly-wrap">'
+          +'<table class="stbl"><thead><tr>'
+            +'<th>Month</th><th class="r">Total</th><th class="r">Avg/Day</th><th class="r">Peak</th><th class="r">Min</th>'
+            +'<th class="r">Absent%</th><th class="r">No-Shows</th>'
+          +'</tr></thead><tbody>'+tmRows+'</tbody></table>'
+        +'</div>'
+      +'</div>';
+    }).join('');
+
+    var typeTabBtn = hasTypes ? '<button class="seva-tab-btn" onclick="switchSevaTab(this,\'tp_t_'+sid+'\')">By Booking Type</button>' : '';
+    var typePanel  = hasTypes ? '<div class="seva-tab-panel" id="tp_t_'+sid+'">'+typeBlocks+'</div>' : '';
+
+    var card = document.createElement('div');
+    card.className = 'seva-stat-card';
+    card.style.setProperty('--sc', color);
+    card.innerHTML =
+      '<div class="seva-card-hdr">'
+        +'<div class="seva-card-title">'+seva+'</div>'
+        +'<div class="seva-card-badge">'+FF(ov.total)+' booked</div>'
+      +'</div>'
+      +'<div class="seva-stats-row">'
+        +'<div class="seva-stat-box"><div class="sv">'+F(ov.total)+'</div><div class="sl">Total</div></div>'
+        +'<div class="seva-stat-box"><div class="sv">'+ov.avg+'</div><div class="sl">Avg / Day</div></div>'
+        +'<div class="seva-stat-box"><div class="sv">'+ov.max+'</div><div class="sl">Peak Day</div></div>'
+        +'<div class="seva-stat-box"><div class="sv">'+ov.min+'</div><div class="sl">Min Day</div></div>'
+        +'<div class="seva-stat-box" style="--sc:#f87171"><div class="sv" style="color:#f87171">'+AP(ov.absentPct)+'</div><div class="sl">Absent Rate</div></div>'
+        +'<div class="seva-stat-box" style="--sc:#f87171"><div class="sv" style="color:#fca5a5">'+F(ov.absent)+'</div><div class="sl">No-Shows</div></div>'
+      +'</div>'
+      +'<div class="seva-tabs">'
+        +'<button class="seva-tab-btn on" onclick="switchSevaTab(this,\'tp_m_'+sid+'\')">Monthly</button>'
+        +typeTabBtn
+      +'</div>'
+      +'<div class="seva-tab-panel on" id="tp_m_'+sid+'">'
+        +'<table class="stbl"><thead><tr>'
+          +'<th>Month</th><th class="r">Op.Days</th><th class="r">Total</th>'
+          +'<th class="r">Avg/Day</th><th class="r">Peak</th><th class="r">Min</th>'
+          +'<th class="r">Absent%</th><th class="r">No-Shows</th>'
+        +'</tr></thead><tbody>'+monthRows+'</tbody></table>'
+      +'</div>'
+      +typePanel;
+
+    grid.appendChild(card);
+  });
+}
+
+buildSevaCards();
+
+
+/* ══════════════════════ SEVA SUMMARY TABLE ══════════════════════ */
+(function() {
+
+var SUM_MO = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26'];
+
+var COLS = [
+  { key: null,              label: 'All Bookings',    sub: 'all',    cls: 'grp-all'    },
+  { key: 'Online',          label: 'Online',          sub: 'online', cls: 'grp-online' },
+  { key: 'Descritionary',   label: 'Discretionary',   sub: 'disc',   cls: 'grp-disc'   },
+  { key: 'Current Booking', label: 'Current Booking', sub: 'curr',   cls: 'grp-curr'   },
+  { key: 'Advance Booking', label: 'Advance Booking', sub: 'adv',    cls: 'grp-adv'    }
+];
+
+function computeRange(seva, typeKey, months) {
+  var total = 0, days = 0, absent = 0, peak = 0;
+  for (var i = 0; i < months.length; i++) {
+    var m = months[i];
+    var ms;
+    if (typeKey === null) {
+      ms = DS[seva] && DS[seva].monthly && DS[seva].monthly[m];
+    } else {
+      ms = DS[seva] && DS[seva].byType && DS[seva].byType[typeKey] &&
+           DS[seva].byType[typeKey].monthly && DS[seva].byType[typeKey].monthly[m];
+    }
+    if (!ms) continue;
+    total  += ms.total || 0;
+    days   += ms.days  || 0;
+    absent += ms.absent|| 0;
+    if ((ms.max || 0) > peak) peak = ms.max;
+  }
+  if (!days || !total) return null;
+  return {
+    avg:       Math.round(total / days),
+    peak:      peak,
+    absentPct: (absent / total * 100)
+  };
+}
+
+function absClass(p) {
+  return p < 5 ? 'abs-lo' : p < 12 ? 'abs-mid' : 'abs-hi';
+}
+
+function buildSummaryTable(fromIdx, toIdx) {
+  var months = SUM_MO.slice(fromIdx, toIdx + 1);
+  var sevas  = Object.keys(DS).sort(function(a, b) {
+    return (D.sevaTotal[b] || 0) - (D.sevaTotal[a] || 0);
+  });
+
+  /* ── header ── */
+  var h = '<thead>';
+  h += '<tr>';
+  h += '<th class="seva-hdr" rowspan="2">Type of Seva</th>';
+  for (var ci = 0; ci < COLS.length; ci++) {
+    var c = COLS[ci];
+    var divCls = ci > 0 ? ' grp-div' : '';
+    h += '<th colspan="3" class="' + c.cls + divCls + '">' + c.label + '</th>';
+  }
+  h += '</tr><tr>';
+  for (var ci = 0; ci < COLS.length; ci++) {
+    var c = COLS[ci];
+    var divCls = ci > 0 ? ' grp-div' : '';
+    h += '<th class="sub-' + c.sub + divCls + '">Avg<br>Per Day</th>';
+    h += '<th class="sub-' + c.sub + '">Peak<br>Per Day</th>';
+    h += '<th class="sub-' + c.sub + '">Absent<br>Rate</th>';
+  }
+  h += '</tr></thead>';
+
+  /* ── body ── */
+  h += '<tbody>';
+  for (var si = 0; si < sevas.length; si++) {
+    var seva  = sevas[si];
+    var color = SEVA_COLORS[seva] || '#333';
+    h += '<tr>';
+    h += '<td class="seva-cell" style="color:' + color + '">' + seva + '</td>';
+    for (var ci = 0; ci < COLS.length; ci++) {
+      var c   = COLS[ci];
+      var r   = computeRange(seva, c.key, months);
+      var div = ci > 0 ? ' grp-div' : '';
+      if (!r) {
+        h += '<td class="nil' + div + '">—</td><td class="nil">—</td><td class="nil">—</td>';
+      } else {
+        var ap = r.absentPct.toFixed(1) + '%';
+        h += '<td class="' + div + '">' + r.avg  + '</td>';
+        h += '<td>' + r.peak + '</td>';
+        h += '<td class="' + absClass(r.absentPct) + '">' + ap + '</td>';
+      }
+    }
+    h += '</tr>';
+  }
+  h += '</tbody>';
+
+  document.getElementById('summaryTbl').innerHTML = h;
+}
+
+function updateDsFill() {
+  var fromEl = document.getElementById('dsFrom');
+  var toEl   = document.getElementById('dsTo');
+  var fill   = document.getElementById('dsFill');
+  var badge  = document.getElementById('scBadge');
+  var from = parseInt(fromEl.value);
+  var to   = parseInt(toEl.value);
+
+  var pct  = 100 / (SUM_MO.length - 1);
+  var left  = from * pct;
+  var right = to   * pct;
+  fill.style.left  = left + '%';
+  fill.style.width = Math.max(0, right - left) + '%';
+  badge.innerHTML  = SUM_MO[from] + ' &rarr; ' + SUM_MO[to];
+}
+
+window.onDsInput = function() {
+  var fromEl = document.getElementById('dsFrom');
+  var toEl   = document.getElementById('dsTo');
+  var from = parseInt(fromEl.value);
+  var to   = parseInt(toEl.value);
+
+  /* prevent handles from crossing */
+  if (from > to) { fromEl.value = to; from = to; }
+  if (to < from) { toEl.value   = from; to = from; }
+
+  updateDsFill();
+  buildSummaryTable(from, to);
+};
+
+function initSummaryTable() {
+  /* render month labels under slider */
+  var wrap    = document.getElementById('dualSlider');
+  var labDiv  = document.getElementById('dsMonthLabels');
+  var pct     = 100 / (SUM_MO.length - 1);
+  var labHtml = '';
+  for (var i = 0; i < SUM_MO.length; i++) {
+    labHtml += '<span style="position:absolute;left:' + (i * pct).toFixed(1) + '%;transform:translateX(-50%)">' + SUM_MO[i] + '</span>';
+  }
+  labDiv.innerHTML = labHtml;
+
+  updateDsFill();
+  buildSummaryTable(0, 9);
+}
+
+/* run after existing runAll() */
+var _origRunAll = typeof runAll === 'function' ? runAll : null;
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSummaryTable);
+} else {
+  initSummaryTable();
+}
+
+})();
+
 </script>
 </body>
 </html>
