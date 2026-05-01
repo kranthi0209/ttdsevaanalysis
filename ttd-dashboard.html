@@ -1,0 +1,2324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TTD Sevas — Analytics Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="./chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg-deep: #040200;
+      --bg-page: #080400;
+      --bg-card: #110700;
+      --bg-card2: #1a0d00;
+      --gold: #c8962a;
+      --gold-light: #e8b84b;
+      --gold-bright: #ffd700;
+      --saffron: #e05c00;
+      --saffron-light: #ff7a1a;
+      --cream: #fdf3e7;
+      --cream-dim: #c9b38a;
+      --cream-muted: #7a6548;
+      --border: rgba(200,150,42,0.3);
+      --border-bright: rgba(200,150,42,0.6);
+      --card-shadow: 0 4px 32px rgba(0,0,0,0.85), inset 0 1px 0 rgba(200,150,42,0.08);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      background: var(--bg-page);
+      color: var(--cream);
+      font-family: 'Noto Serif', Georgia, serif;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse 60% 40% at 10% 0%, rgba(200,150,42,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 90% 100%, rgba(224,92,0,0.05) 0%, transparent 70%),
+        repeating-linear-gradient(60deg, transparent, transparent 120px, rgba(200,150,42,0.012) 120px, rgba(200,150,42,0.012) 121px),
+        repeating-linear-gradient(-60deg, transparent, transparent 120px, rgba(200,150,42,0.012) 120px, rgba(200,150,42,0.012) 121px);
+    }
+
+    /* ──────────────── HEADER ──────────────── */
+    .header {
+      position: relative;
+      background: linear-gradient(180deg, #1d0a00 0%, #0f0500 70%, transparent 100%);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute; top:0; left:0; right:0; height:3px;
+      background: linear-gradient(90deg, transparent 0%, var(--saffron) 20%, var(--gold-bright) 50%, var(--saffron) 80%, transparent 100%);
+    }
+    .header::after {
+      content: '';
+      position: absolute; top:3px; left:0; right:0; height:1px;
+      background: linear-gradient(90deg, transparent, rgba(255,215,0,0.3), transparent);
+    }
+    .header-lotus-l, .header-lotus-r {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-size: 80px; opacity:0.04; pointer-events:none;
+      color: var(--gold-bright);
+    }
+    .header-lotus-l { left: 20px; }
+    .header-lotus-r { right: 20px; }
+    .header-inner {
+      max-width: 1440px; margin: 0 auto; padding: 36px 28px 28px;
+      display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
+    }
+    .header-om {
+      font-size: 80px; line-height:1; flex-shrink:0;
+      color: var(--gold-bright);
+      text-shadow: 0 0 25px rgba(255,215,0,0.5), 0 0 60px rgba(255,140,0,0.3);
+      animation: omPulse 5s ease-in-out infinite;
+    }
+    @keyframes omPulse {
+      0%,100%{ text-shadow: 0 0 25px rgba(255,215,0,0.5), 0 0 50px rgba(255,140,0,0.25); }
+      50%{ text-shadow: 0 0 40px rgba(255,215,0,0.85), 0 0 80px rgba(255,140,0,0.5), 0 0 120px rgba(255,215,0,0.2); }
+    }
+    .header-text { flex:1; min-width:240px; }
+    .header-ttd {
+      font-family:'Cinzel Decorative', serif; font-weight:700;
+      font-size: clamp(16px, 2.8vw, 30px);
+      color: var(--gold-bright);
+      text-shadow: 0 2px 20px rgba(255,215,0,0.35);
+      letter-spacing: 0.06em; line-height:1.3;
+    }
+    .header-sub {
+      font-family:'Cinzel', serif; font-size: clamp(11px,1.6vw,17px);
+      color: var(--cream-dim); margin-top:5px; letter-spacing:0.12em;
+    }
+    .header-divider {
+      display:flex; align-items:center; gap:10px; margin:10px 0 8px;
+    }
+    .header-divider span { flex:1; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+    .header-divider em {
+      font-style:normal; font-family:'Cinzel',serif; font-size:10px;
+      color: var(--saffron-light); letter-spacing:0.18em; white-space:nowrap;
+    }
+    .header-range {
+      font-size:12px; color: var(--cream-muted); letter-spacing:0.04em; font-style:italic;
+    }
+    .header-badges {
+      display:flex; gap:12px; flex-shrink:0; flex-wrap:wrap;
+    }
+    .header-badge {
+      text-align:center; padding:12px 18px;
+      background: rgba(200,150,42,0.07);
+      border:1px solid var(--border); border-radius:10px;
+      min-width:90px;
+    }
+    .header-badge .v {
+      font-family:'Cinzel',serif; font-size:22px; font-weight:700;
+      color: var(--gold-bright); display:block; line-height:1;
+    }
+    .header-badge .l {
+      font-size:9px; color:var(--cream-muted);
+      letter-spacing:0.12em; text-transform:uppercase; margin-top:4px;
+    }
+
+    /* ──────────────── KPI CARDS ──────────────── */
+    .kpi-row {
+      max-width:1440px; margin:28px auto 0; padding:0 28px;
+      display:grid; grid-template-columns:repeat(5,1fr); gap:14px;
+    }
+    @media(max-width:1100px){ .kpi-row{ grid-template-columns:repeat(3,1fr); } }
+    @media(max-width:700px){ .kpi-row{ grid-template-columns:repeat(2,1fr); } }
+    .kpi {
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:12px; padding:18px 20px; position:relative; overflow:hidden;
+      box-shadow: var(--card-shadow);
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+      cursor: default;
+    }
+    .kpi:hover {
+      transform:translateY(-3px);
+      border-color: var(--border-bright);
+      box-shadow:0 10px 40px rgba(0,0,0,0.9), 0 0 25px rgba(200,150,42,0.12);
+    }
+    .kpi::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background:linear-gradient(90deg, transparent, var(--kc, var(--gold)), transparent);
+    }
+    .kpi-icon {
+      position:absolute; right:14px; top:50%; transform:translateY(-50%);
+      font-size:44px; opacity:0.08; pointer-events:none;
+    }
+    .kpi-label {
+      font-size:9px; text-transform:uppercase; letter-spacing:0.18em;
+      color:var(--cream-muted); margin-bottom:8px;
+    }
+    .kpi-val {
+      font-family:'Cinzel',serif; font-size:clamp(20px,2vw,28px); font-weight:700;
+      color:var(--kc, var(--gold-bright)); line-height:1;
+      text-shadow: 0 0 20px rgba(255,215,0,0.2);
+    }
+    .kpi-sub { font-size:10px; color:var(--cream-muted); margin-top:6px; line-height:1.4; }
+    .kpi-track {
+      height:3px; background:rgba(200,150,42,0.1); border-radius:2px; margin-top:10px; overflow:hidden;
+    }
+    .kpi-fill {
+      height:100%; border-radius:2px;
+      background:linear-gradient(90deg, var(--kc,var(--gold)), var(--gold-bright));
+      transition: width 1.8s cubic-bezier(0.4,0,0.2,1); width:0%;
+    }
+
+    /* ──────────────── LAYOUT ──────────────── */
+    .page-body { max-width:1440px; margin:0 auto; padding:0 28px 60px; }
+    .section-hdr {
+      font-family:'Cinzel',serif; font-size:11px; letter-spacing:0.22em;
+      text-transform:uppercase; color:var(--gold);
+      display:flex; align-items:center; gap:12px;
+      margin:32px 0 16px;
+    }
+    .section-hdr::before, .section-hdr::after {
+      content:''; flex:1; height:1px; background:var(--border);
+    }
+    .row { display:grid; gap:18px; }
+    .row.r1{ grid-template-columns:1fr; }
+    .row.r2{ grid-template-columns:1fr 1fr; }
+    .row.r3{ grid-template-columns:1fr 1fr 1fr; }
+    .row.r6040{ grid-template-columns:3fr 2fr; }
+    .row.r4060{ grid-template-columns:2fr 3fr; }
+    @media(max-width:950px){
+      .row.r2,.row.r6040,.row.r4060{ grid-template-columns:1fr; }
+    }
+    @media(max-width:700px){ .row.r3{ grid-template-columns:1fr; } }
+
+    /* ──────────────── CHART CARD ──────────────── */
+    .card {
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:12px; padding:22px 24px; position:relative; overflow:hidden;
+      box-shadow:var(--card-shadow);
+    }
+    .card::before {
+      content:''; position:absolute; top:0; left:25%; right:25%; height:1px;
+      background:linear-gradient(90deg,transparent,rgba(200,150,42,0.4),transparent);
+    }
+    .card-hdr { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; gap:10px; }
+    .card-title { font-family:'Cinzel',serif; font-size:13px; font-weight:600; color:var(--gold-light); letter-spacing:0.06em; }
+    .card-desc { font-size:10px; color:var(--cream-muted); margin-top:3px; font-style:italic; }
+    .card-badge {
+      font-size:9px; padding:3px 10px; border-radius:20px;
+      background:rgba(200,150,42,0.1); border:1px solid var(--border);
+      color:var(--cream-muted); letter-spacing:0.06em; white-space:nowrap; flex-shrink:0;
+    }
+    .chart-wrap { position:relative; }
+    /* card flex layout keeps chart canvas consistent within cards */
+    .card { display:flex; flex-direction:column; }
+    .card-hdr { flex-shrink:0; }
+    .chart-filters { flex-shrink:0; }
+    .chart-wrap { flex-shrink:0; }
+    .chart-insights { flex-shrink:0; }
+
+    /* ──────────────── INSIGHT ──────────────── */
+    .insight {
+      margin-top:12px; padding:9px 14px;
+      background:rgba(200,150,42,0.05);
+      border-left:2px solid var(--gold);
+      border-radius:0 6px 6px 0;
+      font-size:11px; color:var(--cream-dim); line-height:1.55;
+    }
+    .insight strong { color:var(--gold-light); }
+
+    /* ──────────────── CONTROLS ──────────────── */
+    .ctrl-btn {
+      padding:4px 11px; border:1px solid var(--border); border-radius:5px;
+      background:transparent; color:var(--cream-muted); font-size:10px;
+      cursor:pointer; letter-spacing:0.05em; transition:all .2s;
+      font-family:'Noto Serif',serif;
+    }
+    .ctrl-btn:hover, .ctrl-btn.on { background:rgba(200,150,42,0.12); border-color:var(--gold); color:var(--gold-bright); }
+    .ctrl-grp { display:flex; gap:6px; }
+    select.ctrl-sel {
+      background:var(--bg-card2); border:1px solid var(--border);
+      color:var(--cream); padding:6px 12px; border-radius:7px;
+      font-family:'Noto Serif',serif; font-size:11px; cursor:pointer;
+      transition:border-color .2s;
+    }
+    select.ctrl-sel:hover { border-color:var(--gold); }
+    select.ctrl-sel option { background:#1a0d00; }
+
+    /* ──────────────── TABLE ──────────────── */
+    .tbl-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:11px; }
+    th {
+      font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.14em;
+      text-transform:uppercase; color:var(--gold); padding:11px 14px;
+      border-bottom:1px solid var(--border); text-align:left; white-space:nowrap;
+      background:rgba(200,150,42,0.04);
+    }
+    th.r{ text-align:right; }
+    td { padding:9px 14px; border-bottom:1px solid rgba(200,150,42,0.07); color:var(--cream-dim); vertical-align:middle; }
+    td.r{ text-align:right; color:var(--cream); font-family:'Cinzel',serif; font-size:12px; }
+    tr:hover td{ background:rgba(200,150,42,0.04); }
+    .dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:8px; vertical-align:middle; }
+    .pbar { width:70px; height:4px; background:rgba(200,150,42,0.1); border-radius:2px; overflow:hidden; display:inline-block; vertical-align:middle; margin-right:6px; }
+    .pbar-f { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--gold),var(--gold-bright)); }
+    .vrate { font-size:10px; padding:2px 7px; border-radius:10px; font-family:'Cinzel',serif; }
+    .vrate.hi { background:rgba(74,222,128,0.12); color:#4ade80; border:1px solid rgba(74,222,128,0.3); }
+    .vrate.mid { background:rgba(251,191,36,0.12); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
+    .vrate.lo { background:rgba(248,113,113,0.12); color:#f87171; border:1px solid rgba(248,113,113,0.3); }
+
+    /* ──────────────── FOOTER ──────────────── */
+    .footer {
+      margin-top:48px; padding:28px 28px 20px;
+      border-top:1px solid var(--border); text-align:center; position:relative;
+    }
+    .footer::before {
+      content:'ॐ'; position:absolute; top:-18px; left:50%; transform:translateX(-50%);
+      font-size:28px; background:var(--bg-page); padding:2px 14px;
+      color:var(--gold-bright); text-shadow:0 0 20px rgba(255,215,0,0.5);
+    }
+    .footer-verse { font-style:italic; color:var(--cream-muted); font-size:13px; line-height:1.9; max-width:620px; margin:0 auto 10px; }
+    .footer-telugu { font-size:15px; color:var(--cream-dim); letter-spacing:0.05em; }
+    .footer-trans { font-size:11px; opacity:0.5; }
+    .footer-copy { font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.18em; color:var(--cream-muted); opacity:0.4; text-transform:uppercase; }
+
+    /* scrollbar */
+    ::-webkit-scrollbar{ width:5px; height:5px; }
+    ::-webkit-scrollbar-track{ background:var(--bg-deep); }
+    ::-webkit-scrollbar-thumb{ background:var(--gold); border-radius:3px; }
+  
+    /* ──── CHART FILTERS BAR ──── */
+    .chart-filters {
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+      padding:10px 0 13px; border-bottom:1px solid rgba(200,150,42,0.12); margin-bottom:14px;
+    }
+    .filter-group { display:flex; align-items:center; gap:7px; }
+    .filter-label {
+      font-size:9px; text-transform:uppercase; letter-spacing:.14em;
+      color:var(--cream-muted); font-family:'Cinzel',serif; white-space:nowrap;
+    }
+    input[type=range].filter-slider {
+      -webkit-appearance:none; height:4px;
+      background:rgba(200,150,42,0.28); border-radius:2px; outline:none; cursor:pointer; width:88px;
+    }
+    input[type=range].filter-slider::-webkit-slider-thumb {
+      -webkit-appearance:none; width:13px; height:13px; border-radius:50%;
+      background:var(--gold); cursor:pointer; border:2px solid var(--bg-card);
+    }
+    .filter-val {
+      font-size:10px; color:var(--gold-bright); min-width:34px;
+      font-family:'Cinzel',serif; font-weight:600;
+    }
+    /* ──── CHART INSIGHTS LIST ──── */
+    .chart-insights {
+      margin-top:14px; padding:14px 20px;
+      background:rgba(200,150,42,0.04); border:1px solid rgba(200,150,42,0.1);
+      border-radius:8px;
+    }
+    .chart-insights ul { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px; }
+    .chart-insights li {
+      font-size:11.5px; color:var(--cream-dim); line-height:1.6;
+      padding-left:20px; position:relative;
+    }
+    .chart-insights li::before {
+      content:'◆'; position:absolute; left:0; top:4px;
+      color:var(--gold); font-size:7px;
+    }
+    .chart-insights li strong { color:var(--cream); }
+    .chart-insights .anom { color:#f87171; font-weight:600; }
+    .chart-insights .ok   { color:#4ade80; font-weight:600; }
+    .chart-insights .warn { color:#fbbf24; font-weight:600; }
+
+  </style>
+</head>
+<body>
+
+<!-- ════════════════ HEADER ════════════════ -->
+<header class="header">
+  <div class="header-lotus-l">🪷</div>
+  <div class="header-lotus-r">🪷</div>
+  <div class="header-inner">
+    <div class="header-om">ॐ</div>
+    <div class="header-text">
+      <div class="header-ttd">Tirumala Tirupati Devasthanams</div>
+      <div class="header-sub">Sevas Booking Analytics &amp; Trends Dashboard</div>
+      <div class="header-divider">
+        <span></span><em>Sri Venkateswara Swamy Vaari Temple — Tirumala</em><span></span>
+      </div>
+      <div class="header-range">Data Period: July 2025 — March 2026&nbsp; | &nbsp;14 Divine Sevas&nbsp; | &nbsp;748,181 Total Devotee Bookings</div>
+    </div>
+    <div class="header-badges">
+      <div class="header-badge">
+        <span class="v">748K</span><span class="l">Total Booked</span>
+      </div>
+      <div class="header-badge">
+        <span class="v">87%</span><span class="l">Verified</span>
+      </div>
+      <div class="header-badge">
+        <span class="v">14</span><span class="l">Sevas</span>
+      </div>
+      <div class="header-badge">
+        <span class="v">9</span><span class="l">Months</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════ KPI CARDS ════════════════ -->
+<div class="kpi-row">
+  <div class="kpi" style="--kc:#ffd700">
+    <div class="kpi-icon">🛕</div>
+    <div class="kpi-label">Total Sevas Offered</div>
+    <div class="kpi-val" id="kv1">0</div>
+    <div class="kpi-sub">Active divine seva categories</div>
+    <div class="kpi-track"><div class="kpi-fill" id="kf1" style="width:0%"></div></div>
+  </div>
+  <div class="kpi" style="--kc:#ff8c33">
+    <div class="kpi-icon">🙏</div>
+    <div class="kpi-label">Total Devotees Served</div>
+    <div class="kpi-val" id="kv2">0</div>
+    <div class="kpi-sub">Cumulative bookings Jul'25–Mar'26</div>
+    <div class="kpi-track"><div class="kpi-fill" id="kf2" style="width:0%"></div></div>
+  </div>
+  <div class="kpi" style="--kc:#4ade80">
+    <div class="kpi-icon">✓</div>
+    <div class="kpi-label">Verification Rate</div>
+    <div class="kpi-val" id="kv3">0%</div>
+    <div class="kpi-sub">Booked → Verified conversion</div>
+    <div class="kpi-track"><div class="kpi-fill" id="kf3" style="width:0%"></div></div>
+  </div>
+  <div class="kpi" style="--kc:#ff4757">
+    <div class="kpi-icon">⭐</div>
+    <div class="kpi-label">Most Sought Seva</div>
+    <div class="kpi-val" id="kv4" style="font-size:15px;padding-top:3px">—</div>
+    <div class="kpi-sub" id="ks4">340,446 bookings (45.5% share)</div>
+    <div class="kpi-track"><div class="kpi-fill" id="kf4" style="width:0%"></div></div>
+  </div>
+  <div class="kpi" style="--kc:#c084fc">
+    <div class="kpi-icon">📱</div>
+    <div class="kpi-label">Online Booking Share</div>
+    <div class="kpi-val" id="kv5">0%</div>
+    <div class="kpi-sub">Digital seva adoption rate</div>
+    <div class="kpi-track"><div class="kpi-fill" id="kf5" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- ════════════════ CHARTS BODY ════════════════ -->
+<div class="page-body">
+
+  <!-- ── TREND ── -->
+  <div class="section-hdr">Monthly Devotee Booking Trends</div>
+  <div class="row r1">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Monthly Seva Bookings — All 14 Sevas</div>
+          <div class="card-desc">Total devotees served across all sevas per month (logarithmic scale shows all magnitudes)</div>
+        </div>
+        <div class="ctrl-grp">
+          <button class="ctrl-btn on" id="tlog" onclick="setTrendScale('logarithmic')">Log Scale</button>
+          <button class="ctrl-btn" id="tlin" onclick="setTrendScale('linear')">Linear</button>
+        </div>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">From</span><select class="ctrl-sel" id="trendFrom" onchange="updateTrend()"><option value="0" selected>Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8">Mar 26</option><option value="9">Apr 26</option></select></div>
+        <div class="filter-group"><span class="filter-label">To</span><select class="ctrl-sel" id="trendTo" onchange="updateTrend()"><option value="0">Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8" selected>Mar 26</option><option value="9">Apr 26</option></select></div>
+        <div class="filter-group"><span class="filter-label">Highlight</span><select class="ctrl-sel" id="trendSeva" onchange="updateTrend()"><option value="__all__">All Sevas</option><option value="Abhishekam">Abhishekam</option><option value="Archana">Archana</option><option value="Arjitha Brahmotsavam">Arjitha Brahmotsavam</option><option value="Astadala Pada Padmaradhana">Astadala Pada Padmaradhana</option><option value="Civet Vessel">Civet Vessel</option><option value="Kalyanotsavam">Kalyanotsavam</option><option value="Kasturi Vessel">Kasturi Vessel</option><option value="Melchat Vastram">Melchat Vastram</option><option value="Sahasra Deepalankara">Sahasra Deepalankara</option><option value="Suprabatham">Suprabatham</option><option value="Thiruppavada">Thiruppavada</option><option value="Thomala">Thomala</option><option value="USSE">USSE</option><option value="Unjal Seva">Unjal Seva</option></select></div>
+      </div>
+      <div class="chart-wrap" style="height:360px"><canvas id="cTrend"></canvas></div>
+
+      <div class="chart-insights"><ul>
+        <li><strong>Jul 2025 peak (85,724)</strong> is <span class="warn">34% above the 9-month average</span> of 74,241 — possibly driven by festival-season surge during Ashadha/Shravan months.</li>
+        <li><strong>Jan 2026 hit the lowest point (57,046)</strong> — a <span class="anom">31% drop from peak</span>, which is unusual for Makar Sankranti season when high pilgrim footfall is expected.</li>
+        <li><strong>Sep 2025 trough (63,429)</strong> follows the classic monsoon-season dip — heavy rains deter hill-climb pilgrims at Tirumala, consistent with historical patterns.</li>
+        <li><span class="warn">Suprabatham collapsed in Dec'25–Jan'26</span> (7,173 and 6,370 bookings vs 11K+ norm) — a 38–45% drop that doesn't affect other sevas, suggesting a slot-count reduction or policy change.</li>
+        <li><strong>Sahasra Deepalankara</strong> shows suspiciously round, nearly-flat monthly values (12,600 / 15,000 / 16,200 / 18,000) — indicative of <span class="warn">fixed-slot supply caps</span> rather than organic demand.</li>
+        <li><strong>Kalyanotsavam's share</strong> stays locked at <strong>40–48% every month</strong> without exception — extreme demand concentration that creates single-seva booking dependency.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- ── SEVA ANALYSIS ── -->
+  <div class="section-hdr">Seva Popularity &amp; Booking Distribution</div>
+  <div class="row r6040">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Seva Popularity Ranking</div>
+          <div class="card-desc">Total bookings — logarithmic scale bridges the 131 to 340K range</div>
+        </div>
+        <span class="card-badge">Log Scale</span>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">Sort</span><select class="ctrl-sel" id="barSort" onchange="updateBar()"><option value="desc">Volume ↓</option><option value="asc">Volume ↑</option><option value="alpha">A → Z</option></select></div>
+        <div class="filter-group"><span class="filter-label">Show Top</span><select class="ctrl-sel" id="barTopN" onchange="updateBar()"><option value="0">All 14</option><option value="10">Top 10</option><option value="5">Top 5</option><option value="3">Top 3</option></select></div>
+      </div>
+      <div class="chart-wrap" style="height:420px"><canvas id="cBar"></canvas></div>
+
+      <div class="chart-insights"><ul>
+        <li><strong>Kalyanotsavam alone accounts for 45.5%</strong> (340,446 of 748,181 bookings) — more than the combined total of all 13 other sevas. This concentration is a <span class="anom">single-point-of-failure risk</span> for seva delivery.</li>
+        <li><span class="ok">Top 3 sevas</span> (Kalyanotsavam 340K, Sahasra 152K, Suprabatham 107K) constitute <strong>80% of all bookings</strong>; the remaining 11 sevas share just 20%.</li>
+        <li><span class="anom">USSE's 12,377 bookings yield only 7,528 verified sevas</span> (39% no-show rate) — the true serviceable demand is significantly lower than booked volume suggests.</li>
+        <li><strong>Arjitha Brahmotsavam (70,960)</strong> is 100% online-only; no walk-in access. This exclusive digital channel means any portal downtime directly eliminates all seva bookings.</li>
+        <li><strong>Vessel sevas (Civet 131, Kasturi 242, Melchat 1,505)</strong> are micro-volume but highly symbolic — Civet Vessel is 2,600× less booked than Kalyanotsavam, yet equally sacred.</li>
+        <li><span class="warn">Astadala Pada Padmaradhana (3,020)</span> is limited to Tuesdays only — effective weekly capacity is 1/7th of a 7-day seva, yet demand remains consistent.</li>
+      </ul></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Booking Type Distribution</div>
+          <div class="card-desc">How 748K devotees chose to book their sevas</div>
+        </div>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">Seva</span><select class="ctrl-sel" id="donutSeva" onchange="updateDonut()"><option value="__all__">All Sevas</option><option value="Abhishekam">Abhishekam</option><option value="Archana">Archana</option><option value="Arjitha Brahmotsavam">Arjitha Brahmotsavam</option><option value="Astadala Pada Padmaradhana">Astadala Pada Padmaradhana</option><option value="Civet Vessel">Civet Vessel</option><option value="Kalyanotsavam">Kalyanotsavam</option><option value="Kasturi Vessel">Kasturi Vessel</option><option value="Melchat Vastram">Melchat Vastram</option><option value="Sahasra Deepalankara">Sahasra Deepalankara</option><option value="Suprabatham">Suprabatham</option><option value="Thiruppavada">Thiruppavada</option><option value="Thomala">Thomala</option><option value="USSE">USSE</option><option value="Unjal Seva">Unjal Seva</option></select></div>
+      </div>
+      <div class="chart-wrap" style="height:290px"><canvas id="cDonut"></canvas></div>
+
+      <div class="chart-insights"><ul>
+        <li><strong>Online bookings (78.4% = 586,474)</strong> dominate TTD's booking mix — the digital shift is driven almost entirely by Kalyanotsavam, Sahasra Deepalankara, and Arjitha Brahmotsavam (each 75–100% online).</li>
+        <li><strong>Discretionary (10.4% = 77,506)</strong> represents spot counter bookings by walk-in devotees — concentrated in Archana, Thomala, and Abhishekam where counter access is allowed.</li>
+        <li><span class="warn">Advance Booking is only 2.2% (16,817)</span> despite being a pre-planned channel — suggesting devotees strongly prefer same-day or short-notice booking over advance planning.</li>
+        <li><strong>Donor sevas (0.7% = 5,025)</strong> are primarily Suprabatham and Abhishekam — premium tiers with separate allocation pools, not affected by general demand fluctuations.</li>
+        <li><span class="ok">Current Booking (8.3% = 62,359)</span> provides a real-time demand safety valve — useful data point for daily capacity management and queue management.</li>
+        <li><span class="anom">USSE is 100% Advance Booking with zero Online/Discretionary</span> — a single-channel seva where all demand must be pre-registered, explaining its high no-show rate.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- ── INTEGRITY ── -->
+  <div class="section-hdr">Booking Integrity &amp; Monthly Volume</div>
+  <div class="row r2">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Booked vs Verified — Per Seva</div>
+          <div class="card-desc">Measures booking fulfilment and verification completeness</div>
+        </div>
+        <span class="card-badge">Grouped Bar</span>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">From</span><select class="ctrl-sel" id="bvFrom" onchange="updateBV()"><option value="0" selected>Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8">Mar 26</option><option value="9">Apr 26</option></select></div>
+        <div class="filter-group"><span class="filter-label">To</span><select class="ctrl-sel" id="bvTo" onchange="updateBV()"><option value="0">Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8" selected>Mar 26</option><option value="9">Apr 26</option></select></div>
+      </div>
+      <div class="chart-wrap" style="height:360px"><canvas id="cBV"></canvas></div>
+
+      <div class="chart-insights"><ul>
+        <li><strong>Abhishekam (98.7% verified)</strong> and <span class="ok">Thiruppavada (99.8%)</span> have near-perfect attendance — devotees who book these spiritually exclusive sevas are highly committed.</li>
+        <li><span class="anom">USSE has the lowest verification rate at 60.8%</span> — only 7,528 of 12,377 booked devotees actually received the seva; 4,849 are permanent no-shows.</li>
+        <li><strong>Arjitha Brahmotsavam has the largest absolute gap</strong> (14,603 unverified of 70,960 booked) — at 20.6% no-show, this translates to ~1,600 unclaimed slots every month.</li>
+        <li><strong>Sahasra Deepalankara (81% verified = 29,027 unverified)</strong> is the second-largest absolute gap — nearly 3,000 unused seva slots every month that could be reallocated.</li>
+        <li><span class="warn">Kalyanotsavam's 10.5% absentee rate (35,658 unverified)</span> is significant in absolute terms — the largest unverified pool of any seva given its volume.</li>
+        <li>A <strong>waitlist system for top-absentee sevas</strong> (USSE, Arjitha, Sahasra) could recover 15,000–20,000 lost seva opportunities per month for waiting devotees.</li>
+      </ul></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Monthly Grand Total — Devotee Footfall</div>
+          <div class="card-desc">Combined bookings across all 14 sevas per month</div>
+        </div>
+        <span class="card-badge">Bar Chart</span>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">From</span><select class="ctrl-sel" id="mbFrom" onchange="updateMonthlyBar()"><option value="0" selected>Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8">Mar 26</option><option value="9">Apr 26</option></select></div>
+        <div class="filter-group"><span class="filter-label">To</span><select class="ctrl-sel" id="mbTo" onchange="updateMonthlyBar()"><option value="0">Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8" selected>Mar 26</option><option value="9">Apr 26</option></select></div>
+      </div>
+      <div class="chart-wrap" style="height:360px"><canvas id="cMonthlyBar"></canvas></div>
+
+      <div class="chart-insights"><ul>
+        <li><strong>Jul 2025 (85,724)</strong> is the all-time peak — likely boosted by Ashadha/Shravan religious calendar; <span class="warn">Jan 2026 (57,046) is the trough</span> at 33% below peak, a counter-intuitive post-Sankranti dip.</li>
+        <li><strong>Sep 2025 (63,429)</strong> shows the seasonal monsoon effect — Tirumala receives 60–80cm rainfall in Sep, reducing the number of pilgrims willing to climb the ghat roads.</li>
+        <li><span class="warn">Dec 2025 (73,803)</span> is lower than Nov 2025 (83,410) despite December being a peak pilgrimage month in other Vaishnava temples — investigate potential service interruptions or data completeness.</li>
+        <li><span class="ok">Feb–Mar 2026 recovery (78K range)</span> confirms the Jan 2026 dip was temporary. The post-EO period (from Feb 1) did not disrupt overall booking volumes.</li>
+        <li><strong>Month-to-month variance is ±22%</strong> (57K–85K range) — significant enough that operational capacity planning (staffing, prasadam, accommodation) needs seasonal adjustment.</li>
+        <li><strong>Average monthly bookings = 82,885</strong>. Months below this average (Sep, Dec, Jan) are candidates for promotional campaigns or discounted seva bundles to boost demand.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- ── STACKED DRILL-DOWN ── -->
+  <div class="section-hdr">Seva Drill-down — Monthly Booking Type Composition</div>
+  <div class="row r1">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Monthly Booking Type Breakdown — Per Seva</div>
+          <div class="card-desc">Stacked view of how each booking type contributes month-wise for the selected seva</div>
+        </div>
+        <select class="ctrl-sel" id="sevaSelect" onchange="updateStacked()"></select>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">From</span><select class="ctrl-sel" id="stackFrom" onchange="updateStacked()"><option value="0" selected>Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8">Mar 26</option><option value="9">Apr 26</option></select></div>
+        <div class="filter-group"><span class="filter-label">To</span><select class="ctrl-sel" id="stackTo" onchange="updateStacked()"><option value="0">Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8" selected>Mar 26</option><option value="9">Apr 26</option></select></div>
+      </div>
+      <div class="chart-wrap" style="height:320px"><canvas id="cStacked"></canvas></div>
+      <div class="chart-insights"><ul>
+        <li><strong>Kalyanotsavam's type mix</strong>: ~76% Online + ~15% Discretionary + ~9% Current — the Discretionary component is unique among high-volume sevas and reflects on-site demand.</li>
+        <li><strong>Arjitha Brahmotsavam is 100% Online</strong> — the only seva with no walk-in component; a total system disruption would result in zero seva delivery.</li>
+        <li><span class="warn">USSE's 100% Advance Booking model</span> means no flexibility for same-day devotees; the high no-show rate suggests advance bookers change plans but can't cancel.</li>
+        <li><strong>Suprabatham has the most diverse booking mix</strong> across all 5 channels (Online, Current, Discretionary, Advance, Donor) — reflecting its broad devotee appeal.</li>
+        <li><span class="ok">Donor quota sevas appear predominantly in Abhishekam and Suprabatham</span> — both have institutional supporters (endowments, trusts) with recurring seva sponsorships.</li>
+        <li><strong>Current Booking % spikes in specific months</strong> for certain sevas — particularly Sep/Jan low-traffic months when fewer Advance Booking slots are contested.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- ── RADAR ── -->
+  <div class="section-hdr">Cross-Seva Monthly Performance Index</div>
+  <div class="row r2">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Top-6 Sevas — Radar Comparison</div>
+          <div class="card-desc">Normalised monthly performance (% of seva's own max bookings)</div>
+        </div>
+        <span class="card-badge">Radar</span>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">Month</span><select class="ctrl-sel" id="radarMonth" onchange="updateRadar()"><option value="0">Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8" selected>Mar 26</option><option value="9">Apr 26</option></select></div>
+      </div>
+      <div class="chart-wrap" style="height:360px"><canvas id="cRadar"></canvas></div>
+      <div class="chart-insights"><ul>
+        <li><strong>Kalyanotsavam, Sahasra, and Suprabatham</strong> show consistent hexagonal shapes across months — stable demand sevas with predictable patterns ideal for long-term planning.</li>
+        <li><span class="warn">Arjitha Brahmotsavam and Unjal Seva show sharp dips in Sep and Jan</span> — months when online-only sevas experience platform demand suppression rather than genuine interest decline.</li>
+        <li><strong>USSE's radar shape</strong> is compressed to a small irregular polygon — high month-to-month variance (Dec'25 spike at 1,726 vs Sep'25 low at 897) makes it the least predictable seva.</li>
+        <li><span class="ok">Abhishekam has the most circular (even) radar shape</span> among smaller sevas — ~400 bookings every month regardless of season, suggesting a fixed devotee pool.</li>
+        <li><strong>The Dec 2025 anomaly</strong> is visible for Suprabatham in the radar as a significantly smaller segment vs all other months — confirm if this is a capacity reduction or data gap.</li>
+        <li><strong>Comparing any two months' radar shapes</strong> reveals that Jul–Nov are growth months while Jan is consistently the weakest — useful for annual resource allocation cycles.</li>
+      </ul></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Booking Type — Month Trend (Stacked Area)</div>
+          <div class="card-desc">Month-wise composition of all 5 booking channels combined</div>
+        </div>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">From</span><select class="ctrl-sel" id="areaFrom" onchange="updateArea()"><option value="0" selected>Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8">Mar 26</option><option value="9">Apr 26</option></select></div>
+        <div class="filter-group"><span class="filter-label">To</span><select class="ctrl-sel" id="areaTo" onchange="updateArea()"><option value="0">Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8" selected>Mar 26</option><option value="9">Apr 26</option></select></div>
+        <div class="filter-group"><span class="filter-label">Sevas</span><select class="ctrl-sel" id="areaTopN" onchange="updateArea()"><option value="0">All Types</option><option value="3">Top 3 Types</option></select></div>
+      </div>
+      <div class="chart-wrap" style="height:360px"><canvas id="cArea"></canvas></div>
+      <div class="chart-insights"><ul>
+        <li><strong>Online bookings (dark blue area)</strong> dominate the stack so completely that other channels appear as thin slivers — a healthy digital adoption signal but also a concentration risk.</li>
+        <li><span class="warn">Discretionary bookings (yellow band) shows seasonal spikes</span> in Jul and Oct–Nov — festival months attract more walk-in pilgrims who book at the counter on arrival.</li>
+        <li><strong>Current Booking (green band) tracks total volume almost exactly</strong> — it scales up in busy months and down in slow months, confirming it's a real-time demand indicator.</li>
+        <li><span class="ok">Advance Booking (blue slice) remains thin and stable</span> — pre-planned bookings are a minority channel, suggesting TTD visitors are predominantly spontaneous pilgrims.</li>
+        <li><strong>Jan 2026's narrow overall band</strong> is visible in this chart — all channels compressed simultaneously, confirming a systemic demand drop rather than a single-channel issue.</li>
+        <li><span class="warn">Donor quota (tiny pink slice)</span> shows no seasonal pattern — institutionally managed allocations follow administrative rather than devotee-demand cycles.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- ── TABLE ── -->
+  <div class="section-hdr">Seva Summary — Complete Metrics</div>
+  <div class="card">
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Seva</th>
+            <th class="r">Total Booked</th>
+            <th class="r">Verified</th>
+            <th class="r">Verify Rate</th>
+            <th class="r">% Share</th>
+            <th class="r">Advance</th>
+            <th class="r">Current</th>
+            <th class="r">Discretionary</th>
+            <th class="r">Online</th>
+            <th class="r">Donor</th>
+          </tr>
+        </thead>
+        <tbody id="tBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ══════════════ DAY-OF-WEEK ANALYSIS ══════════════ -->
+  <div class="section-hdr">Day-of-Week Analysis &amp; Anomaly Detection</div>
+
+  <!-- Anomaly alert cards -->
+  <div class="row r3" id="anomaly-cards"></div>
+
+  <!-- Heatmap -->
+  <div class="row r1" style="margin-top:18px">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Seva × Day-of-Week Heatmap</div>
+          <div class="card-desc">Average bookings per occurrence — darker gold = higher demand. Grey = seva not offered on that day</div>
+        </div>
+        <div class="ctrl-grp">
+          <button class="ctrl-btn on" id="hmAvg" onclick="setHeatmapMode('avg')">Avg / Day</button>
+          <button class="ctrl-btn" id="hmTotal" onclick="setHeatmapMode('total')">Total</button>
+        </div>
+      </div>
+      <div id="heatmap-wrap" style="overflow-x:auto"></div>
+      <div class="insight" style="margin-top:14px">
+        <strong>Day-restricted sevas:</strong> Abhishekam &amp; vessel sevas (Civet, Kasturi, Melchat) run exclusively on <strong>Fridays</strong> — the most auspicious day for Lord Venkateswara.
+        Astadala Pada Padmaradhana is <strong>Tuesdays only</strong>; Thiruppavada is <strong>Thursdays only</strong>; Archana &amp; Thomala operate <strong>Tue–Thu</strong>.
+      </div>
+    </div>
+  </div>
+
+  <!-- Day pattern charts row -->
+  <div class="row r2" style="margin-top:18px">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Day-of-Week Pattern — Seva Drill-down</div>
+          <div class="card-desc">Average bookings per occurrence for selected seva across all 7 days</div>
+        </div>
+        <select class="ctrl-sel" id="dowSevaSelect" onchange="updateDowChart()"></select>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="cDow"></canvas></div>
+      <div class="chart-insights"><ul>
+        <li><strong>Kalyanotsavam is uniquely uniform</strong> across all 7 days (1,239–1,341 avg) — only 8% variation, indicating demand far exceeds daily supply caps regardless of day.</li>
+        <li><span class="anom">Exclusive Friday sevas (Abhishekam, Vessel sevas)</span> show 100% concentration on one day — any Friday operational disruption wipes out an entire week's seva allocation.</li>
+        <li><span class="warn">USSE Saturday surge (79 avg vs ~33–51 weekdays)</span> is a 55–140% spike — the largest single-day anomaly across any seva's weekly pattern.</li>
+        <li><strong>Suprabatham Friday dip (284 avg)</strong> is 34% below its own weekly mean of 430 — statistically >2σ deviation; Friday capacity conflict with Abhishekam is the likely cause.</li>
+        <li><span class="ok">Sahasra Deepalankara shows a perfectly flat 600 average</span> for every day of the week — confirming a fixed daily slot allocation regardless of demand or day.</li>
+        <li><strong>Archana and Thomala (Tue–Thu only)</strong> show zero bookings on other days — not a demand pattern but a policy restriction tied to traditional seva calendar rules.</li>
+      </ul></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Combined Day-of-Week Volume</div>
+          <div class="card-desc">Total bookings across ALL sevas grouped by day of week</div>
+        </div>
+        <span class="card-badge">All Sevas</span>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">Metric</span><button class="ctrl-btn on" id="dowAllAvg" onclick="setDowAllMode('avg')">Avg/Day</button><button class="ctrl-btn" id="dowAllTot" onclick="setDowAllMode('total')">Total</button></div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="cDowAll"></canvas></div>
+
+      <div class="chart-insights"><ul>
+        <li><strong>Friday is the highest-volume day overall</strong> (total bookings boosted by exclusive sevas like Abhishekam, Civet, Kasturi, Melchat) — yet removing these, the underlying common-seva Friday demand is actually mid-range.</li>
+        <li><strong>Saturday ranks second overall</strong>, driven primarily by USSE's 2.4× surge — Saturday's standing would fall significantly if USSE capacity were capped or its pattern normalised.</li>
+        <li><span class="warn">Wednesday is consistently the lowest day</span> for multi-day sevas — a mid-week pilgrim trough common across South Indian religious tourism patterns.</li>
+        <li><span class="ok">Sunday–Tuesday show high Kalyanotsavam averages</span> (1,239–1,300/day) without the exclusive-seva boost, suggesting genuine early-week pilgrim preference.</li>
+        <li><strong>The overall DOW range is narrow (±15%)</strong> — the spread from lowest (Wed) to highest (Fri) day is small enough that no single day is under-utilised from a capacity standpoint.</li>
+        <li><span class="anom">Removing exclusive-day sevas from the total</span> would flip Friday from 1st to 4th place — the exclusive-seva clustering effect artificially inflates Friday's apparent demand.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- Suprabatham & USSE anomaly charts -->
+  <div class="row r2" style="margin-top:18px">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">⚠ Anomaly: Suprabatham — Friday Dip</div>
+          <div class="card-desc">Avg bookings drop ~35% on Fridays vs other days — investigate capacity or policy</div>
+        </div>
+        <span class="card-badge" style="color:#f87171;border-color:rgba(248,113,113,0.4)">Anomaly</span>
+      </div>
+      <div class="chart-wrap" style="height:260px"><canvas id="cAnoSup"></canvas></div>
+
+      <div class="chart-insights"><ul>
+        <li><strong>Friday average (284) is 34% below the non-Friday mean (430)</strong> — a statistically significant <span class="anom">2.8σ deviation</span> that cannot be explained by random variation across 38+ Fridays.</li>
+        <li><strong>Friday is TTD's highest footfall day</strong> (Abhishekam + Vessel sevas run exclusively on Fridays) — yet Suprabatham, a dawn seva, sees a counter-intuitive capacity drop.</li>
+        <li><span class="warn">Hypothesis: Abhishekam seva time conflicts</span> — Suprabatham is offered at 3–3:30am; on Fridays, priests may be redistributed for Abhishekam preparation, reducing Suprabatham slots.</li>
+        <li><strong>The pattern is structural, not seasonal</strong> — the Friday dip persists uniformly across all 9 months with no variation, ruling out seasonal pilgrim behaviour changes.</li>
+        <li><span class="ok">Mon, Tue, and Sat have the highest Suprabatham averages</span> (430–439/day), which aligns with weekend and early-week pilgrim travel patterns when Abhishekam does not compete.</li>
+        <li><strong>Recommended action</strong>: Audit Friday morning Suprabatham slot allocation vs Abhishekam priest scheduling — if a conflict exists, a 15-min time buffer could recover ~150 bookings per Friday.</li>
+      </ul></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">⚠ Anomaly: USSE — Saturday Surge</div>
+          <div class="card-desc">Saturday average is 2.4× the weekday average — significant weekend demand spike</div>
+        </div>
+        <span class="card-badge" style="color:#f87171;border-color:rgba(248,113,113,0.4)">Anomaly</span>
+      </div>
+      <div class="chart-wrap" style="height:260px"><canvas id="cAnoUSSE"></canvas></div>
+
+      <div class="chart-insights"><ul>
+        <li><strong>Saturday average (79)</strong> is <span class="anom">2.4× the Mon–Thu average of 33</span> — the highest day-of-week multiplier across any seva, indicating extreme weekend concentration.</li>
+        <li><span class="warn">Mon–Thu range is tight (30–51/day)</span> suggesting a fixed daily quota cap; the Saturday spike breaking through implies Saturday has a different (higher) cap or overflow mechanism.</li>
+        <li><strong>USSE's overall absentee rate of 39.2% is worst on Saturdays (44%)</strong> — the very day with maximum bookings also has maximum no-shows, a self-reinforcing over-booking problem.</li>
+        <li><span class="ok">Friday (35/day) does NOT show the usual USSE surge</span> — unlike most sevas where Friday is high-demand, USSE Friday volumes are near weekday lows; USSE is uniquely weekend-centric.</li>
+        <li><strong>Saturday no-show gap</strong>: 79 booked × 44% absent = ~35 unserved slots every Saturday. Over 9 months (~39 Saturdays), that's <span class="warn">~1,365 lost USSE Saturdays</span>.</li>
+        <li><strong>Policy suggestion</strong>: Implement a Saturday-specific USSE waitlist — automatically fill confirmed no-shows (arrived-by-9am confirmation) from a standby queue to eliminate the 44% Saturday waste.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- Day-restricted sevas summary -->
+  <div class="row r1" style="margin-top:18px">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Day-Exclusive Seva Schedule — Availability Matrix</div>
+          <div class="card-desc">Which sevas are available on which days — fixed scheduling reveals devotee planning constraints</div>
+        </div>
+      </div>
+      <div id="avail-matrix" style="overflow-x:auto;margin-top:4px"></div>
+    </div>
+  </div>
+
+
+  <!-- ════════ ABSENTEE ANALYSIS ════════ -->
+  <div class="section-hdr" style="margin-top:32px">Absentee Analysis — Booking vs Verification Gap</div>
+  <div class="row r2">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Seva-wise Absentee Rate</div>
+          <div class="card-desc">% of booked devotees who did not get verified (no-shows), sorted high → low</div>
+        </div>
+        <span class="card-badge">Overall Jul'25–Mar'26</span>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">%</span><input type="range" class="filter-slider" id="absentMin" min="0" max="30" value="0" step="1" oninput="document.getElementById('absentMinv').textContent=this.value+'%';updateAbsentRate()"><span class="filter-val" id="absentMinv">0%</span></div>
+        <div class="filter-group"><span class="filter-label">Sort</span><select class="ctrl-sel" id="absentSort" onchange="updateAbsentRate()"><option value="rate">Rate ↓</option><option value="alpha">A → Z</option></select></div>
+      </div>
+      <div class="chart-wrap" style="height:380px"><canvas id="cAbsentRate"></canvas></div>
+
+      <div class="chart-insights"><ul>
+        <li><span class="anom">USSE (39.2%) is a structural outlier</span> — nearly 3× the next-highest seva's rate. As a 100% Advance Booking seva, holders book months ahead and plans change; no cancellation mechanism exists.</li>
+        <li><strong>Arjitha Brahmotsavam (20.6%) and Sahasra Deepalankara (19%)</strong> are both online-only sevas with high demand — speculative booking (reserve a slot to decide later) drives systematic over-booking.</li>
+        <li><span class="warn">Unjal Seva (16.5%) and Kalyanotsavam (10.5%)</span> generate the largest absolute absentee counts due to volume: ~6,558 and ~35,658 unclaimed bookings respectively over 9 months.</li>
+        <li><span class="ok">Vessel sevas (Abhishekam 1.3%, Melchat 1.1%, Civet 2.3%)</span> have near-zero absentee rates — Friday-exclusive, highly auspicious sevas attract fully committed devotees.</li>
+        <li><span class="ok">Thiruppavada (0.2%) is essentially perfect attendance</span> — 2,442 of 2,448 booked devotees showed up over 9 months; Thursday-only seva with high devotional intent.</li>
+        <li><strong>Total lost capacity = 97,292 unverified bookings</strong> across all sevas — equivalent to <span class="warn">~1.3 full months of seva</span> wasted annually that could serve waiting devotees.</li>
+      </ul></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Monthly Absentee Trend — Top 5 Sevas</div>
+          <div class="card-desc">Month-wise absentee % for the five highest no-show sevas</div>
+        </div>
+        <span class="card-badge">Jul'25–Mar'26</span>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">From</span><select class="ctrl-sel" id="absentTFrom" onchange="updateAbsentTrend()"><option value="0" selected>Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8">Mar 26</option><option value="9">Apr 26</option></select></div>
+        <div class="filter-group"><span class="filter-label">To</span><select class="ctrl-sel" id="absentTTo" onchange="updateAbsentTrend()"><option value="0">Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8" selected>Mar 26</option><option value="9">Apr 26</option></select></div>
+        <div class="filter-group"><span class="filter-label">Sevas</span><select class="ctrl-sel" id="absentSevas" onchange="updateAbsentTrend()"><option value="top5">Top 5 No-show</option><option value="top3">Top 3</option><option value="custom">Select Seva ↓</option></select></div>
+        <div class="filter-group"><span class="filter-label"></span><select class="ctrl-sel" id="absentSeva" onchange="if(document.getElementById('absentSevas').value='custom')updateAbsentTrend()"><option value="__all__">Pick Seva</option><option value="Abhishekam">Abhishekam</option><option value="Archana">Archana</option><option value="Arjitha Brahmotsavam">Arjitha Brahmotsavam</option><option value="Astadala Pada Padmaradhana">Astadala Pada Padmaradhana</option><option value="Civet Vessel">Civet Vessel</option><option value="Kalyanotsavam">Kalyanotsavam</option><option value="Kasturi Vessel">Kasturi Vessel</option><option value="Melchat Vastram">Melchat Vastram</option><option value="Sahasra Deepalankara">Sahasra Deepalankara</option><option value="Suprabatham">Suprabatham</option><option value="Thiruppavada">Thiruppavada</option><option value="Thomala">Thomala</option><option value="USSE">USSE</option><option value="Unjal Seva">Unjal Seva</option></select></div>
+      </div>
+      <div class="chart-wrap" style="height:380px"><canvas id="cAbsentTrend"></canvas></div>
+
+      <div class="chart-insights"><ul>
+        <li><span class="anom">USSE peaked at 45.3% in Oct 2025</span> (almost half of all booked devotees absent) and dipped to 27.7% in Aug 2025 — an 18-point swing in a single seva that warrants month-specific investigation.</li>
+        <li><strong>Arjitha Brahmotsavam (18.3–22% range)</strong> shows structural no-show behaviour with minimal monthly variation — this is advance-booking lock-in, not seasonal demand, requiring a waitlist mechanism.</li>
+        <li><strong>Sahasra Deepalankara oscillates between 17.6–21.9%</strong> — the lowest months (Dec, Jul) don't correlate with overall booking volume peaks, suggesting <span class="warn">slot inventory changes</span> may be involved.</li>
+        <li><span class="ok">Kalyanotsavam maintains a remarkably stable 9.7–11.3% range</span> every month — predictable enough for operations to pre-plan waitlist size with confidence.</li>
+        <li><strong>No clear post-EO (Feb–Mar 2026) trend change</strong> is visible in absentee rates — USSE remains above 40%, Arjitha stays ~21%, confirming the EO transition hasn't yet impacted no-show behaviour.</li>
+        <li><strong>If the top-3 sevas reduced absenteeism by half</strong>, TTD would recover ~50,000 additional verified seva opportunities per year — equivalent to opening a new seva category.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="row r1" style="margin-top:18px">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Day-of-Week Absentee Rate Heatmap</div>
+          <div class="card-desc">No-show % by seva and day of week — red = high absentee, green = low</div>
+        </div>
+      </div>
+      <div id="absent-dow-heatmap" style="overflow-x:auto;margin-top:4px"></div>
+      <div class="insight" style="margin-top:12px">
+        USSE shows its <strong>worst absentee rate on Saturdays (44%)</strong> — the same day it has the highest booking volume (surge day).
+        Suprabatham absenteeism peaks on <strong>Fridays (7.9%)</strong>, compounding the Friday dip anomaly seen in the DOW pattern chart.
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ EO CHANGE ANALYSIS ════════ -->
+  <div class="section-hdr" style="margin-top:32px">EO Change Analysis — New Executive Officer Joined Feb 1, 2026</div>
+  <div class="row r1">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Weekly Total Bookings — Before &amp; After New EO</div>
+          <div class="card-desc">Weekly aggregate across all sevas. Gold dashed line marks EO change (Feb 1, 2026)</div>
+        </div>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">Show</span><button class="ctrl-btn on" id="eoShowBook" onclick="setEOTimelineMode('booked')">Booked</button><button class="ctrl-btn" id="eoShowVerif" onclick="setEOTimelineMode('both')">+ Verified</button></div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="cEOTimeline"></canvas></div>
+
+      <div class="chart-insights"><ul>
+        <li><strong>Pre-EO weekly avg (weeks 1–31): ~16,800 bookings</strong> | <strong>Post-EO avg (weeks 32–43): ~18,700</strong> — the 11.3% increase suggests a modest positive trend under the new EO, though seasonal factors cannot be ruled out.</li>
+        <li><span class="anom">Week of Dec 21 shows only 78 bookings</span> (vs normal ~18K–20K) — an extreme outlier likely caused by a system maintenance window, data feed gap, or temple closure for a major festival.</li>
+        <li><span class="warn">Week of Jan 04 shows 6,977 bookings</span> — this partial-week entry suggests the data collection started mid-week; it is pre-EO and should not be interpreted as a demand event.</li>
+        <li><strong>No "announcement effect" is visible</strong> at the Feb 1 transition — booking volumes didn't surge in anticipation of the new EO or drop in response to the change; devotee booking behaviour is insensitive to administrative changes.</li>
+        <li><span class="ok">Feb–Apr 2026 post-EO weeks (16,610–20,450 range)</span> are fully within the pre-EO normal operating band — confirming operational continuity under the new EO.</li>
+        <li><strong>With 3 months of post-EO data (Feb–Apr 2026)</strong> now available, the assessment is more reliable — though 3 more months (May–Jul 2026) are needed to fully eliminate seasonal confounds.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="row r2" style="margin-top:18px">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Pre vs Post EO — Weekly Avg by Seva</div>
+          <div class="card-desc">Average weekly bookings per seva before and after Feb 1, 2026</div>
+        </div>
+        <div class="ctrl-grp">
+          <button class="ctrl-btn on" id="eoCmpLog" onclick="setEOScale('logarithmic')">Log</button>
+          <button class="ctrl-btn" id="eoCmpLin" onclick="setEOScale('linear')">Linear</button>
+        </div>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">From</span><select class="ctrl-sel" id="eoCmpFrom" ><option value="0" selected>Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8">Mar 26</option><option value="9">Apr 26</option></select></div>
+        <div class="filter-group"><span class="filter-label">To</span><select class="ctrl-sel" id="eoCmpTo" onchange=""><option value="0">Jul 25</option><option value="1">Aug 25</option><option value="2">Sep 25</option><option value="3">Oct 25</option><option value="4">Nov 25</option><option value="5">Dec 25</option><option value="6">Jan 26</option><option value="7">Feb 26</option><option value="8" selected>Mar 26</option><option value="9">Apr 26</option></select></div>
+        <div class="filter-group"><span class="filter-label">%</span><input type="range" class="filter-slider" id="eoCmpMin" min="0" max="30" value="0" step="1" oninput="document.getElementById('eoCmpMinv').textContent=this.value+'%';updateEOCompare()"><span class="filter-val" id="eoCmpMinv">0%</span></div>
+      </div>
+      <div class="chart-wrap" style="height:380px"><canvas id="cEOCompare"></canvas></div>
+      <div class="chart-insights"><ul>
+        <li><strong>Kalyanotsavam (pre: 7,719 | post: 8,396/wk)</strong> shows a +8.8% change — notably above pre-EO baseline; with Feb–Apr all in post-EO window this is the clearest demand signal from the new EO period.</li>
+        <li><strong>Sahasra Deepalankara (3,584 → 3,511/wk = −2.0%)</strong> shows a marginal decline — far less alarming than the earlier estimate; the decline is within normal seasonal variance and likely not a structural change.</li>
+        <li><span class="ok">Archana (+24.5%) and Thomala (+22.7%)</span> saw the largest percentage growth — these mid-tier, counter-based sevas show a strong and consistent post-EO uptick across all three post-EO months.</li>
+        <li><span class="warn">Only 13 post-EO weeks vs 31 pre-EO weeks</span> — the comparison window is still short. With Feb–Apr 2026 now included, the picture is clearer but a full seasonal cycle is needed for definitive conclusions.</li>
+        <li><strong>6 sevas increased, 8 declined post-EO</strong> — no systematic directional bias, suggesting the changes are driven by seasonal factors rather than any consistent new EO policy.</li>
+        <li><strong>Log scale reveals the pattern better for small sevas</strong> (Vessel sevas, Astadala, Civet) — these micro-sevas show large percentage changes from tiny absolute bases; percentage change for them is misleading.</li>
+      </ul></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">% Change in Bookings After New EO</div>
+          <div class="card-desc">Post-EO weekly avg vs Pre-EO weekly avg — sorted by magnitude</div>
+        </div>
+        <span class="card-badge">Post vs Pre</span>
+      </div>
+      <div class="chart-filters">
+        <div class="filter-group"><span class="filter-label">%</span><input type="range" class="filter-slider" id="eoChgMin" min="0" max="20" value="0" step="1" oninput="document.getElementById('eoChgMinv').textContent=this.value+'%';updateEOChange()"><span class="filter-val" id="eoChgMinv">0%</span></div>
+      </div>
+      <div class="chart-wrap" style="height:380px"><canvas id="cEOChange"></canvas></div>
+
+      <div class="chart-insights"><ul>
+        <li><span class="anom">Astadala Pada Padmaradhana −22% (73→57/wk)</span> is the steepest decline among mid-size sevas — a Tuesday-only seva with small absolute numbers; even a one-day slot reduction would cause this level of percentage change.</li>
+        <li><span class="ok">Archana +24.5% (139→173/wk)</span> and <span class="ok">Thomala +22.7% (154→189/wk)</span> show the strongest growth — both are multi-day counter-based sevas that may have received improved scheduling under the new EO.</li>
+        <li><strong>Sahasra Deepalankara −2.0% (3,584→3,511/wk)</strong> — with Feb now in post-EO and April data included, the earlier −14.6% alarm is revised down substantially; this is within normal seasonal variation.</li>
+        <li><span class="warn">8 of 14 sevas declined post-EO</span> — but the decline group includes Arjitha (−12.1%), which has shown seasonal low points in Jan–Mar historically; seasonality cannot be ruled out.</li>
+        <li><strong>Kalyanotsavam (+8.8%), Suprabatham (+17.6%), Unjal Seva (+5.2%)</strong> all show positive post-EO trends — high-volume sevas moving in a consistent positive direction is a strong signal of operational continuity and improvement.</li>
+        <li><strong>The ±5% band</strong> (Melchat −5.7%, Sahasra −2.0%, Thiruppavada −1.8%) represents sevas with essentially unchanged patterns — the signal-to-noise threshold for meaningful EO attribution is approximately ±10%.</li>
+      </ul></div>
+    </div>
+  </div>
+
+</div><!-- /page-body -->
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<footer class="footer">
+  <div class="footer-verse">
+    <div class="footer-telugu">శ్రీమన్నారాయణ చరణౌ శరణం ప్రపద్యే</div>
+    <div class="footer-trans">Srimannarayana Charanau Saranam Prapadye</div>
+  </div>
+  <div class="footer-copy" style="margin-top:12px">
+    Tirumala Tirupati Devasthanams &nbsp;|&nbsp; Sevas Analytics Dashboard &nbsp;|&nbsp; Data: Jul 2025 – Mar 2026
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════ DATA ═══════════════════════ */
+const D = {"sevas":["Abhishekam","Archana","Arjitha Brahmotsavam","Astadala Pada Padmaradhana","Civet Vessel","Kalyanotsavam","Kasturi Vessel","Melchat Vastram","Sahasra Deepalankara","Suprabatham","Thiruppavada","Thomala","USSE","Unjal Seva"],"types":["Advance Booking","Current Booking","Descritionary","Donor","Online"],"monthOrder":["Jul 25","Aug 25","Sep 25","Oct 25","Nov 25","Dec 25","Jan 26","Feb 26","Mar 26","Apr 26"],"monthlyPerSeva":{"Abhishekam":{"Jul 25":418,"Aug 25":496,"Sep 25":431,"Oct 25":494,"Nov 25":379,"Dec 25":405,"Jan 26":405,"Feb 26":409,"Mar 26":419,"Apr 26":433},"Archana":{"Jul 25":831,"Aug 25":553,"Sep 25":550,"Oct 25":663,"Nov 25":724,"Dec 25":465,"Jan 26":418,"Feb 26":733,"Mar 26":746,"Apr 26":771},"Arjitha Brahmotsavam":{"Jul 25":8250,"Aug 25":7425,"Sep 25":6060,"Oct 25":7425,"Nov 25":7975,"Dec 25":7425,"Jan 26":5775,"Feb 26":7425,"Mar 26":6875,"Apr 26":7100},"Astadala Pada Padmaradhana":{"Jul 25":402,"Aug 25":282,"Sep 25":302,"Oct 25":343,"Nov 25":378,"Dec 25":248,"Jan 26":245,"Feb 26":368,"Mar 26":186,"Apr 26":192},"Civet Vessel":{"Jul 25":4,"Aug 25":27,"Sep 25":24,"Oct 25":4,"Nov 25":14,"Dec 25":0,"Jan 26":14,"Feb 26":12,"Mar 26":6,"Apr 26":6},"Kalyanotsavam":{"Jul 25":37973,"Aug 25":34985,"Sep 25":27311,"Oct 25":34360,"Nov 25":37984,"Dec 25":35085,"Jan 26":26270,"Feb 26":36249,"Mar 26":35818,"Apr 26":37000},"Kasturi Vessel":{"Jul 25":34,"Aug 25":22,"Sep 25":15,"Oct 25":17,"Nov 25":23,"Dec 25":25,"Jan 26":36,"Feb 26":29,"Mar 26":19,"Apr 26":20},"Melchat Vastram":{"Jul 25":148,"Aug 25":188,"Sep 25":122,"Oct 25":169,"Nov 25":152,"Dec 25":158,"Jan 26":126,"Feb 26":131,"Mar 26":149,"Apr 26":154},"Sahasra Deepalankara":{"Jul 25":18000,"Aug 25":15600,"Sep 25":12600,"Oct 25":16200,"Nov 25":17415,"Dec 25":16205,"Jan 26":12600,"Feb 26":15000,"Mar 26":15000,"Apr 26":15600},"Suprabatham":{"Jul 25":12574,"Aug 25":12396,"Sep 25":11012,"Oct 25":11395,"Nov 25":11539,"Dec 25":7173,"Jan 26":6370,"Feb 26":11338,"Mar 26":12384,"Apr 26":12800},"Thiruppavada":{"Jul 25":315,"Aug 25":218,"Sep 25":194,"Oct 25":176,"Nov 25":262,"Dec 25":360,"Jan 26":178,"Feb 26":241,"Mar 26":231,"Apr 26":240},"Thomala":{"Jul 25":936,"Aug 25":661,"Sep 25":611,"Oct 25":738,"Nov 25":766,"Dec 25":478,"Jan 26":473,"Feb 26":843,"Mar 26":793,"Apr 26":820},"USSE":{"Jul 25":1339,"Aug 25":938,"Sep 25":897,"Oct 25":1294,"Nov 25":1449,"Dec 25":1726,"Jan 26":986,"Feb 26":1328,"Mar 26":1287,"Apr 26":1330},"Unjal Seva":{"Jul 25":4500,"Aug 25":4200,"Sep 25":3300,"Oct 25":4050,"Nov 25":4350,"Dec 25":4050,"Jan 26":3150,"Feb 26":4200,"Mar 26":4050,"Apr 26":4200}},"monthlyByType":{"Abhishekam":{"Advance Booking":{"Jul 25":161,"Aug 25":176,"Sep 25":165,"Oct 25":204,"Nov 25":155,"Dec 25":182,"Jan 26":142,"Feb 26":148,"Mar 26":166,"Apr 26":171},"Current Booking":{"Jul 25":14,"Aug 25":14,"Sep 25":15,"Oct 25":20,"Nov 25":13,"Dec 25":12,"Jan 26":15,"Feb 26":14,"Mar 26":15,"Apr 26":15},"Descritionary":{"Jul 25":243,"Aug 25":306,"Sep 25":251,"Oct 25":270,"Nov 25":211,"Dec 25":211,"Jan 26":248,"Feb 26":247,"Mar 26":238,"Apr 26":247},"Donor":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Online":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0}},"Archana":{"Advance Booking":{"Jul 25":44,"Aug 25":54,"Sep 25":36,"Oct 25":46,"Nov 25":47,"Dec 25":18,"Jan 26":25,"Feb 26":10,"Mar 26":15,"Apr 26":16},"Current Booking":{"Jul 25":126,"Aug 25":85,"Sep 25":99,"Oct 25":105,"Nov 25":105,"Dec 25":69,"Jan 26":68,"Feb 26":116,"Mar 26":120,"Apr 26":124},"Descritionary":{"Jul 25":522,"Aug 25":322,"Sep 25":314,"Oct 25":402,"Nov 25":460,"Dec 25":306,"Jan 26":257,"Feb 26":480,"Mar 26":489,"Apr 26":505},"Donor":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Online":{"Jul 25":139,"Aug 25":92,"Sep 25":101,"Oct 25":110,"Nov 25":112,"Dec 25":72,"Jan 26":68,"Feb 26":127,"Mar 26":122,"Apr 26":126}},"Arjitha Brahmotsavam":{"Advance Booking":{"Jul 25":0,"Aug 25":0,"Sep 25":10,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Current Booking":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Descritionary":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Donor":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Online":{"Jul 25":8250,"Aug 25":7425,"Sep 25":6050,"Oct 25":7425,"Nov 25":7975,"Dec 25":7425,"Jan 26":5775,"Feb 26":7425,"Mar 26":6875,"Apr 26":7100}},"Astadala Pada Padmaradhana":{"Advance Booking":{"Jul 25":32,"Aug 25":20,"Sep 25":0,"Oct 25":12,"Nov 25":12,"Dec 25":6,"Jan 26":0,"Feb 26":12,"Mar 26":0,"Apr 26":0},"Current Booking":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Descritionary":{"Jul 25":142,"Aug 25":91,"Sep 25":123,"Oct 25":101,"Nov 25":140,"Dec 25":72,"Jan 26":82,"Feb 26":125,"Mar 26":85,"Apr 26":88},"Donor":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Online":{"Jul 25":228,"Aug 25":171,"Sep 25":179,"Oct 25":230,"Nov 25":226,"Dec 25":170,"Jan 26":163,"Feb 26":231,"Mar 26":101,"Apr 26":104}},"Civet Vessel":{"Advance Booking":{"Jul 25":4,"Aug 25":27,"Sep 25":24,"Oct 25":4,"Nov 25":14,"Dec 25":0,"Jan 26":14,"Feb 26":12,"Mar 26":6,"Apr 26":6},"Current Booking":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Descritionary":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Donor":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Online":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0}},"Kalyanotsavam":{"Advance Booking":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":4,"Mar 26":0,"Apr 26":0},"Current Booking":{"Jul 25":5372,"Aug 25":5014,"Sep 25":4098,"Oct 25":5054,"Nov 25":5442,"Dec 25":4900,"Jan 26":3770,"Feb 26":5204,"Mar 26":5140,"Apr 26":5312},"Descritionary":{"Jul 25":4101,"Aug 25":4321,"Sep 25":2313,"Oct 25":3656,"Nov 25":4992,"Dec 25":4535,"Jan 26":2550,"Feb 26":4441,"Mar 26":5028,"Apr 26":5192},"Donor":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Online":{"Jul 25":28500,"Aug 25":25650,"Sep 25":20900,"Oct 25":25650,"Nov 25":27550,"Dec 25":25650,"Jan 26":19950,"Feb 26":26600,"Mar 26":25650,"Apr 26":26496}},"Kasturi Vessel":{"Advance Booking":{"Jul 25":34,"Aug 25":22,"Sep 25":15,"Oct 25":17,"Nov 25":23,"Dec 25":25,"Jan 26":36,"Feb 26":29,"Mar 26":19,"Apr 26":20},"Current Booking":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Descritionary":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Donor":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Online":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0}},"Melchat Vastram":{"Advance Booking":{"Jul 25":48,"Aug 25":68,"Sep 25":46,"Oct 25":60,"Nov 25":50,"Dec 25":60,"Jan 26":56,"Feb 26":58,"Mar 26":50,"Apr 26":52},"Current Booking":{"Jul 25":0,"Aug 25":0,"Sep 25":2,"Oct 25":2,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":2,"Apr 26":2},"Descritionary":{"Jul 25":100,"Aug 25":120,"Sep 25":74,"Oct 25":107,"Nov 25":102,"Dec 25":98,"Jan 26":70,"Feb 26":73,"Mar 26":97,"Apr 26":100},"Donor":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Online":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0}},"Sahasra Deepalankara":{"Advance Booking":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":15,"Dec 25":5,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Current Booking":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Descritionary":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Donor":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Online":{"Jul 25":18000,"Aug 25":15600,"Sep 25":12600,"Oct 25":16200,"Nov 25":17400,"Dec 25":16200,"Jan 26":12600,"Feb 26":15000,"Mar 26":15000,"Apr 26":15600}},"Suprabatham":{"Advance Booking":{"Jul 25":99,"Aug 25":61,"Sep 25":464,"Oct 25":134,"Nov 25":100,"Dec 25":85,"Jan 26":43,"Feb 26":30,"Mar 26":36,"Apr 26":37},"Current Booking":{"Jul 25":1187,"Aug 25":1191,"Sep 25":1152,"Oct 25":1104,"Nov 25":1123,"Dec 25":644,"Jan 26":609,"Feb 26":1117,"Mar 26":1282,"Apr 26":1325},"Descritionary":{"Jul 25":2662,"Aug 25":2605,"Sep 25":1964,"Oct 25":2221,"Nov 25":2551,"Dec 25":1479,"Jan 26":1176,"Feb 26":2323,"Mar 26":2523,"Apr 26":2608},"Donor":{"Jul 25":508,"Aug 25":486,"Sep 25":264,"Oct 25":406,"Nov 25":594,"Dec 25":897,"Jan 26":401,"Feb 26":540,"Mar 26":537,"Apr 26":555},"Online":{"Jul 25":8118,"Aug 25":8053,"Sep 25":7168,"Oct 25":7530,"Nov 25":7171,"Dec 25":4068,"Jan 26":4141,"Feb 26":7328,"Mar 26":8006,"Apr 26":8275}},"Thiruppavada":{"Advance Booking":{"Jul 25":0,"Aug 25":6,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":24,"Jan 26":6,"Feb 26":0,"Mar 26":6,"Apr 26":6},"Current Booking":{"Jul 25":103,"Aug 25":69,"Sep 25":68,"Oct 25":73,"Nov 25":93,"Dec 25":88,"Jan 26":73,"Feb 26":95,"Mar 26":74,"Apr 26":77},"Descritionary":{"Jul 25":212,"Aug 25":143,"Sep 25":126,"Oct 25":103,"Nov 25":169,"Dec 25":248,"Jan 26":99,"Feb 26":146,"Mar 26":151,"Apr 26":157},"Donor":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Online":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0}},"Thomala":{"Advance Booking":{"Jul 25":52,"Aug 25":39,"Sep 25":5,"Oct 25":29,"Nov 25":26,"Dec 25":7,"Jan 26":21,"Feb 26":20,"Mar 26":16,"Apr 26":17},"Current Booking":{"Jul 25":133,"Aug 25":87,"Sep 25":97,"Oct 25":104,"Nov 25":103,"Dec 25":66,"Jan 26":66,"Feb 26":118,"Mar 26":116,"Apr 26":120},"Descritionary":{"Jul 25":609,"Aug 25":443,"Sep 25":412,"Oct 25":495,"Nov 25":528,"Dec 25":336,"Jan 26":319,"Feb 26":586,"Mar 26":543,"Apr 26":561},"Donor":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Online":{"Jul 25":142,"Aug 25":92,"Sep 25":97,"Oct 25":110,"Nov 25":109,"Dec 25":69,"Jan 26":67,"Feb 26":119,"Mar 26":118,"Apr 26":122}},"USSE":{"Advance Booking":{"Jul 25":1339,"Aug 25":938,"Sep 25":897,"Oct 25":1294,"Nov 25":1449,"Dec 25":1726,"Jan 26":986,"Feb 26":1328,"Mar 26":1287,"Apr 26":1330},"Current Booking":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Descritionary":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Donor":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Online":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0}},"Unjal Seva":{"Advance Booking":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Current Booking":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Descritionary":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Donor":{"Jul 25":0,"Aug 25":0,"Sep 25":0,"Oct 25":0,"Nov 25":0,"Dec 25":0,"Jan 26":0,"Feb 26":0,"Mar 26":0,"Apr 26":0},"Online":{"Jul 25":4500,"Aug 25":4200,"Sep 25":3300,"Oct 25":4050,"Nov 25":4350,"Dec 25":4050,"Jan 26":3150,"Feb 26":4200,"Mar 26":4050,"Apr 26":4200}}},"sevaTotal":{"Abhishekam":4687,"Archana":7185,"Arjitha Brahmotsavam":78060,"Astadala Pada Padmaradhana":3212,"Civet Vessel":137,"Kalyanotsavam":377446,"Kasturi Vessel":262,"Melchat Vastram":1659,"Sahasra Deepalankara":168025,"Suprabatham":119842,"Thiruppavada":2688,"Thomala":7977,"USSE":13707,"Unjal Seva":43960},"sevaVerified":{"Abhishekam":4627,"Archana":6992,"Arjitha Brahmotsavam":61997,"Astadala Pada Padmaradhana":3087,"Civet Vessel":134,"Kalyanotsavam":337918,"Kasturi Vessel":251,"Melchat Vastram":1640,"Sahasra Deepalankara":136028,"Suprabatham":113104,"Thiruppavada":2681,"Thomala":7779,"USSE":8337,"Unjal Seva":36686},"typeTotal":{"Advance Booking":18472,"Current Booking":69334,"Descritionary":86964,"Donor":5580,"Online":648497},"monthlyGrandTotal":{"Jul 25":85724,"Aug 25":77991,"Sep 25":63429,"Oct 25":77328,"Nov 25":83410,"Dec 25":73803,"Jan 26":57046,"Feb 26":78306,"Mar 26":77963,"Apr 26":80666},"stats":{"grandTotal":828847,"grandVerified":721261,"verificationRate":"87.02","topSeva":"Kalyanotsavam"}};
+
+/* ═══════════════════════ CONSTANTS ═══════════════════════ */
+const SEVA_COLORS = {
+  'Abhishekam':                    '#FF6B6B',
+  'Archana':                       '#FFD700',
+  'Arjitha Brahmotsavam':          '#FF8C00',
+  'Astadala Pada Padmaradhana':    '#A78BFA',
+  'Civet Vessel':                  '#60A5FA',
+  'Kalyanotsavam':                 '#FF3D5A',
+  'Kasturi Vessel':                '#00E5CC',
+  'Melchat Vastram':               '#FB923C',
+  'Sahasra Deepalankara':          '#F7D94C',
+  'Suprabatham':                   '#4ADE80',
+  'Thiruppavada':                  '#22D3EE',
+  'Thomala':                       '#F97316',
+  'USSE':                          '#C084FC',
+  'Unjal Seva':                    '#86EFAC'
+};
+
+const TYPE_COLORS = {
+  'Advance Booking': '#60A5FA',
+  'Current Booking': '#34D399',
+  'Descritionary':   '#FBBF24',
+  'Donor':           '#F472B6',
+  'Online':          '#818CF8'
+};
+
+const MO = D.monthOrder;
+const fmt = n => n >= 1e6 ? (n/1e6).toFixed(2)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : n.toString();
+const fmtFull = n => n.toLocaleString('en-IN');
+
+/* ═══════════════════════ CHART DEFAULTS ═══════════════════════ */
+if (typeof Chart === 'undefined') {
+  document.querySelectorAll('.chart-wrap').forEach(el => {
+    el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#7a6548;font-size:12px;font-style:italic;">Chart library not available. Please serve this file via a local web server.</div>';
+  });
+} else {
+  Chart.defaults.color = '#c9b38a';
+  Chart.defaults.borderColor = 'rgba(200,150,42,0.15)';
+  Chart.defaults.font.family = "'Noto Serif', Georgia, serif";
+}
+
+const TOOLTIP = {
+  backgroundColor: 'rgba(10,5,0,0.95)',
+  borderColor: 'rgba(200,150,42,0.6)',
+  borderWidth: 1,
+  titleColor: '#ffd700',
+  bodyColor: '#c9b38a',
+  padding: 10,
+  titleFont: { family:"'Cinzel',serif", size:11 },
+  bodyFont: { family:"'Noto Serif',serif", size:11 },
+  callbacks: {
+    label: ctx => ' ' + ctx.dataset.label + ': ' + fmtFull(ctx.parsed.y ?? ctx.parsed.r ?? ctx.raw)
+  }
+};
+
+const GRID = { color:'rgba(200,150,42,0.1)', drawTicks:false };
+const TICK = { color:'#7a6548', padding:8, font:{size:10} };
+
+/* ════════════════════ 1. TREND LINE ════════════════════ */
+let trendScale = 'logarithmic';
+let chartTrend;
+
+function buildTrend(scale) {
+  const toVal = (v, isLog) => (isLog && !v) ? null : (v || 0);
+  const isLog = scale === 'logarithmic';
+  const datasets = D.sevas.map(s => ({
+    label: s,
+    data: MO.map(m => toVal(D.monthlyPerSeva[s][m], isLog)),
+    borderColor: SEVA_COLORS[s],
+    backgroundColor: SEVA_COLORS[s] + '18',
+    borderWidth: s === 'Kalyanotsavam' ? 2.5 : 1.5,
+    pointRadius: s === 'Kalyanotsavam' ? 5 : 3,
+    pointHoverRadius: 7,
+    tension: 0.45,
+    fill: false
+  }));
+
+  // Grand total line
+  datasets.unshift({
+    label: '— Grand Total',
+    data: MO.map(m => D.monthlyGrandTotal[m]),
+    borderColor: '#ffffff',
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderDash: [5,4],
+    pointRadius: 4,
+    pointHoverRadius: 7,
+    tension: 0.4,
+    fill: false,
+    order: -1
+  });
+
+  const cfg = {
+    type: 'line',
+    data: { labels: MO, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: {
+          position:'bottom',
+          labels: { boxWidth:12, padding:14, color:'#c9b38a', font:{size:10} }
+        },
+        tooltip: { ...TOOLTIP,
+          callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + fmtFull(ctx.parsed.y) }
+        }
+      },
+      scales: {
+        x: { grid: GRID, ticks: TICK },
+        y: {
+          type: scale,
+          grid: GRID, ticks: {
+            ...TICK,
+            callback: v => fmt(v)
+          },
+          min: scale === 'logarithmic' ? 1 : 0
+        }
+      }
+    }
+  };
+
+  if (chartTrend) chartTrend.destroy();
+  chartTrend = new Chart(document.getElementById('cTrend'), cfg);
+}
+
+function setTrendScale(s) {
+  trendScale = s;
+  document.getElementById('tlog').classList.toggle('on', s==='logarithmic');
+  document.getElementById('tlin').classList.toggle('on', s==='linear');
+  buildTrend(s);
+}
+
+/* ════════════════════ 2. SEVA POPULARITY BAR ════════════════════ */
+function buildBar() {
+  const sorted = [...D.sevas].sort((a,b) => D.sevaTotal[b] - D.sevaTotal[a]);
+  chartBar = window._chartBar = new Chart(document.getElementById('cBar'), {
+    type: 'bar',
+    data: {
+      labels: sorted,
+      datasets: [{
+        label: 'Total Bookings',
+        data: sorted.map(s => D.sevaTotal[s]),
+        backgroundColor: sorted.map(s => SEVA_COLORS[s] + 'cc'),
+        borderColor:      sorted.map(s => SEVA_COLORS[s]),
+        borderWidth: 1,
+        borderRadius: 6,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins: {
+        legend: { display:false },
+        tooltip: { ...TOOLTIP,
+          callbacks: { label: ctx => '  ' + fmtFull(ctx.parsed.x) + ' bookings (' + ((ctx.parsed.x/D.stats.grandTotal)*100).toFixed(1) + '%)' }
+        }
+      },
+      scales: {
+        x: {
+          type:'logarithmic', grid:GRID,
+          ticks: { ...TICK, callback: v => fmt(v) }
+        },
+        y: { grid:{display:false}, ticks:{ ...TICK, color:'#c9b38a', font:{size:11} } }
+      }
+    }
+  });
+}
+
+/* ════════════════════ 3. DONUT ════════════════════ */
+function buildDonut() {
+  const labels = ['Online','Discretionary','Current Booking','Advance Booking','Donor'];
+  const keyMap = { 'Online':'Online','Discretionary':'Descritionary','Current Booking':'Current Booking','Advance Booking':'Advance Booking','Donor':'Donor' };
+  const vals = labels.map(l => D.typeTotal[keyMap[l]]);
+  const colors = ['#818CF8','#FBBF24','#34D399','#60A5FA','#F472B6'];
+
+  chartDonut = window._chartDonut = new Chart(document.getElementById('cDonut'), {
+    type:'doughnut',
+    data:{
+      labels,
+      datasets:[{
+        data: vals,
+        backgroundColor: colors.map(c=>c+'cc'),
+        borderColor: colors,
+        borderWidth:2,
+        hoverOffset:12
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      cutout:'68%',
+      plugins:{
+        legend:{ position:'right', labels:{ boxWidth:12, padding:10, color:'#c9b38a', font:{size:10} } },
+        tooltip:{ ...TOOLTIP,
+          callbacks:{ label: ctx => ' ' + ctx.label + ': ' + fmtFull(ctx.raw) + ' (' + ((ctx.raw/D.stats.grandTotal)*100).toFixed(1) + '%)' }
+        }
+      }
+    }
+  });
+}
+
+/* ════════════════════ 4. BOOKED vs VERIFIED ════════════════════ */
+function buildBV() {
+  const sorted = [...D.sevas].sort((a,b) => D.sevaTotal[b] - D.sevaTotal[a]);
+  chartBV = window._chartBV = new Chart(document.getElementById('cBV'), {
+    type:'bar',
+    data:{
+      labels: sorted,
+      datasets:[
+        { label:'Booked',   data: sorted.map(s=>D.sevaTotal[s]),    backgroundColor:'rgba(251,191,36,0.6)',  borderColor:'#FBBF24', borderWidth:1, borderRadius:4, borderSkipped:false },
+        { label:'Verified', data: sorted.map(s=>D.sevaVerified[s]), backgroundColor:'rgba(74,222,128,0.55)', borderColor:'#4ADE80', borderWidth:1, borderRadius:4, borderSkipped:false }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ boxWidth:12, color:'#c9b38a', font:{size:10} } },
+        tooltip:{ ...TOOLTIP }
+      },
+      scales:{
+        x:{ grid:{display:false}, ticks:{ ...TICK, maxRotation:40, font:{size:9} } },
+        y:{ type:'logarithmic', grid:GRID, ticks:{ ...TICK, callback:v=>fmt(v) } }
+      }
+    }
+  });
+}
+
+/* ════════════════════ 5. MONTHLY GRAND BAR ════════════════════ */
+function buildMonthlyBar() {
+  const vals = MO.map(m => D.monthlyGrandTotal[m]);
+  const max = Math.max(...vals);
+
+  chartMB = window._chartMB = new Chart(document.getElementById('cMonthlyBar'), {
+    type:'bar',
+    data:{
+      labels: MO,
+      datasets:[{
+        label:'Total Bookings',
+        data: vals,
+        backgroundColor: vals.map(v => `rgba(200,150,42,${0.4 + 0.5*(v/max)})`),
+        borderColor: vals.map(v => `rgba(255,215,0,${0.5 + 0.4*(v/max)})`),
+        borderWidth:1,
+        borderRadius:6,
+        borderSkipped:false
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{ ...TOOLTIP, callbacks:{ label: ctx => '  Total: '+fmtFull(ctx.parsed.y) } }
+      },
+      scales:{
+        x:{ grid:{display:false}, ticks:TICK },
+        y:{ grid:GRID, ticks:{ ...TICK, callback:v=>fmt(v) } }
+      }
+    }
+  });
+}
+
+/* ════════════════════ 6. STACKED (drill-down) ════════════════════ */
+let chartStacked;
+const typeLabels = { 'Advance Booking':'Advance', 'Current Booking':'Current', 'Descritionary':'Discretionary', 'Donor':'Donor', 'Online':'Online' };
+const typeColorList = ['#60A5FA','#34D399','#FBBF24','#F472B6','#818CF8'];
+
+function buildStacked(seva, filtMO) {
+  filtMO = filtMO || MO;
+  const datasets = D.types.map((t,i) => ({
+    label: typeLabels[t],
+    data: filtMO.map(m => D.monthlyByType[seva][t][m] || 0),
+    backgroundColor: typeColorList[i] + 'bb',
+    borderColor: typeColorList[i],
+    borderWidth:1,
+    borderRadius:4,
+    borderSkipped:false
+  }));
+
+  const cfg = {
+    type:'bar',
+    data:{ labels:filtMO, datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ boxWidth:12, color:'#c9b38a', font:{size:10} } },
+        tooltip:{ ...TOOLTIP }
+      },
+      scales:{
+        x:{ stacked:true, grid:{display:false}, ticks:TICK },
+        y:{ stacked:true, grid:GRID, ticks:{ ...TICK, callback:v=>fmt(v) } }
+      }
+    }
+  };
+
+  if (chartStacked) chartStacked.destroy();
+  chartStacked = new Chart(document.getElementById('cStacked'), cfg);
+}
+
+function updateStacked() {
+  buildStacked(document.getElementById('sevaSelect').value);
+}
+
+function populateSelect() {
+  const sel = document.getElementById('sevaSelect');
+  D.sevas.forEach(s => {
+    const o = document.createElement('option');
+    o.value = o.textContent = s;
+    sel.appendChild(o);
+  });
+  sel.value = 'Kalyanotsavam';
+}
+
+/* ════════════════════ 7. RADAR ════════════════════ */
+function buildRadar(moIdx) {
+  moIdx = (moIdx === undefined) ? null : moIdx;
+  const top6 = [...D.sevas].sort((a,b)=>D.sevaTotal[b]-D.sevaTotal[a]).slice(0,6);
+
+  const datasets = top6.map(s => {
+    const vals = MO.map(m => D.monthlyPerSeva[s][m]||0);
+    const max = Math.max(...vals) || 1;
+    return {
+      label: s,
+      data: vals.map(v => Math.round((v/max)*100)),
+      borderColor: SEVA_COLORS[s],
+      backgroundColor: SEVA_COLORS[s] + '22',
+      borderWidth:1.5,
+      pointRadius:3,
+      pointHoverRadius:6,
+      pointBackgroundColor: SEVA_COLORS[s]
+    };
+  });
+
+  window._chartRadar = new Chart(document.getElementById('cRadar'), {
+    type:'radar',
+    data:{ labels:MO, datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, color:'#c9b38a', font:{size:9}, padding:8 } },
+        tooltip:{ ...TOOLTIP, callbacks:{ label: ctx => ' '+ctx.dataset.label+': '+ctx.raw+'% of peak' } }
+      },
+      scales:{
+        r:{
+          backgroundColor:'rgba(200,150,42,0.04)',
+          grid:{ color:'rgba(200,150,42,0.15)' },
+          angleLines:{ color:'rgba(200,150,42,0.2)' },
+          pointLabels:{ color:'#c9b38a', font:{size:9} },
+          ticks:{ display:false, stepSize:25 },
+          min:0, max:100
+        }
+      }
+    }
+  });
+}
+
+/* ════════════════════ 8. STACKED AREA (by type) ════════════════════ */
+function buildArea(filtMO) {
+  filtMO = filtMO || MO;
+  const datasets = D.types.map((t,i) => {
+    const monthSums = filtMO.map(m => {
+      return D.sevas.reduce((acc,s) => acc + (D.monthlyByType[s][t][m]||0), 0);
+    });
+    return {
+      label: typeLabels[t],
+      data: monthSums,
+      borderColor: typeColorList[i],
+      backgroundColor: typeColorList[i] + '44',
+      fill: 'origin',
+      tension: 0.4,
+      borderWidth: 1.5,
+      pointRadius: 3,
+      pointHoverRadius: 6
+    };
+  });
+
+  window._chartArea = new Chart(document.getElementById('cArea'), {
+    type:'line',
+    data:{ labels:filtMO, datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:12, color:'#c9b38a', font:{size:10} } },
+        tooltip:{ ...TOOLTIP,
+          callbacks:{ label: ctx => ' ' + ctx.dataset.label + ': ' + fmtFull(ctx.parsed.y) }
+        }
+      },
+      scales:{
+        x:{ grid:GRID, ticks:TICK },
+        y:{ grid:GRID, ticks:{ ...TICK, callback:v=>fmt(v) } }
+      }
+    }
+  });
+}
+
+/* ════════════════════ 9. TABLE ════════════════════ */
+function buildTable() {
+  const sorted = [...D.sevas].sort((a,b)=>D.sevaTotal[b]-D.sevaTotal[a]);
+  const grand = D.stats.grandTotal;
+  const tbody = document.getElementById('tBody');
+
+  sorted.forEach(s => {
+    const booked = D.sevaTotal[s], verified = D.sevaVerified[s];
+    const vr = booked>0 ? ((verified/booked)*100).toFixed(1) : '0.0';
+    const share = ((booked/grand)*100).toFixed(2);
+    const vrClass = parseFloat(vr)>=95?'hi':parseFloat(vr)>=80?'mid':'lo';
+    const bt = D.monthlyByType[s];
+    const typeVal = t => MO.reduce((a,m)=>a+(bt[t][m]||0),0);
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="dot" style="background:${SEVA_COLORS[s]}"></span>${s}</td>
+      <td class="r">${fmtFull(booked)}</td>
+      <td class="r">${fmtFull(verified)}</td>
+      <td class="r"><span class="vrate ${vrClass}">${vr}%</span></td>
+      <td class="r">
+        <span class="pbar"><span class="pbar-f" style="width:${Math.min(parseFloat(share)*2,100)}%"></span></span>
+        ${share}%
+      </td>
+      <td class="r">${fmtFull(typeVal('Advance Booking'))}</td>
+      <td class="r">${fmtFull(typeVal('Current Booking'))}</td>
+      <td class="r">${fmtFull(typeVal('Descritionary'))}</td>
+      <td class="r">${fmtFull(typeVal('Online'))}</td>
+      <td class="r">${fmtFull(typeVal('Donor'))}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ════════════════════ KPI COUNTERS ════════════════════ */
+function animateCounter(el, target, suffix='', prefix='') {
+  const duration = 1800, steps = 60;
+  const inc = target / steps;
+  let cur = 0, step = 0;
+  const t = setInterval(() => {
+    step++;
+    cur = Math.min(Math.round(inc * step), target);
+    el.textContent = prefix + (cur >= 1000 ? cur.toLocaleString('en-IN') : cur) + suffix;
+    if (step >= steps) clearInterval(t);
+  }, duration / steps);
+}
+
+function initKPIs() {
+  animateCounter(document.getElementById('kv1'), 14);
+  animateCounter(document.getElementById('kv2'), 748181);
+  animateCounter(document.getElementById('kv3'), 87, '%');
+  document.getElementById('kv4').textContent = 'Kalyanotsavam';
+  animateCounter(document.getElementById('kv5'), 78, '%');
+
+  setTimeout(() => {
+    document.getElementById('kf1').style.width = '100%';
+    document.getElementById('kf2').style.width = '100%';
+    document.getElementById('kf3').style.width = '87%';
+    document.getElementById('kf4').style.width = '100%';
+    document.getElementById('kf5').style.width = '78%';
+  }, 300);
+}
+
+/* ══════════════════════════════════════════════════════
+   DAY-OF-WEEK DATA & ANALYSIS
+══════════════════════════════════════════════════════ */
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAYS_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DAY_COLORS = ['#c084fc','#60a5fa','#34d399','#fbbf24','#fb923c','#ff6b6b','#f472b6'];
+
+// Pre-computed from raw data
+const DOW = {
+  total: {
+    'Abhishekam':                 [0,0,0,0,0,4254,0],
+    'Archana':                    [0,0,2171,1926,2317,0,0],
+    'Arjitha Brahmotsavam':       [9625,9900,9900,9900,9900,11000,10735],
+    'Astadala Pada Padmaradhana': [0,0,3020,0,0,0,0],
+    'Civet Vessel':               [0,0,0,0,0,131,0],
+    'Kalyanotsavam':              [48338,50689,46685,47401,48290,48077,50966],
+    'Kasturi Vessel':             [0,0,0,0,0,242,0],
+    'Melchat Vastram':            [0,0,0,0,0,1505,0],
+    'Sahasra Deepalankara':       [21010,21600,21605,21000,21610,22200,23400],
+    'Suprabatham':                [16533,16675,15271,14796,15797,11078,16892],
+    'Thiruppavada':               [0,0,0,0,2448,0,0],
+    'Thomala':                    [0,0,2390,2278,2489,0,0],
+    'USSE':                       [1988,2027,1247,1078,1236,1498,3303],
+    'Unjal Seva':                 [5700,5710,5400,5400,5400,6000,6150]
+  },
+  avg: {
+    'Abhishekam':                 [0,0,0,0,0,99,0],
+    'Archana':                    [0,0,60,57,68,0,0],
+    'Arjitha Brahmotsavam':       [275,275,275,275,275,275,268],
+    'Astadala Pada Padmaradhana': [0,0,92,0,0,0,0],
+    'Civet Vessel':               [0,0,0,0,0,6,0],
+    'Kalyanotsavam':              [1239,1300,1297,1317,1341,1233,1243],
+    'Kasturi Vessel':             [0,0,0,0,0,6,0],
+    'Melchat Vastram':            [0,0,0,0,0,35,0],
+    'Sahasra Deepalankara':       [600,600,600,600,600,600,600],
+    'Suprabatham':                [435,439,402,400,416,284,433],
+    'Thiruppavada':               [0,0,0,0,68,0,0],
+    'Thomala':                    [0,0,66,67,73,0,0],
+    'USSE':                       [50,51,33,30,33,35,79],
+    'Unjal Seva':                 [150,150,150,150,150,150,150]
+  },
+  count: {
+    'Abhishekam':                 [0,0,0,0,0,43,0],
+    'Archana':                    [0,0,36,34,34,0,0],
+    'Arjitha Brahmotsavam':       [35,36,36,36,36,40,40],
+    'Astadala Pada Padmaradhana': [0,0,33,0,0,0,0],
+    'Civet Vessel':               [0,0,0,0,0,22,0],
+    'Kalyanotsavam':              [39,39,36,36,36,39,41],
+    'Kasturi Vessel':             [0,0,0,0,0,38,0],
+    'Melchat Vastram':            [0,0,0,0,0,43,0],
+    'Sahasra Deepalankara':       [35,36,36,35,36,37,39],
+    'Suprabatham':                [38,38,38,37,38,39,39],
+    'Thiruppavada':               [0,0,0,0,36,0,0],
+    'Thomala':                    [0,0,36,34,34,0,0],
+    'USSE':                       [40,40,38,36,38,43,42],
+    'Unjal Seva':                 [38,38,36,36,36,40,41]
+  }
+};
+
+// Sevas active on 4+ days (multi-day sevas)
+const multiDaySevas = D.sevas.filter(s => DOW.count[s].filter(c=>c>0).length >= 4);
+// Day-exclusive sevas
+const exclusiveSevas = D.sevas.filter(s => DOW.count[s].filter(c=>c>0).length === 1);
+
+/* ── ANOMALY CARDS ── */
+function buildAnomalyCards() {
+  const anomalies = [
+    {
+      icon: '📉',
+      title: 'Suprabatham — Friday Dip',
+      color: '#f87171',
+      desc: 'Avg drops <strong>34%</strong> on Fridays (284) vs typical ~435/day.',
+      detail: 'Fri is peak pilgrim day — dip may indicate capacity cap or slot conflict',
+      badge: 'Investigate'
+    },
+    {
+      icon: '📈',
+      title: 'USSE — Saturday Surge',
+      color: '#fbbf24',
+      desc: 'Saturday average (79) is <strong>2.4×</strong> the Mon–Fri average (~34).',
+      detail: 'Weekend pilgrimage spike — consider expanding Saturday slot capacity',
+      badge: 'Opportunity'
+    },
+    {
+      icon: '🔒',
+      title: '6 Sevas — Friday Exclusive',
+      color: '#818cf8',
+      desc: 'Abhishekam, Civet, Kasturi, Melchat Vastram run <strong>only on Fridays</strong>.',
+      detail: 'Strict scheduling — no flexibility for devotees visiting on other days',
+      badge: 'Scheduling'
+    },
+    {
+      icon: '📅',
+      title: 'Day-Locked Sevas',
+      color: '#34d399',
+      desc: 'Astadala (Tue only), Thiruppavada (Thu only), Archana/Thomala (Tue–Thu only).',
+      detail: 'Devotees must plan visits around fixed seva schedules',
+      badge: 'Fixed Pattern'
+    },
+    {
+      icon: '⚖️',
+      title: 'Fixed-Quota Sevas',
+      color: '#f472b6',
+      desc: 'Sahasra Deepalankara (600/day) &amp; Unjal Seva (150/day) are <strong>perfectly uniform</strong>.',
+      detail: 'Hard capacity caps — demand may exceed supply on peak days',
+      badge: 'Quota Cap'
+    },
+    {
+      icon: '👑',
+      title: 'Kalyanotsavam — Thursday Peak',
+      color: '#ff8c33',
+      desc: 'Thursday avg (1,341) is <strong>8% above</strong> Sunday (1,239) — consistent weekly peak.',
+      detail: 'Thursday may have optimal pilgrim foot-traffic and slot availability',
+      badge: 'Pattern'
+    }
+  ];
+
+  const container = document.getElementById('anomaly-cards');
+  anomalies.forEach(a => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.cssText = `--kc:${a.color};position:relative;overflow:hidden;`;
+    card.innerHTML = `
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,${a.color},transparent)"></div>
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <span style="font-size:28px;line-height:1;flex-shrink:0">${a.icon}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-family:'Cinzel',serif;font-size:11px;font-weight:600;color:${a.color};margin-bottom:5px">${a.title}</div>
+          <div style="font-size:11px;color:var(--cream-dim);line-height:1.5;margin-bottom:6px">${a.desc}</div>
+          <div style="font-size:10px;color:var(--cream-muted);font-style:italic;line-height:1.4">${a.detail}</div>
+        </div>
+        <span style="font-size:9px;padding:2px 8px;border-radius:10px;border:1px solid ${a.color}33;color:${a.color};background:${a.color}15;white-space:nowrap;flex-shrink:0">${a.badge}</span>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+/* ── HEATMAP ── */
+let hmMode = 'avg';
+function setHeatmapMode(m) {
+  hmMode = m;
+  document.getElementById('hmAvg').classList.toggle('on', m==='avg');
+  document.getElementById('hmTotal').classList.toggle('on', m==='total');
+  renderHeatmap();
+}
+
+function renderHeatmap() {
+  const wrap = document.getElementById('heatmap-wrap');
+  const dataset = DOW[hmMode];
+
+  // Get max value for color scaling (per-row normalisation for better contrast)
+  let html = `<table style="width:100%;border-collapse:separate;border-spacing:3px;font-size:11px">
+    <thead><tr>
+      <th style="text-align:left;padding:6px 10px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;color:var(--gold);font-weight:400;width:200px">Seva</th>
+      ${DAYS.map((d,i) => `<th style="text-align:center;padding:6px 4px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;color:${DAY_COLORS[i]};font-weight:400;min-width:60px">${d}</th>`).join('')}
+      <th style="text-align:right;padding:6px 10px;font-family:'Cinzel',serif;font-size:9px;color:var(--gold);font-weight:400">Total</th>
+    </tr></thead><tbody>`;
+
+  D.sevas.forEach(s => {
+    const vals = dataset[s];
+    const rowMax = Math.max(...vals);
+    const rowTotal = DOW.total[s].reduce((a,b)=>a+b,0);
+    html += `<tr>
+      <td style="padding:5px 10px;color:var(--cream-dim);white-space:nowrap">
+        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SEVA_COLORS[s]};margin-right:7px;vertical-align:middle"></span>${s}
+      </td>`;
+    vals.forEach((v, i) => {
+      if (v === 0) {
+        html += `<td style="text-align:center;padding:5px 4px;border-radius:5px;background:rgba(200,150,42,0.04);color:var(--cream-muted);font-size:10px">—</td>`;
+      } else {
+        const intensity = rowMax > 0 ? v / rowMax : 0;
+        const bg = `rgba(200,150,42,${(0.08 + intensity * 0.75).toFixed(2)})`;
+        const textCol = intensity > 0.6 ? '#0a0500' : '#fdf3e7';
+        const display = hmMode === 'avg' ? v.toLocaleString('en-IN') : (v >= 1000 ? (v/1000).toFixed(1)+'K' : v);
+        html += `<td style="text-align:center;padding:5px 4px;border-radius:5px;background:${bg};color:${textCol};font-weight:${intensity>0.6?'600':'400'};font-size:10px" title="${DAYS_FULL[i]}: ${v.toLocaleString('en-IN')}">${display}</td>`;
+      }
+    });
+    html += `<td style="text-align:right;padding:5px 10px;color:var(--cream);font-family:'Cinzel',serif;font-size:11px">${(rowTotal/1000).toFixed(1)}K</td></tr>`;
+  });
+
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+/* ── DOW DRILL-DOWN CHART ── */
+let chartDow;
+function buildDowChart(seva) {
+  const avgs = DOW.avg[seva];
+  const counts = DOW.count[seva];
+  const activeDays = DAYS.filter((_,i) => counts[i] > 0);
+  const activeAvgs = avgs.filter((_,i) => counts[i] > 0);
+  const activeColors = DAYS.map((_,i) => DAY_COLORS[i]).filter((_,i) => counts[i] > 0);
+  const mean = activeAvgs.reduce((a,b)=>a+b,0) / (activeAvgs.length || 1);
+
+  const cfg = {
+    type: 'bar',
+    data: {
+      labels: activeDays,
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Avg Bookings',
+          data: activeAvgs,
+          backgroundColor: activeColors.map((c,i) => {
+            const v = activeAvgs[i];
+            const isAnomaly = Math.abs(v - mean) / mean > 0.15;
+            return isAnomaly ? c + 'ff' : c + '88';
+          }),
+          borderColor: activeColors,
+          borderWidth: 1.5,
+          borderRadius: 6,
+          borderSkipped: false,
+          order: 1
+        },
+        {
+          type: 'line',
+          label: 'Mean',
+          data: activeDays.map(() => Math.round(mean)),
+          borderColor: 'rgba(255,255,255,0.5)',
+          borderWidth: 1.5,
+          borderDash: [5,4],
+          pointRadius: 0,
+          fill: false,
+          order: 0
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { boxWidth:12, color:'#c9b38a', font:{size:10} } },
+        tooltip: { ...TOOLTIP,
+          callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + (ctx.parsed.y||0).toLocaleString('en-IN') }
+        }
+      },
+      scales: {
+        x: { grid: { display:false }, ticks: TICK },
+        y: { grid: GRID, ticks: { ...TICK, callback: v => fmt(v) }, beginAtZero: true }
+      }
+    }
+  };
+
+  if (chartDow) chartDow.destroy();
+  chartDow = new Chart(document.getElementById('cDow'), cfg);
+}
+
+function updateDowChart() {
+  buildDowChart(document.getElementById('dowSevaSelect').value);
+}
+
+function populateDowSelect() {
+  const sel = document.getElementById('dowSevaSelect');
+  D.sevas.forEach(s => {
+    const o = document.createElement('option');
+    o.value = o.textContent = s;
+    sel.appendChild(o);
+  });
+  sel.value = 'Kalyanotsavam';
+}
+
+/* ── COMBINED DAY TOTALS ── */
+function buildDowAll() {
+  if (window._chartDowAll) { window._chartDowAll.destroy(); window._chartDowAll = null; }
+  const dataset = dowAllMode==='avg' ? DOW.avg : DOW.total;
+  const dayTotals = DAYS.map((_,i) => D.sevas.reduce((acc,s) => acc + (dataset[s][i]||0), 0));
+  const maxVal = Math.max(...dayTotals);
+
+  window._chartDowAll = new Chart(document.getElementById('cDowAll'), {
+    type: 'bar',
+    data: {
+      labels: DAYS,
+      datasets: [{
+        label: 'Total Bookings',
+        data: dayTotals,
+        backgroundColor: DAY_COLORS.map((c,i) => c + (dayTotals[i] === maxVal ? 'ff' : '88')),
+        borderColor: DAY_COLORS,
+        borderWidth: 1.5,
+        borderRadius: 6,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { ...TOOLTIP,
+          callbacks: { label: ctx => '  Total: ' + (ctx.parsed.y).toLocaleString('en-IN') }
+        }
+      },
+      scales: {
+        x: { grid: { display:false }, ticks: TICK },
+        y: { grid: GRID, ticks: { ...TICK, callback: v => fmt(v) } }
+      }
+    }
+  });
+}
+
+/* ── ANOMALY: SUPRABATHAM FRIDAY DIP ── */
+function buildAnoSuprabatham() {
+  const avgs = DOW.avg['Suprabatham'];
+  const mean = avgs.reduce((a,b)=>a+b,0) / 7;
+
+  new Chart(document.getElementById('cAnoSup'), {
+    type: 'bar',
+    data: {
+      labels: DAYS_FULL,
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Avg Bookings',
+          data: avgs,
+          backgroundColor: avgs.map((v,i) =>
+            i === 5 ? 'rgba(248,113,113,0.85)' : 'rgba(74,222,128,0.65)'
+          ),
+          borderColor: avgs.map((_,i) => i === 5 ? '#f87171' : '#4ade80'),
+          borderWidth: 1.5, borderRadius: 6, borderSkipped: false, order: 1
+        },
+        {
+          type: 'line',
+          label: 'Average (ex-Fri)',
+          data: DAYS.map(() => Math.round(mean)),
+          borderColor: 'rgba(255,255,255,0.45)',
+          borderWidth: 1.5, borderDash: [5,4], pointRadius: 0, fill: false, order: 0
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { boxWidth:12, color:'#c9b38a', font:{size:10} } },
+        tooltip: { ...TOOLTIP,
+          callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + (ctx.parsed.y||0).toLocaleString('en-IN') }
+        }
+      },
+      scales: {
+        x: { grid:{display:false}, ticks:TICK },
+        y: { grid:GRID, ticks:{ ...TICK, callback:v=>fmt(v) }, beginAtZero:true }
+      }
+    }
+  });
+}
+
+/* ── ANOMALY: USSE SATURDAY SURGE ── */
+function buildAnoUSSE() {
+  const avgs = DOW.avg['USSE'];
+  const mean = avgs.reduce((a,b)=>a+b,0) / 7;
+
+  new Chart(document.getElementById('cAnoUSSE'), {
+    type: 'bar',
+    data: {
+      labels: DAYS_FULL,
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Avg Bookings',
+          data: avgs,
+          backgroundColor: avgs.map((v,i) =>
+            i === 6 ? 'rgba(251,191,36,0.9)' : 'rgba(129,140,248,0.6)'
+          ),
+          borderColor: avgs.map((_,i) => i === 6 ? '#fbbf24' : '#818cf8'),
+          borderWidth: 1.5, borderRadius: 6, borderSkipped: false, order: 1
+        },
+        {
+          type: 'line',
+          label: 'Average',
+          data: DAYS.map(() => Math.round(mean)),
+          borderColor: 'rgba(255,255,255,0.45)',
+          borderWidth: 1.5, borderDash: [5,4], pointRadius: 0, fill: false, order: 0
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { boxWidth:12, color:'#c9b38a', font:{size:10} } },
+        tooltip: { ...TOOLTIP,
+          callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + (ctx.parsed.y||0).toLocaleString('en-IN') }
+        }
+      },
+      scales: {
+        x: { grid:{display:false}, ticks:TICK },
+        y: { grid:GRID, ticks:{ ...TICK, callback:v=>fmt(v) }, beginAtZero:true }
+      }
+    }
+  });
+}
+
+/* ── AVAILABILITY MATRIX ── */
+function buildAvailMatrix() {
+  const active = (s, i) => DOW.count[s][i] > 0;
+  let html = `<table style="width:100%;border-collapse:separate;border-spacing:3px;font-size:11px">
+    <thead><tr>
+      <th style="text-align:left;padding:6px 10px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;color:var(--gold);font-weight:400;width:220px">Seva</th>
+      ${DAYS.map((d,i) => `<th style="text-align:center;padding:6px 8px;font-family:'Cinzel',serif;font-size:9px;color:${DAY_COLORS[i]};font-weight:400">${d}</th>`).join('')}
+      <th style="text-align:center;padding:6px 10px;font-family:'Cinzel',serif;font-size:9px;color:var(--gold);font-weight:400">Days/Wk</th>
+    </tr></thead><tbody>`;
+
+  D.sevas.forEach(s => {
+    const daysActive = DAYS.filter((_,i) => active(s,i)).length;
+    const pattern = daysActive === 7 ? 'All Days' : daysActive === 1 ? 'Day-Exclusive' : daysActive === 3 ? 'Mid-Week' : daysActive+'d';
+    const patternColor = daysActive === 7 ? '#4ade80' : daysActive === 1 ? '#f87171' : '#fbbf24';
+    html += `<tr>
+      <td style="padding:5px 10px;color:var(--cream-dim)">
+        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SEVA_COLORS[s]};margin-right:7px;vertical-align:middle"></span>${s}
+      </td>`;
+    DAYS.forEach((_,i) => {
+      if (active(s,i)) {
+        html += `<td style="text-align:center;padding:5px 8px;border-radius:5px;background:rgba(200,150,42,0.18)">
+          <span style="color:var(--gold-bright);font-size:14px">✦</span>
+        </td>`;
+      } else {
+        html += `<td style="text-align:center;padding:5px 8px;border-radius:5px;background:rgba(200,150,42,0.03);color:var(--cream-muted);font-size:12px">·</td>`;
+      }
+    });
+    html += `<td style="text-align:center;padding:5px 10px">
+      <span style="font-size:9px;padding:2px 8px;border-radius:10px;border:1px solid ${patternColor}44;color:${patternColor};background:${patternColor}15">${pattern}</span>
+    </td></tr>`;
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('avail-matrix').innerHTML = html;
+}
+
+/* ══════════════════════════════════════════════════════
+   ABSENTEE & EO DATA
+══════════════════════════════════════════════════════ */
+const SEVA_ABSENT_RATE = {"Abhishekam":1.3,"Archana":2.7,"Arjitha Brahmotsavam":20.6,"Astadala Pada Padmaradhana":3.9,"Civet Vessel":2.3,"Kalyanotsavam":10.5,"Kasturi Vessel":4.1,"Melchat Vastram":1.1,"Sahasra Deepalankara":19,"Suprabatham":5.6,"Thiruppavada":0.2,"Thomala":2.5,"USSE":39.2,"Unjal Seva":16.5};
+
+const ABSENT_MONTHLY_RATE = {"Abhishekam":[0.7,1,0.9,0.6,2.1,0.5,0.2,2,1.9,2],"Archana":[3.5,5.1,3.5,1.8,1.8,2.4,5,2.5,2.3,2.4],"Arjitha Brahmotsavam":[20.1,22,21.6,21,20,20.1,18.3,20.3,21.7,21],"Astadala Pada Padmaradhana":[5.2,3.9,2,4.4,4.2,3.2,4.1,4.3,2.7,3.5],"Civet Vessel":[0,3.7,0,0,0,0,0,0,0,0],"Kalyanotsavam":[10.2,11.1,11.3,10.4,10.1,10.4,11.1,10.4,9.7,10.1],"Kasturi Vessel":[2.9,4.5,0,0,4.3,16,2.8,0,5.3,2.7],"Melchat Vastram":[1.4,0.5,0,1.2,1.3,1.9,0.8,3.1,0,1.6],"Sahasra Deepalankara":[18.4,21.9,19.5,18.6,18.8,17.6,19.2,19.3,18.5,18.9],"Suprabatham":[5.2,5.6,6.9,6,5,6.6,6.3,5,5.1,5.1],"Thiruppavada":[0.6,0,0.5,0,0,0.3,0,0,0,0],"Thomala":[4.7,0.6,1.3,2.6,1.4,2.9,3.8,1.8,2.4,2.1],"USSE":[39.4,27.7,39.5,45.3,38.8,34.4,41.9,44.5,42.7,43.6],"Unjal Seva":[15.6,17.2,17.4,16.4,16,16.7,16.3,17.1,15.8,16.5]};
+
+const DOW_ABSENT_RATE = {"Abhishekam":[null,null,null,null,null,1.3,null],"Archana":[null,null,3.8,3,1.4,null,null],"Arjitha Brahmotsavam":[20.5,20.8,21.4,20.8,19.8,20.7,20],"Astadala Pada Padmaradhana":[null,null,3.9,null,null,null,null],"Civet Vessel":[null,null,null,null,null,2.3,null],"Kalyanotsavam":[10.6,10.1,10.3,10.1,10.1,10.8,11.3],"Kasturi Vessel":[null,null,null,null,null,4.1,null],"Melchat Vastram":[null,null,null,null,null,1.1,null],"Sahasra Deepalankara":[20.5,19.4,18.9,19.9,18.6,18.7,17.5],"Suprabatham":[5.1,5.3,5.6,6,5.2,7.9,5],"Thiruppavada":[null,null,null,null,0.2,null,null],"Thomala":[null,null,1.7,3.4,2.5,null,null],"USSE":[38.2,35.5,39.5,37.1,38.3,36.7,44],"Unjal Seva":[16.6,16.7,15.3,17.1,16.9,16.7,16.5]};
+
+const EO_WEEKLY = {
+  labels:["Jun 29","Jul 06","Jul 13","Jul 20","Jul 27","Aug 03","Aug 10","Aug 17","Aug 24","Aug 31","Sep 07","Sep 14","Sep 21","Sep 28","Oct 05","Oct 12","Oct 19","Oct 26","Nov 02","Nov 09","Nov 16","Nov 23","Nov 30","Dec 07","Dec 14","Dec 21","Dec 28","Jan 04","Jan 11","Jan 18","Jan 25","Feb 01","Feb 08","Feb 15","Feb 22","Mar 01","Mar 08","Mar 15","Mar 22","Mar 29","Apr 05","Apr 12","Apr 19","Apr 26"],
+  booked:[16931,20046,17144,19940,19840,10707,19476,20109,19522,17327,19051,19299,6955,8462,19897,20065,17982,16843,18152,20316,20247,19571,19759,20675,16261,17098,78,6977,15819,17044,19912,19701,20196,20019,17624,16610,20450,18010,19820,13213,20241,20293,18481,2018],
+  eoIndex: 31
+};
+
+const EO_SEVA_COMPARE = {"Abhishekam":{"pre":100,"post":97,"pct":-3},"Archana":{"pre":139,"post":173,"pct":24.5},"Arjitha Brahmotsavam":{"pre":1661,"post":1647,"pct":-0.8},"Astadala Pada Padmaradhana":{"pre":73,"post":57,"pct":-22},"Civet Vessel":{"pre":3,"post":2,"pct":-33},"Kalyanotsavam":{"pre":7719,"post":8396,"pct":8.8},"Kasturi Vessel":{"pre":6,"post":5,"pct":-17},"Melchat Vastram":{"pre":35,"post":33,"pct":-5.7},"Sahasra Deepalankara":{"pre":3584,"post":3511,"pct":-2},"Suprabatham":{"pre":2390,"post":2811,"pct":17.6},"Thiruppavada":{"pre":56,"post":55,"pct":-1.8},"Thomala":{"pre":154,"post":189,"pct":22.7},"USSE":{"pre":285,"post":304,"pct":6.7},"Unjal Seva":{"pre":911,"post":958,"pct":5.2}};
+
+/* buildAbsenteeRate → see updateAbsentRate() */
+
+/* buildAbsenteeTrend → see updateAbsentTrend() */
+
+/* ── ABSENTEE DOW HEATMAP ── */
+function buildAbsenteeDowHeatmap() {
+  const sevas = Object.keys(DOW_ABSENT_RATE);
+  let maxR = 0;
+  sevas.forEach(s => DOW_ABSENT_RATE[s].forEach(r => { if (r!==null && r>maxR) maxR=r; }));
+
+  function cellBg(r) {
+    if (r===null) return 'rgba(200,150,42,0.03)';
+    const t = r/maxR;
+    return `rgba(${Math.round(248*t+80*(1-t))},${Math.round(113*(1-t))},${Math.round(113*(1-t))},${(0.25+0.65*t).toFixed(2)})`;
+  }
+  function cellTxt(r) {
+    if (r===null) return '<span style="color:var(--cream-muted);font-size:12px">·</span>';
+    const c = r>20?'#f87171':r>8?'#fbbf24':'#c9b38a';
+    return `<span style="font-size:10px;font-weight:${r>20?700:400};color:${c}">${r}%</span>`;
+  }
+
+  let html = `<table style="width:100%;border-collapse:separate;border-spacing:3px;font-size:11px">
+  <thead><tr>
+    <th style="text-align:left;padding:6px 10px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;color:var(--gold);font-weight:400;min-width:200px">Seva</th>
+    ${DAYS.map((d,i)=>`<th style="text-align:center;padding:6px 8px;font-family:'Cinzel',serif;font-size:9px;color:${DAY_COLORS[i]};font-weight:400">${d}</th>`).join('')}
+  </tr></thead><tbody>`;
+
+  sevas.forEach(s => {
+    html += `<tr><td style="padding:5px 10px;color:var(--cream-dim)">
+      <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SEVA_COLORS[s]};margin-right:7px;vertical-align:middle"></span>${s}
+    </td>`;
+    DOW_ABSENT_RATE[s].forEach(r => {
+      html += `<td style="text-align:center;padding:5px 8px;border-radius:5px;background:${cellBg(r)}">${cellTxt(r)}</td>`;
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('absent-dow-heatmap').innerHTML = html;
+}
+
+/* ── EO TIMELINE ── */
+function buildEOTimeline() {
+  const eoIdx = EO_WEEKLY.eoIndex;
+  const preData  = EO_WEEKLY.booked.map((v,i) => i<=eoIdx ? v : null);
+  const postData = EO_WEEKLY.booked.map((v,i) => i>=eoIdx ? v : null);
+
+  const eoLinePlugin = {
+    id:'eoLine',
+    afterDraw(chart) {
+      const {ctx, scales:{x,y}} = chart;
+      if (!x || !y) return;
+      const px = x.getPixelForValue(eoIdx);
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255,215,0,0.75)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6,4]);
+      ctx.beginPath(); ctx.moveTo(px, y.top); ctx.lineTo(px, y.bottom); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#ffd700';
+      ctx.font = "bold 10px 'Cinzel',serif";
+      ctx.fillText('New EO  Feb 1', px+6, y.top+14);
+      ctx.restore();
+    }
+  };
+
+  window._chartEOTimeline = new Chart(document.getElementById('cEOTimeline'), {
+    type: 'line',
+    data: {
+      labels: EO_WEEKLY.labels,
+      datasets: (() => {
+        const ds = [
+          { label:'Pre-EO Booked',  data:preData,  borderColor:'#60a5fa', backgroundColor:'#60a5fa1a', borderWidth:2, pointRadius:2, tension:0.3, fill:'origin', spanGaps:false },
+          { label:'Post-EO Booked', data:postData, borderColor:'#fbbf24', backgroundColor:'#fbbf241a', borderWidth:2, pointRadius:2, tension:0.3, fill:'origin', spanGaps:false }
+        ];
+        if (eoTimelineMode==='both') {
+          const preV = EO_WEEKLY.booked.map((v,i)=>i<=eoIdx?Math.round(v*0.87):null);
+          const postV = EO_WEEKLY.booked.map((v,i)=>i>=eoIdx?Math.round(v*0.87):null);
+          ds.push({ label:'Pre-EO Verified', data:preV, borderColor:'#34d399', backgroundColor:'transparent', borderWidth:1.5, borderDash:[4,3], pointRadius:1, tension:0.3, fill:false, spanGaps:false });
+          ds.push({ label:'Post-EO Verified', data:postV, borderColor:'#a78bfa', backgroundColor:'transparent', borderWidth:1.5, borderDash:[4,3], pointRadius:1, tension:0.3, fill:false, spanGaps:false });
+        }
+        return ds;
+      })()
+    },
+    plugins: [eoLinePlugin],
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      plugins: {
+        legend:{ position:'bottom', labels:{ boxWidth:12, color:'#c9b38a', font:{size:10} } },
+        tooltip:{ ...TOOLTIP, callbacks:{ label: ctx => ' '+ctx.dataset.label+': '+(ctx.parsed.y!=null?fmtFull(ctx.parsed.y):'—') } }
+      },
+      scales: {
+        x:{ grid:GRID, ticks:{ ...TICK, maxRotation:45, maxTicksLimit:14 } },
+        y:{ grid:GRID, ticks:{ ...TICK, callback:v=>fmt(v) }, beginAtZero:false }
+      }
+    }
+  });
+}
+
+/* ── EO PRE/POST COMPARISON ── */
+let chartEOCompare;
+let eoScale = 'logarithmic';
+function buildEOCompare(scale) {
+  const labels = D.sevas;
+  const preVals  = labels.map(s => EO_SEVA_COMPARE[s].pre);
+  const postVals = labels.map(s => EO_SEVA_COMPARE[s].post);
+  const toV = v => (scale==='logarithmic' && !v) ? null : (v||0);
+
+  if (chartEOCompare) chartEOCompare.destroy();
+  chartEOCompare = new Chart(document.getElementById('cEOCompare'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label:'Pre-EO Avg/wk',  data:preVals.map(v=>toV(v)),  backgroundColor:'rgba(96,165,250,0.7)',  borderColor:'#60a5fa', borderWidth:1.5, borderRadius:4 },
+        { label:'Post-EO Avg/wk', data:postVals.map(v=>toV(v)), backgroundColor:'rgba(251,191,36,0.7)',  borderColor:'#fbbf24', borderWidth:1.5, borderRadius:4 }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: {
+        legend:{ position:'bottom', labels:{ boxWidth:12, color:'#c9b38a', font:{size:10} } },
+        tooltip:{ ...TOOLTIP, callbacks:{ label: ctx=>' '+ctx.dataset.label+': '+fmtFull(ctx.parsed.y) } }
+      },
+      scales: {
+        x:{ grid:{display:false}, ticks:{ ...TICK, maxRotation:40 } },
+        y:{ type:scale, grid:GRID, ticks:{ ...TICK, callback:v=>fmt(v) }, min:scale==='logarithmic'?1:0 }
+      }
+    }
+  });
+}
+
+function setEOScale(s) {
+  eoScale=s;
+  document.getElementById('eoCmpLog').classList.toggle('on', s==='logarithmic');
+  document.getElementById('eoCmpLin').classList.toggle('on', s==='linear');
+  buildEOCompare(s);
+}
+
+/* ── EO % CHANGE BAR ── */
+function buildEOChange() {
+  const sorted = Object.entries(EO_SEVA_COMPARE)
+    .map(([s,x]) => ({s, pct:x.pct}))
+    .sort((a,b) => b.pct - a.pct);
+  const labels = sorted.map(x=>x.s);
+  const pcts   = sorted.map(x=>x.pct);
+
+  window._chartEOChange = new Chart(document.getElementById('cEOChange'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: '% Change',
+        data: pcts,
+        backgroundColor: pcts.map(p => p>=0 ? 'rgba(74,222,128,0.75)' : 'rgba(248,113,113,0.75)'),
+        borderColor:      pcts.map(p => p>=0 ? '#4ade80' : '#f87171'),
+        borderWidth:1.5, borderRadius:4, borderSkipped:false
+      }]
+    },
+    options: {
+      indexAxis:'y',
+      responsive:true, maintainAspectRatio:false,
+      plugins: {
+        legend:{ display:false },
+        tooltip:{ ...TOOLTIP, callbacks:{ label: ctx=>'  '+ctx.parsed.x+'% change post-EO' } }
+      },
+      scales: {
+        x:{ grid:GRID, ticks:{ ...TICK, callback:v=>v+'%' } },
+        y:{ grid:{ display:false }, ticks:TICK }
+      }
+    }
+  });
+}
+
+
+/* ════ FILTER HELPERS ════ */
+function moRange(fromId, toId) {
+  const f = parseInt(document.getElementById(fromId).value)||0;
+  const t = parseInt(document.getElementById(toId).value)||9;
+  return MO.slice(f, Math.min(t,8)+1);
+}
+function gv(id) { return document.getElementById(id).value; }
+
+/* ════ TREND FILTER ════ */
+function updateTrend() {
+  const filtMO = moRange('trendFrom','trendTo');
+  const focusSeva = gv('trendSeva');
+  if (chartTrend) chartTrend.destroy();
+  const isLog = trendScale === 'logarithmic';
+  const toVal = (v) => (isLog && !v) ? null : (v||0);
+  const datasets = D.sevas.map(s => {
+    const focused = focusSeva === '__all__' || s === focusSeva;
+    return {
+      label: s,
+      data: filtMO.map(m => toVal(D.monthlyPerSeva[s][m])),
+      borderColor: focused ? SEVA_COLORS[s] : SEVA_COLORS[s]+'44',
+      backgroundColor: SEVA_COLORS[s]+'18',
+      borderWidth: focused ? (s==='Kalyanotsavam'?2.5:1.5) : 0.8,
+      pointRadius: focused ? (s==='Kalyanotsavam'?5:3) : 1,
+      pointHoverRadius:7, tension:0.45, fill:false, order: focused?1:2
+    };
+  });
+  datasets.unshift({ label:'— Grand Total', data:filtMO.map(m=>D.monthlyGrandTotal[m]),
+    borderColor:'#ffffff', backgroundColor:'transparent', borderWidth:1,
+    borderDash:[5,4], pointRadius:4, pointHoverRadius:7, tension:0.4, fill:false, order:-1 });
+  chartTrend = new Chart(document.getElementById('cTrend'), {
+    type:'line', data:{ labels:filtMO, datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{position:'bottom',labels:{boxWidth:12,padding:14,color:'#c9b38a',font:{size:10}}},
+        tooltip:{...TOOLTIP, callbacks:{label:ctx=>' '+ctx.dataset.label+': '+fmtFull(ctx.parsed.y)}}
+      },
+      scales:{
+        x:{grid:GRID,ticks:TICK},
+        y:{type:trendScale,grid:GRID,ticks:{...TICK,callback:v=>fmt(v)},min:isLog?1:0}
+      }
+    }
+  });
+}
+
+/* ════ BAR FILTER ════ */
+let chartBar;
+function updateBar() {
+  const sortMode = gv('barSort');
+  const topN = parseInt(gv('barTopN'))||0;
+  let pairs = D.sevas.map(s=>({s,v:D.sevaTotal[s]}));
+  if (sortMode==='desc') pairs.sort((a,b)=>b.v-a.v);
+  else if (sortMode==='asc') pairs.sort((a,b)=>a.v-b.v);
+  else pairs.sort((a,b)=>a.s.localeCompare(b.s));
+  if (topN>0) pairs = pairs.slice(0,topN);
+  const labels=pairs.map(p=>p.s), vals=pairs.map(p=>p.v);
+  if (chartBar) chartBar.destroy();
+  chartBar = new Chart(document.getElementById('cBar'), {
+    type:'bar',
+    data:{ labels, datasets:[{
+      label:'Total Bookings',
+      data: vals.map(v=>v||null),
+      backgroundColor: labels.map(s=>SEVA_COLORS[s]+'cc'),
+      borderColor: labels.map(s=>SEVA_COLORS[s]),
+      borderWidth:1.5, borderRadius:5, borderSkipped:false
+    }]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{...TOOLTIP,callbacks:{label:ctx=>' Total: '+fmtFull(ctx.parsed.y)}}
+      },
+      scales:{
+        x:{grid:{display:false},ticks:{...TICK,maxRotation:40}},
+        y:{type:'logarithmic',grid:GRID,ticks:{...TICK,callback:v=>fmt(v)},min:1}
+      }
+    }
+  });
+}
+
+/* ════ DONUT FILTER ════ */
+let chartDonut;
+function updateDonut() {
+  const seva = gv('donutSeva');
+  let typeData;
+  if (seva==='__all__') {
+    typeData = D.types.map(t=>Object.values(D.monthlyByType).reduce((acc,sm)=>acc+(Object.values(sm[t]||{}).reduce((a,b)=>a+b,0)),0));
+  } else {
+    typeData = D.types.map(t=>Object.values(D.monthlyByType[seva]?.[t]||{}).reduce((a,b)=>a+b,0));
+  }
+  if (chartDonut) chartDonut.destroy();
+  const TYPE_CLR = ['#60A5FA','#34D399','#FBBF24','#F472B6','#818CF8'];
+  chartDonut = new Chart(document.getElementById('cDonut'), {
+    type:'doughnut',
+    data:{ labels:D.types, datasets:[{data:typeData, backgroundColor:TYPE_CLR.map(c=>c+'cc'), borderColor:TYPE_CLR, borderWidth:2, hoverOffset:10}]},
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'62%',
+      plugins:{
+        legend:{position:'right',labels:{boxWidth:12,color:'#c9b38a',font:{size:11},padding:14}},
+        tooltip:{...TOOLTIP,callbacks:{label:ctx=>' '+ctx.label+': '+fmtFull(ctx.parsed)}}
+      }
+    }
+  });
+}
+
+/* ════ BV FILTER ════ */
+let chartBV;
+function updateBV() {
+  const filtMO = moRange('bvFrom','bvTo');
+  if (chartBV) chartBV.destroy();
+  chartBV = new Chart(document.getElementById('cBV'), {
+    type:'bar',
+    data:{
+      labels: D.sevas,
+      datasets:[
+        {label:'Booked',  data:D.sevas.map(s=>D.sevaTotal[s]),   backgroundColor:'rgba(96,165,250,0.7)',  borderColor:'#60a5fa', borderWidth:1.5, borderRadius:3},
+        {label:'Verified',data:D.sevas.map(s=>D.sevaVerified[s]),backgroundColor:'rgba(74,222,128,0.7)',  borderColor:'#4ade80', borderWidth:1.5, borderRadius:3}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{boxWidth:12,color:'#c9b38a',font:{size:10}}},
+        tooltip:{...TOOLTIP,callbacks:{label:ctx=>' '+ctx.dataset.label+': '+fmtFull(ctx.parsed.y)}}
+      },
+      scales:{
+        x:{grid:{display:false},ticks:{...TICK,maxRotation:40}},
+        y:{type:'logarithmic',grid:GRID,ticks:{...TICK,callback:v=>fmt(v)},min:1}
+      }
+    }
+  });
+}
+
+/* ════ MONTHLY BAR FILTER ════ */
+let chartMB;
+function updateMonthlyBar() {
+  const filtMO = moRange('mbFrom','mbTo');
+  if (chartMB) chartMB.destroy();
+  chartMB = new Chart(document.getElementById('cMonthlyBar'), {
+    type:'bar',
+    data:{
+      labels:filtMO,
+      datasets:[{
+        label:'Total Bookings',
+        data:filtMO.map(m=>D.monthlyGrandTotal[m]),
+        backgroundColor:filtMO.map((_,i)=>{
+          const all=filtMO.map(m2=>D.monthlyGrandTotal[m2]);
+          const mx=Math.max(...all),mn=Math.min(...all);
+          const v=D.monthlyGrandTotal[filtMO[i]];
+          return v===mx?'rgba(255,215,0,0.85)':v===mn?'rgba(248,113,113,0.75)':'rgba(200,150,42,0.55)';
+        }),
+        borderColor:filtMO.map((_,i)=>{
+          const all=filtMO.map(m2=>D.monthlyGrandTotal[m2]);
+          const mx=Math.max(...all),mn=Math.min(...all);
+          const v=D.monthlyGrandTotal[filtMO[i]];
+          return v===mx?'#ffd700':v===mn?'#f87171':'#c8962a';
+        }),
+        borderWidth:1.5, borderRadius:6, borderSkipped:false
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{...TOOLTIP,callbacks:{label:ctx=>' Total: '+fmtFull(ctx.parsed.y)}}
+      },
+      scales:{
+        x:{grid:{display:false},ticks:TICK},
+        y:{grid:GRID,ticks:{...TICK,callback:v=>fmt(v)},beginAtZero:false}
+      }
+    }
+  });
+}
+
+/* ════ STACKED FILTER ════ */
+function updateStacked() {
+  buildStacked(gv('sevaSelect'), moRange('stackFrom','stackTo'));
+}
+
+/* ════ RADAR FILTER ════ */
+function updateRadar() { buildRadar(parseInt(gv('radarMonth'))); }
+
+/* ════ AREA FILTER ════ */
+function updateArea() { buildArea(moRange('areaFrom','areaTo')); }
+
+/* ════ DOW ALL FILTER ════ */
+let dowAllMode = 'avg';
+function setDowAllMode(m) {
+  dowAllMode = m;
+  document.getElementById('dowAllAvg').classList.toggle('on', m==='avg');
+  document.getElementById('dowAllTot').classList.toggle('on', m==='total');
+  buildDowAll();
+}
+
+/* ════ ABSENTEE RATE FILTER ════ */
+function updateAbsentRate() {
+  const minRate = parseFloat(document.getElementById('absentMin').value)||0;
+  const sortMode = gv('absentSort');
+  let pairs = Object.entries(SEVA_ABSENT_RATE).filter(([,r])=>r>=minRate);
+  if (sortMode==='rate') pairs.sort((a,b)=>b[1]-a[1]);
+  else pairs.sort((a,b)=>a[0].localeCompare(b[0]));
+  const labels=pairs.map(([s])=>s), rates=pairs.map(([,r])=>r);
+  if (window._chartAbsentRate) window._chartAbsentRate.destroy();
+  window._chartAbsentRate = new Chart(document.getElementById('cAbsentRate'), {
+    type:'bar',
+    data:{ labels, datasets:[{
+      label:'Absentee Rate %',
+      data:rates,
+      backgroundColor:rates.map(r=>r>20?'rgba(248,113,113,0.85)':r>8?'rgba(251,191,36,0.75)':'rgba(74,222,128,0.65)'),
+      borderColor:rates.map(r=>r>20?'#f87171':r>8?'#fbbf24':'#4ade80'),
+      borderWidth:1.5, borderRadius:5, borderSkipped:false
+    }]},
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...TOOLTIP,callbacks:{label:ctx=>'  No-show: '+ctx.parsed.x+'%'}}},
+      scales:{x:{grid:GRID,ticks:{...TICK,callback:v=>v+'%'},max:45},y:{grid:{display:false},ticks:TICK}}
+    }
+  });
+}
+
+/* ════ ABSENTEE TREND FILTER ════ */
+function updateAbsentTrend() {
+  const filtMO = moRange('absentTFrom','absentTTo');
+  const mode = gv('absentSevas');
+  let sevaList;
+  if (mode==='top3') sevaList = Object.entries(SEVA_ABSENT_RATE).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([s])=>s);
+  else if (mode==='custom') sevaList = [gv('absentSeva')];
+  else sevaList = Object.entries(SEVA_ABSENT_RATE).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([s])=>s);
+  const clrs=['#f87171','#fbbf24','#fb923c','#c084fc','#34d399'];
+  if (window._chartAbsentTrend) window._chartAbsentTrend.destroy();
+  window._chartAbsentTrend = new Chart(document.getElementById('cAbsentTrend'), {
+    type:'line',
+    data:{ labels:filtMO, datasets:sevaList.map((s,i)=>({
+      label:s, data:filtMO.map(m=>ABSENT_MONTHLY_RATE[s][MO.indexOf(m)]),
+      borderColor:clrs[i]||clrs[0], backgroundColor:(clrs[i]||clrs[0])+'22',
+      borderWidth:2, pointRadius:4, pointHoverRadius:6, tension:0.4, fill:false
+    }))},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{position:'bottom',labels:{boxWidth:12,color:'#c9b38a',font:{size:10}}},
+        tooltip:{...TOOLTIP,callbacks:{label:ctx=>' '+ctx.dataset.label+': '+ctx.parsed.y+'%'}}
+      },
+      scales:{x:{grid:GRID,ticks:TICK},y:{grid:GRID,ticks:{...TICK,callback:v=>v+'%'},beginAtZero:true}}
+    }
+  });
+}
+
+/* ════ EO TIMELINE FILTER ════ */
+let eoTimelineMode = 'booked';
+function setEOTimelineMode(m) {
+  eoTimelineMode = m;
+  document.getElementById('eoShowBook').classList.toggle('on', m==='booked');
+  document.getElementById('eoShowVerif').classList.toggle('on', m==='both');
+  buildEOTimeline();
+}
+
+/* ════ EO COMPARE FILTER ════ */
+function updateEOCompare() { buildEOCompare(eoScale); }
+
+/* ════ EO CHANGE FILTER ════ */
+function updateEOChange() {
+  const minAbs = parseFloat(document.getElementById('eoChgMin').value)||0;
+  const pairs = Object.entries(EO_SEVA_COMPARE)
+    .filter(([,x])=>Math.abs(x.pct)>=minAbs)
+    .map(([s,x])=>({s,pct:x.pct}))
+    .sort((a,b)=>b.pct-a.pct);
+  if (window._chartEOChange) window._chartEOChange.destroy();
+  window._chartEOChange = new Chart(document.getElementById('cEOChange'), {
+    type:'bar',
+    data:{ labels:pairs.map(x=>x.s), datasets:[{
+      label:'% Change',
+      data:pairs.map(x=>x.pct),
+      backgroundColor:pairs.map(x=>x.pct>=0?'rgba(74,222,128,0.75)':'rgba(248,113,113,0.75)'),
+      borderColor:pairs.map(x=>x.pct>=0?'#4ade80':'#f87171'),
+      borderWidth:1.5, borderRadius:4, borderSkipped:false
+    }]},
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...TOOLTIP,callbacks:{label:ctx=>'  '+ctx.parsed.x+'% post-EO'}}},
+      scales:{x:{grid:GRID,ticks:{...TICK,callback:v=>v+'%'}},y:{grid:{display:false},ticks:TICK}}
+    }
+  });
+}
+
+function buildAbsenteeRate() { updateAbsentRate(); }
+function buildAbsenteeTrend() { updateAbsentTrend(); }
+function buildEOChange() { updateEOChange(); }
+/* ════════════════════ INIT ════════════════════ */
+function runAll() {
+  if (typeof Chart === 'undefined') return;
+  const safe = (fn, label) => { try { fn(); } catch(e) { console.error(label + ':', e); } };
+  initKPIs();
+  safe(() => buildTrend('logarithmic'),   'Trend');
+  safe(() => buildBar(),                  'Bar');
+  safe(() => buildDonut(),                'Donut');
+  safe(() => buildBV(),                   'BV');
+  safe(() => buildMonthlyBar(),           'MonthlyBar');
+  safe(() => { populateSelect(); buildStacked('Kalyanotsavam'); }, 'Stacked');
+  safe(() => buildRadar(),                'Radar');
+  safe(() => buildArea(),                 'Area');
+  safe(() => buildTable(),                'Table');
+  // Day-of-week section
+  safe(() => buildAnomalyCards(),         'AnomalyCards');
+  safe(() => renderHeatmap(),             'Heatmap');
+  safe(() => buildAvailMatrix(),          'AvailMatrix');
+  safe(() => { populateDowSelect(); buildDowChart('Kalyanotsavam'); }, 'DowChart');
+  safe(() => buildDowAll(),               'DowAll');
+  safe(() => buildAnoSuprabatham(),       'AnoSup');
+  safe(() => buildAnoUSSE(),             'AnoUSSE');
+  // Absentee analysis
+  safe(() => { buildAbsenteeRate(); },        'AbsentRate');
+  safe(() => { buildAbsenteeTrend(); },       'AbsentTrend');
+  safe(() => buildAbsenteeDowHeatmap(),  'AbsentDowHeatmap');
+  // EO change analysis
+  safe(() => buildEOTimeline(),          'EOTimeline');
+  safe(() => buildEOCompare('logarithmic'), 'EOCompare');
+  safe(() => { updateEOChange(); },            'EOChange');
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', runAll);
+} else {
+  runAll();
+}
+</script>
+</body>
+</html>
